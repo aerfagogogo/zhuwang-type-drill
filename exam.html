@@ -130,8 +130,10 @@ select{padding:8px 10px}
     <h2>1. 答题 <span class="stage-status" id="s1status">进行中</span></h2>
     <textarea id="ans" placeholder="在此输入你的答案（多行 OK）。⌘+Enter 提交。"></textarea>
     <div class="controls" style="border:0;padding:0;margin-top:8px">
-      <button class="warn" onclick="markAndNext('skip')">跳过</button>
-      <button class="red" onclick="markAndNext('dontknow')">不会</button>
+      <button class="s" onclick="prevQ()" title="回上一题，可重答">← 上一题</button>
+      <button class="warn" onclick="markAndNext('skip')" title="暂时跳过；下次会话用「← 上一题」回到这里">⏭ 跳过</button>
+      <button class="red" onclick="markAndNext('dontknow')" title="完全不会，直接拿标答的命令进盲敲">❌ 不会</button>
+      <button class="s" onclick="markAndNext('flagged')" title="发现标准答案有误，标记后跳过；后续我会修正">⚠️ 答案有误</button>
       <div class="gap"></div>
       <button onclick="submitAnswer()">提交并批卷 →</button>
     </div>
@@ -260,7 +262,8 @@ function renderQ(){
   const ansC=STATE.entries.filter(x=>x.phase==='completed').length;
   const skC=STATE.entries.filter(x=>x.mark==='skip').length;
   const dkC=STATE.entries.filter(x=>x.mark==='dontknow').length;
-  $('counts').textContent='✏'+ansC+'  ⏭'+skC+'  ❌'+dkC;
+  const flC=STATE.entries.filter(x=>x.mark==='flagged').length;
+  $('counts').textContent='✏'+ansC+'  ⏭'+skC+'  ❌'+dkC+'  ⚠️'+flC;
   $('qmeta').textContent='第 '+(i+1)+' / '+QS.length+' 题 · '+q.id+(q.题源?' · '+q.题源:'');
   $('qti').textContent='题面：'+q.题面;
 
@@ -271,9 +274,14 @@ function renderQ(){
 
   // 阶段 1 状态
   $('ans').value=e.user_answer||'';
-  if(e.phase==='completed'){$('s1status').textContent='已完成';$('stage1').classList.add('done');$('stage1').classList.remove('active');}
-  else if(e.phase==='graded'){$('s1status').textContent='已批卷';$('stage1').classList.add('done');$('stage1').classList.remove('active');}
-  else{$('s1status').textContent='进行中';$('stage1').classList.add('active');$('stage1').classList.remove('done');}
+  let s1='进行中';
+  if(e.mark==='flagged')s1='⚠️ 标记答案有误';
+  else if(e.mark==='skip')s1='⏭ 已跳过 (可重答)';
+  else if(e.phase==='completed')s1='✅ 已完成';
+  else if(e.phase==='graded')s1='已批卷';
+  $('s1status').textContent=s1;
+  if(e.phase==='completed'||e.phase==='graded'){$('stage1').classList.add('done');$('stage1').classList.remove('active');}
+  else{$('stage1').classList.add('active');$('stage1').classList.remove('done');}
 
   // 阶段 2 渲染
   if(e.verdict)renderVerdict(e);
@@ -305,11 +313,12 @@ function renderVerdict(e){
   }
 }
 
-// ---- 阶段 1: 提交 / 跳过 / 不会 ----
-async function submitAnswer(){
+// ---- 阶段 1: 提交 / 跳过 / 不会 / 答案有误 ----
+async function submitAnswer(opts){
+  opts=opts||{};
   const i=STATE.idx;const q=QS[i];const e=STATE.entries[i];
   const ans=$('ans').value.trim();
-  if(!ans){alert('请填答案，或点跳过/不会');return;}
+  if(!ans&&!opts.allowEmpty){alert('请填答案，或点跳过/不会/答案有误');return;}
   e.user_answer=ans;
   saveState();
   // 切到批卷中状态
@@ -334,11 +343,20 @@ function markAndNext(m){
   const e=STATE.entries[STATE.idx];
   e.mark=m;e.user_answer=$('ans').value.trim();
   if(m==='dontknow'){
-    // 不会 → 直接走批卷流程拿 drills
-    submitAnswer();return;
+    // 不会 → 直接走批卷流程拿 drills（允许空答案）
+    submitAnswer({allowEmpty:true});return;
   }
-  // 跳过 → 直接下一题
+  if(m==='flagged'){
+    // 答案有误 → 标记后跳到下一题，不调 API
+    e.phase='answering';  // 保持可重做状态
+    saveState();gotoNext();return;
+  }
+  // 跳过 → 保持 phase=answering，下次「上一题」回得来
   saveState();gotoNext();
+}
+
+function prevQ(){
+  if(STATE.idx>0){STATE.idx--;saveState();renderQ();}
 }
 
 // ---- 调 API ----
@@ -515,14 +533,20 @@ function renderSummary(){
   const wrong=e.filter(x=>x.verdict==='wrong').length;
   const dk=e.filter(x=>x.verdict==='dontknow').length;
   const skip=e.filter(x=>x.mark==='skip').length;
+  const flagged=e.filter(x=>x.mark==='flagged');
   let totReps=0,totFirst=0;
   for(const ent of e){
     for(const r of (ent.drill_reps||[])){totReps++;if(r.first_try)totFirst++;}
   }
+  let flagHtml='';
+  if(flagged.length){
+    flagHtml='<div class="h" style="margin-top:10px">⚠️ 标记答案有误（待 Claudian 修正）</div>';
+    for(const f of flagged)flagHtml+='<div>· '+f.id+'</div>';
+  }
   $('summary').innerHTML=
     '<div class="h">本场总结</div>'+
-    '<div>✅ 正确 '+correct+' · ⚠️ 部分 '+partial+' · ❌ 错 '+wrong+' · ❌ 不会 '+dk+' · ⏭ 跳过 '+skip+'</div>'+
-    '<div>🔨 盲敲共 '+totReps+' 遍，其中 '+totFirst+' 遍一次过</div>';
+    '<div>✅ 正确 '+correct+' · ⚠️ 部分 '+partial+' · ❌ 错 '+wrong+' · ❌ 不会 '+dk+' · ⏭ 跳过 '+skip+' · ⚠️ 标错 '+flagged.length+'</div>'+
+    '<div>🔨 盲敲共 '+totReps+' 遍，其中 '+totFirst+' 遍一次过</div>'+flagHtml;
   $('exportBox').textContent=JSON.stringify(STATE,null,2);
 }
 

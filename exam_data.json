@@ -25,7 +25,7 @@
       "id": "操作系统-004",
       "title": "004-账户锁定 + 口令有效期",
       "题面": "设置操作系统用户连续登录失败 5 次后，账户锁定 10 分钟；设置操作系统用户口令有效期为 90 天，并到期前 10 天提示修改。",
-      "标答": "```bash\n# 第一步：切换到 root（PAM 与 login.defs 都要 root 才能改）\nsu - root\n\n# 第二步：在 3 个 PAM 配置中各加同一行 pam_tally 规则\n#   per_user        每用户独立计数\n#   unlock_time=600 锁 600 秒 = 10 分钟\n#   onerr=succeed   出错时按成功处理（避免异常自锁）\n#   audit           记审计日志\n#   deny=5          失败 5 次后锁定\nvi /etc/pam.d/kde\nvi /etc/pam.d/login\nvi /etc/pam.d/sshd\n# 在 auth 段加入下面这一行（三个文件各加一次）：\n# auth required /lib64/security/pam_tally.so per_user unlock_time=600 onerr=succeed audit deny=5\n\n# 第三步：编辑 /etc/login.defs 设置口令有效期\nvi /etc/login.defs\n# 修改两行：\n# PASS_MAX_DAYS   90       口令最长 90 天有效\n# PASS_WARN_AGE   10       到期前 10 天开始提示\n```",
+      "标答": "```bash\n# 第一步：切换到 root（PAM 与系统级配置都要 root 才能改）\nsu - root\n\n# 第二步：配置账户锁定（PAM pam_tally）\n#   在 /etc/pam.d/login 的 auth 段加入：\n#   auth required /lib64/security/pam_tally.so per_user unlock_time=600 onerr=succeed audit deny=5\n#     deny=5          失败 5 次后锁定\n#     unlock_time=600 锁 600 秒 = 10 分钟\n#     per_user        每用户独立计数\n#     onerr=succeed   PAM 出错时放行（避免误自锁）\n#     audit           记审计日志\nvi /etc/pam.d/login\n# 如需也限制图形 / SSH 登录，对 /etc/pam.d/kde 和 /etc/pam.d/sshd 各加同一行\n# vi /etc/pam.d/kde\n# vi /etc/pam.d/sshd\n\n# 第三步：设置口令有效期 - 方法 A（chage 针对单用户，最简）\n#   -M 90 口令最长 90 天有效\n#   -W 10 到期前 10 天开始提示\nchage -M 90 -W 10 nusp\n\n# 第三步：方法 B（login.defs 影响所有新建用户）\nvi /etc/login.defs\n# 修改两行：\n# PASS_MAX_DAYS   90\n# PASS_WARN_AGE   10\n\n# 验证：\nchage -l nusp\n```",
       "题源": "华东2018 第1题"
     },
     {

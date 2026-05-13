@@ -4,342 +4,399 @@
       "id": "操作系统-001",
       "title": "001-crontab 定时记录内存",
       "题面": "每隔 1 分钟查看内存使用情况, 追加写入 `/home/nusp/zhejiang/Desktop/zhangsan.txt`。",
+      "标答": "```bash\n# 第一步：先确保目标文件存在（cron 写入前文件不存在不会自动建）\ntouch /home/nusp/zhejiang/Desktop/zhangsan.txt\n\n# 第二步：编辑当前用户的定时任务表\ncrontab -e\n\n# 第三步：在打开的 vi 里加入一行（按 i 插入，最后 Esc → :wq 保存）\n#   五个 * = 分时日月周，全 * 表示每分钟执行一次\n#   free 查看内存，>> 追加不覆盖\n* * * * * free >> /home/nusp/zhejiang/Desktop/zhangsan.txt\n\n# 第四步：验证定时任务已写入\ncrontab -l\n```",
       "题源": "杭州培训·凝思 第一·题1"
     },
     {
       "id": "操作系统-002",
       "title": "002-SSH 远程抓 top 信息 + scp 拷回",
       "题面": "在远程主机 `ks-sca01` 用 `top` 命令获取一次系统信息, 拷贝到本地桌面 `zhangsan.txt`。",
+      "标答": "```bash\n# 第一步：SSH 登录远程主机 ks-sca01 抓一次 top 快照并重定向到远端文件\n#   -b batch 模式（非交互，可重定向）\n#   -n 1 只刷新一次就退出\nssh ks-sca01 \"top -b -n 1 > ~/zhangsan.txt\"\n\n# 第二步：用 scp 把远程文件拉回本地桌面\nscp ks-sca01:~/zhangsan.txt ~/Desktop/zhangsan.txt\n```\n\n> **一行式更省事**：`ssh ks-sca01 \"top -b -n 1\" > ~/Desktop/zhangsan.txt`（远程执行 + 本地重定向，省掉中间文件）",
       "题源": "杭州培训·凝思 第一·题2"
     },
     {
       "id": "操作系统-003",
       "title": "003-SSH 远程查 CPU + 打包 + scp 拷回",
       "题面": "登录远程主机查 CPU 信息, 打包成 `zhangsan.tar.gz`, 拷贝到本地桌面。",
+      "标答": "```bash\n# 第一步：SSH 登录远程主机\nssh ks-sca01\n\n# 第二步：在远程主机上查 CPU 信息并保存\n#   lscpu 比 cat /proc/cpuinfo 简洁，结构化输出\nlscpu > ~/cpu.txt\n\n# 第三步：把 cpu.txt 打包成 tar.gz\n#   -c create 创建包\n#   -z gzip 压缩\n#   -f file 指定包名\ntar -czf ~/zhangsan.tar.gz ~/cpu.txt\n\n# 第四步：退出远程 shell 回到本地\nexit\n\n# 第五步：在本地用 scp 把压缩包拉回桌面\nscp ks-sca01:~/zhangsan.tar.gz ~/Desktop/\n```",
       "题源": "杭州培训·凝思 第一·题3"
     },
     {
       "id": "操作系统-004",
       "title": "004-账户锁定 + 口令有效期",
       "题面": "设置操作系统用户连续登录失败 5 次后，账户锁定 10 分钟；设置操作系统用户口令有效期为 90 天，并到期前 10 天提示修改。",
+      "标答": "```bash\n# 第一步：切换到 root（PAM 与 login.defs 都要 root 才能改）\nsu - root\n\n# 第二步：在 3 个 PAM 配置中各加同一行 pam_tally 规则\n#   per_user        每用户独立计数\n#   unlock_time=600 锁 600 秒 = 10 分钟\n#   onerr=succeed   出错时按成功处理（避免异常自锁）\n#   audit           记审计日志\n#   deny=5          失败 5 次后锁定\nvi /etc/pam.d/kde\nvi /etc/pam.d/login\nvi /etc/pam.d/sshd\n# 在 auth 段加入下面这一行（三个文件各加一次）：\n# auth required /lib64/security/pam_tally.so per_user unlock_time=600 onerr=succeed audit deny=5\n\n# 第三步：编辑 /etc/login.defs 设置口令有效期\nvi /etc/login.defs\n# 修改两行：\n# PASS_MAX_DAYS   90       口令最长 90 天有效\n# PASS_WARN_AGE   10       到期前 10 天开始提示\n```",
       "题源": "华东2018 第1题"
     },
     {
       "id": "操作系统-005",
       "title": "005-last + history + ps + find 四件套",
       "题面": "按照以下要求完成系统操作：\n- 查找最近登录本机的 4 个用户，将结果输出到本机主目录 `/kaoshi/103001.txt`\n- 查找本机 root 用户最近使用的 5 条命令，将其追加输出到本机主目录 `/kaoshi/103001.txt`\n- 查找本工作站中与 root 用户相关的进程，将其追加输出到本机主目录 `/kaoshi/103001.txt`\n- 在本机主目录下搜索权限为 777 的文件，将结果追加输出到本机主目录 `/kaoshi/103003.txt`",
+      "标答": "```bash\n# 第一步：切到 root（查 root 的 history 和进程都需要 root 权限）\nsu - root\n\n# 第二步：查最近登录的 4 个用户，输出到 103001.txt（首次用 > 创建）\n#   -n 4 限定行数\nlast -n 4 > /home/d5000/zhejiang/kaoshi/103001.txt\n\n# 第三步：追加 root 最近 5 条命令\n#   history 5 显示最近 5 条\nhistory 5 >> /home/d5000/zhejiang/kaoshi/103001.txt\n\n# 第四步：追加 root 相关进程\n#   -u root 按用户过滤\nps -u root >> /home/d5000/zhejiang/kaoshi/103001.txt\n\n# 第五步：在主目录下找权限为 777 的文件，追加到 103003.txt\n#   -type f 只找普通文件\n#   -perm 777 精确匹配 777 权限\nfind /home/d5000/zhejiang -type f -perm 777 >> /home/d5000/zhejiang/kaoshi/103003.txt\n```",
       "题源": "华东2018 第2题"
     },
     {
       "id": "操作系统-006",
       "title": "006-内存进程排行 + 反序查看 + find 大文件",
       "题面": "用命令查看 `sca1-1` 使用内存最多的 8 个进程（只显示 8 个），将其输出到 `/home/d5000/zhejiang/memory.txt` 中，将 memory.txt 文件按行反序显示查看。找出 `/etc` 下面，文件容量大于 50KB 且文件所有者不是 root 的文件名，且将权限完整列出。",
+      "标答": "```bash\n# 第一步：ssh 到 sca1-1（题目要求在 sca1-1 上查）\nssh sca1-1\n\n# 第二步：列内存占用 Top 8 进程，写入 memory.txt\n#   ps -aux 列所有用户全量进程\n#   sort -k4nr 按第 4 列（%MEM）数值倒序 (n=numeric, r=reverse)\n#   head -8 只取前 8 行\nps -aux | sort -k4nr | head -8 > /home/d5000/zhejiang/memory.txt\n\n# 第三步：tac 反序显示文件内容（cat 倒过来读）\ntac /home/d5000/zhejiang/memory.txt\n\n# 第四步：找 /etc 下 >50KB 且属主非 root 的文件，列出完整权限\n#   -size +50k    大于 50 KB\n#   ! -user root  属主不是 root（! 是逻辑取反）\n#   -exec ls -l {} \\;  对每个命中文件执行 ls -l 列详情\nfind /etc -size +50k ! -user root -exec ls -l {} \\;\n```",
       "题源": "华东2018 第3题"
     },
     {
       "id": "操作系统-007",
       "title": "007-22 端口占用 + root_oct11 进程统计",
       "题面": "- 在 hdhis1-1 节点上找出占用 22 端口作为服务端口的程序，并把该程序名以及使用的命令写入主目录下 exam 文件夹下的 1.txt 文件\n- 在工作站节点上统计由 root 用户启动且启动时间为 10 月 11 号的程序数量，并把使用的命令以及统计出来的数量写入主目录下 exam 文件夹下的 2.txt 文件",
+      "标答": "```bash\n# 第一步：SSH 到 hdhis1-1 查 22 端口占用，把命令本身和结果都写入 1.txt\n#   -a all 所有连接\n#   -n numeric 不解析主机名\n#   -p 显示对应程序名/PID\nssh hdhis1-1 \"echo 'netstat -anp | grep 22' > ~/exam/1.txt && netstat -anp | grep 22 >> ~/exam/1.txt\"\n\n# 第二步：在工作站上统计 root 用户、Oct 11 启动的进程数量\n#   ps -ef        全格式列所有进程\n#   awk '{print $1,$5}'  取出 UID 和启动时间两列\n#   grep root     筛 root 用户\n#   grep Oct11    筛启动时间含 Oct11（注意大小写按系统 locale）\n#   wc -l         数行数\necho 'ps -ef | awk \"{print(\\$1,\\$5)}\" | grep root | grep Oct11 | wc -l' > ~/exam/2.txt\nps -ef | awk '{print($1,$5)}' | grep root | grep Oct11 | wc -l >> ~/exam/2.txt\n```",
       "题源": "华东2018 第4题"
     },
     {
       "id": "操作系统-008",
       "title": "008-find 目录深度 + stat 详情",
       "题面": "找出本地工作站 `/home/d5000/zhejiang/var` 目录下 90 分钟以内访问过的文件，文件名称包含字符串 \"log\"，查找目录深度为 1，将找出的文件的详细信息（包括每个文件的访问时间、修改时间、状态改变时间）保存至本地工作站 `/home/d5000/zhejiang/kaoshi/find_log.txt` 文件中。",
+      "标答": "```bash\n# 第一步：find 一次性完成\"找 + 取详情 + 写盘\"\n#   -maxdepth 1  限定深度为 1，只搜当前目录不递归子目录（必须放在 -name 前）\n#   -type f      只要普通文件\n#   -name \"*log*\"  文件名包含 log\n#   -amin -90    access time 在 90 分钟以内（- 表示小于）\n#   -exec stat {} \\;  对每个命中文件执行 stat 查看 atime/mtime/ctime\n#   \\; 句尾分号不能少\nfind /home/d5000/zhejiang/var -maxdepth 1 -type f -name \"*log*\" -amin -90 -exec stat {} \\; > /home/d5000/zhejiang/kaoshi/find_log.txt\n```\n\n> **xargs 写法**：`find /home/d5000/zhejiang/var -maxdepth 1 -type f -name \"*log*\" -amin -90 | xargs stat > /home/d5000/zhejiang/kaoshi/find_log.txt`（xargs 不用 `{}` 和 `\\;`）",
       "题源": "华东2018 第5题"
     },
     {
       "id": "操作系统-009",
       "title": "009-每天定时导库（脚本 + crontab）",
       "题面": "要求结合脚本在本工作站上每天 3:20 定时导出厂站表、母线表、断路器表至 out.dmp 文件，导出文件放在 `/home/d5000/zhejiang/kaoshi` 目录。",
+      "标答": "```bash\n# 第一步：在 /home/d5000/zhejiang/ 下新建 backup.sh 脚本\nvi /home/d5000/zhejiang/backup.sh\n# 脚本内容（三张表 substation/busbarsection/breaker → out.dmp）：\n# #!/bin/tcsh\n# /home/d5000/dm/dmClient/bin/expdb d5000/d5000@mdb tables=substation,busbarsection,breaker file=/home/d5000/zhejiang/kaoshi/out.dmp\n\n# 第二步：给脚本加执行权限\nchmod +x /home/d5000/zhejiang/backup.sh\n\n# 第三步：编辑当前用户的 crontab\ncrontab -e\n# 在打开的 vi 中加入一行（按 i 插入，:wq 保存）：\n#   20 3 * * * = 每天 3 点 20 分\n# 20 3 * * * /home/d5000/zhejiang/backup.sh\n\n# 第四步：验证定时任务已写入\ncrontab -l\n```\n\n> **改 /etc/crontab 的等价写法**：`20 3 * * * d5000 /home/d5000/zhejiang/backup.sh`（系统级 crontab 多一列用户名）",
       "题源": "华东2018 第6题"
     },
     {
       "id": "操作系统-010",
       "title": "010-vi 范围删除 + 读文件 + 行首尾替换",
       "题面": "使用 vi 工具完成下列操作，编辑 `/var/log/messages` 文件，删除文件的第一行到第一百行，将 `/etc/hosts` 文件中的内容添加到 messages 文件第三行后，然后在每行的行首添加 \"begin\" 字符，在每行的行尾增加 end。",
+      "标答": "```bash\n# 第一步：用 vi 打开 /var/log/messages（messages 通常 root 才能改）\nvi /var/log/messages\n\n# 后续都是 vi 命令模式（按 : 进入），逐条输入并回车：\n```\n\n```vim\n\" 第二步：删除 1-100 行\n\"   1,100 行范围\n\"   d delete\n:1,100 d\n\n\" 第三步：在第 3 行后读入 /etc/hosts 的内容\n\"   3   行号\n\"   r   read 读文件\n:3r /etc/hosts\n\n\" 第四步：每行行首加 begin\n\"   1,$  从第 1 行到最后一行（$=末行）\n\"   s    substitute 替换\n\"   ^    匹配行首\n\"   g    全局\n:1,$ s/^/begin/g\n\n\" 第五步：每行行尾加 end\n\"   $    在替换模式里表示行尾\n:1,$ s/$/end/g\n\n\" 第六步：保存退出\n:wq\n```",
       "题源": "华东2018 第7题"
     },
     {
       "id": "操作系统-011",
       "title": "011-uname + lsof + sed 替换路径 + 行范围存",
       "题面": "查询系统的信息（包括系统的内核、内核名、主机名），查询结果保存至本机主目录下的 `xitong.txt` 文件中；查询占用 22 号端口的进程，将该进程名输入到本机主目录下的 `duankou.txt` 文件中；将本机主目录下文件 `xuanba2.txt` 中所有路径 `/usr/bin` 替换成 `/test`，将 xuanba2.txt 中 20~59 行之间的内容存盘成文件 `/zhejiang/cunpan.txt`。",
+      "标答": "```bash\n# 第一步：查系统信息（内核名/主机名/内核版本一锅端）写入 xitong.txt\n#   uname -a all 显示全部信息\nuname -a > ~/xitong.txt\n\n# 第二步：切到 root（lsof 看 22 端口需要 root）\nsu - root\n\n# 第三步：查占用 22 端口的进程，写入 duankou.txt\n#   lsof -i :22 列所有打开 22 端口的进程\nlsof -i :22 > ~/duankou.txt\n\n# 第四步：用 vi 打开 xuanba2.txt，做两件事：路径替换 + 行范围存盘\nvi ~/xuanba2.txt\n```\n\n```vim\n\" 第五步：vi 内全局把 /usr/bin 替换为 /test\n\"   %        所有行\n\"   s#A#B#g  用 # 作分隔符避开路径里的 /\n:% s#/usr/bin#/test#g\n\n\" 第六步：把 20-59 行存为 /zhejiang/cunpan.txt\n\"   20,59   行范围\n\"   w       write 写文件\n:20,59 w /zhejiang/cunpan.txt\n\n\" 第七步：保存退出\n:wq\n```\n\n> **shell 等价写法（不进 vi）**：\n> - 替换：`sed -i 's#/usr/bin#/test#g' ~/xuanba2.txt`\n> - 取行范围：`sed -n '20,59p' ~/xuanba2.txt > /zhejiang/cunpan.txt`\n\n**准备工作**：在本机主目录下新建 xuanba2.txt，内容包含 `/usr/bin`",
       "题源": "华东2018 第8题"
     },
     {
       "id": "操作系统-012",
       "title": "012-内核查询 + down_load + top 排序（综合）",
       "题面": "要求显示当前相关系统的主机名、内核版本等信息，并将内容查询到的内容保存到 `姓名_9.text`；显示当前系统内核版本，将内容追加到 `姓名_9.text`；要求设置句柄数到达 60000 时系统报警但是不进行报错；下装 sca1-1 服务器上测试态 public 表；关闭 wh1-1 工作站的 iapi 程序；设置系统最大推画面数为 7 个，图形最大放大倍数为 1100%；使用 top 命令以内存占用率大小的顺序排列进程列表，截图保存到桌面 `xuanba3.png`；使用命令使 top 刷新 10 次，将 10 次的结果导入到 `/opt/top.txt` 文件中。",
+      "标答": "```bash\n# 第一步：查系统主机名+内核全量信息，覆盖写入姓名_9.text\n#   -a all 显示全部\nuname -a > ~/姓名_9.text\n\n# 第二步：查内核版本号，追加到同一文件\n#   -r release 仅显示内核 release\nuname -r >> ~/姓名_9.text\n\n# 第三步：句柄软限制改为 60000（达到时报警不报错，硬限制不动）\nsu - root\nvi /etc/security/limits.conf\n# 加入一行：\n# *    soft    nofile    60000\n\n# 第四步：去 sca1-1 服务器下装测试态 public 表\n#   -ctx 4 指 context=4（测试态）\nssh sca1-1\ndown_load public -ctx 4\nexit\n\n# 第五步：关闭 wh1-1 工作站的 iapi 程序\nssh wh1-1\nprocshut sys base_srv iapi\nexit\n\n# 第六步：改 PLATFORM/graph 参数（推画面最大 7、放大倍数 1100%）\n#   MAX_EXPLORER_WND_NUMS = 7\n#   MAX_ZOOM_FACTOR       = 11   （单位是 ×100%，11 即 1100%）\n# 通过系统配置工具或编辑对应 ini 修改这两个参数\n\n# 第七步：交互式 top 按 M 切到内存排序后截图\n#   1) 终端输入 top\n#   2) 按大写 M（按 %MEM 列降序排序）\n#   3) 截屏保存到桌面 xuanba3.png\ntop\n# 在 top 界面里按 Shift+M\n\n# 第八步：top 批量模式刷新 10 次，结果写 /opt/top.txt\n#   -b batch 非交互\n#   -n 10 刷新 10 次\ntop -b -n 10 > /opt/top.txt\n```",
       "题源": "华东2018 第9题"
     },
     {
       "id": "操作系统-013",
       "title": "013-关闭 iapi + 下装 public + 切应用主机",
       "题面": "按照以下要求完成系统操作：\n- 关闭 hdsta1-1 工作站的 iapi 程序\n- 下装 hdsca1-1 服务器上测试态 public 表，并将 public 应用主机切至 hdpas1-1",
+      "标答": "```bash\n# 第一步：登录 hdsta1-1 工作站，关闭 iapi 程序\n#   procshut 关闭进程，参数：系统名 服务组 程序名\nssh hdsta1-1\nprocshut sys base_srv iapi\nexit\n\n# 第二步：登录 hdsca1-1 服务器，下装测试态 public 表\n#   -ctx 4 上下文 ctx=4 表示测试态\nssh hdsca1-1\ndown_load public -ctx 4\n\n# 第三步：把 public 的应用主机切到 hdpas1-1\n#   app_switch 目标主机 应用名 优先级\napp_switch hdpas1-1 public 3\n```\n\n**故障点排查**：\n- `/etc/security/limits.conf` 中 `soft nofile` 应为 80000\n- 确认 scada 应用主机运行在 hdsca1-1 服务器上",
       "题源": "华东2018 第10题"
     },
     {
       "id": "操作系统-014",
       "title": "014-netstat 查端口 + ifconfig 临时改 IP ",
       "题面": "- 查看本工作站 UDP 端口号的使用情况，将其输出到 `/home/d5000/zhejiang/exam/102701.txt`\n- 查看本工作站 TCP 端口号的使用情况，将其追加输出到 `/home/d5000/zhejiang/exam/102701.txt`\n- 临时配置 eth2 网卡 ip 地址为 `192.1.1.100/24`，并将默认网关临时设置为 `192.1.1.254`\n- 设置 eth2 网卡能通过的最大数据包大小为 1400 bytes\n- 查看本机路由表，将其追加输出到 `/home/d5000/zhejiang/exam/102701.txt`",
+      "标答": "```bash\n# 第一步：查 UDP 端口使用情况，覆盖写入 102701.txt\n#   -a all 包括监听\n#   -p 显示进程\n#   -u udp 协议\nnetstat -apu > /home/d5000/zhejiang/exam/102701.txt\n\n# 第二步：查 TCP 端口使用情况，追加到同一文件\n#   -t tcp 协议\nnetstat -apt >> /home/d5000/zhejiang/exam/102701.txt\n\n# 第三步：临时给 eth2 配 IP 192.1.1.100/24 并启用\n#   /24 → 子网掩码 255.255.255.0\n#   up 激活网卡\nifconfig eth2 192.1.1.100 netmask 255.255.255.0 up\n\n# 第四步：临时加默认网关 192.1.1.254\nroute add default gw 192.1.1.254\n\n# 第五步：把 eth2 的 MTU 改为 1400 字节\n#   mtu = Maximum Transmission Unit 最大传输单元\nifconfig eth2 mtu 1400\n\n# 第六步：查看路由表并追加到 102701.txt\nroute >> /home/d5000/zhejiang/exam/102701.txt\n# 等价写法：netstat -rn >> /home/d5000/zhejiang/exam/102701.txt\n```",
       "题源": "华东2018 第11题"
     },
     {
       "id": "操作系统-015",
       "title": "015-后台进程 jobs_fg_kill + 内存句柄 + lso",
       "题面": "- 新建一个目录 `/home/d5000/huadong/kaoshi`\n- 直接后台运行 top 命令，查看作业号将其输入到 `/home/d5000/huadong/kaoshi/file.txt` 并恢复到前台运行。然后再调入后台，查看 top 进程号，将其输入到 `/home/d5000/huadong/kaoshi/file1.txt`，强制杀死此进程，查看后台进程已不存在 top\n- 查看内存空闲物理内存大小并将其输入到 `/home/d5000/huadong/kaoshi/mem.txt`\n- 查看最大文件句柄数，临时修改文件最大句柄数为 77777\n- 显示 sshd 进程打开的所有文件将其输入到 `/home/d5000/huadong/kaoshi/ssh.txt`\n- 统计 sshd 打开了多少个文件结果输出到 `/home/d5000/huadong/kaoshi/ssh1.txt`",
+      "标答": "```bash\n# 第一步：新建考试目录\nmkdir -p /home/d5000/huadong/kaoshi\n\n# 第二步：把 top 直接放后台运行\n#   末尾 & 表示后台执行\ntop &\n\n# 第三步：查看作业号(jobs)并写入 file.txt\njobs > /home/d5000/huadong/kaoshi/file.txt\n\n# 第四步：把 top 调回前台\n#   %1 = 第 1 个后台作业\nfg %1\n\n# 第五步：在 top 界面按 Ctrl+Z 暂停并重新调入后台\n#   (键盘操作: Ctrl+Z)\nbg %1\n\n# 第六步：查看 top 的进程号并写入 file1.txt\nps -ef | grep top | grep -v grep > /home/d5000/huadong/kaoshi/file1.txt\n\n# 第七步：强制杀死 top 进程\n#   把上一步看到的 PID 替换到下面\nkill -9 <top_PID>\n\n# 第八步：确认后台无 top\njobs\n\n# 第九步：查看空闲物理内存并写入 mem.txt\ncat /proc/meminfo | grep \"MemFree\" > /home/d5000/huadong/kaoshi/mem.txt\n\n# 第十步：查看最大文件句柄数\nulimit -a\n\n# 第十一步：临时修改最大文件句柄数为 77777\nulimit -n 77777\n\n# 第十二步：列出 sshd 打开的所有文件并写入 ssh.txt\n#   -c sshd → 按命令名过滤\nlsof -c sshd > /home/d5000/huadong/kaoshi/ssh.txt\n\n# 第十三步：统计 sshd 打开的文件数并写入 ssh1.txt\nlsof -c sshd | wc -l > /home/d5000/huadong/kaoshi/ssh1.txt\n```",
       "题源": "华东2018 第12题"
     },
     {
       "id": "操作系统-016",
       "title": "016-crontab + ps-xj + lspci + user",
       "题面": "- 写一个计划任务在 9 月的周二以 sysadmin 用户执行 ls 命令\n- 树形结构显示系统所有进程信息，并显示 UID, PPIP 等信息\n- 查看系统显卡信息结果输出到 `/home/d5000/huadong/kaoshi/vga.txt`\n- 添加组帐号 user2，指定 gid 为 10002；添加用户 user1，指定 user1 主目录为 `/home/user1`；指定 user1 的基本组为 users，同时加入到组 user2；不允许 user 通过本地登录服务器\n- 单独长格式只显示 `/home` 目录本身的属性，如权限、属主、属组等信息（不得使用 grep 过滤方法）结果输出到 `/home/d5000/huadong/kaoshi/home.txt`",
+      "标答": "```bash\n# 第一步：编辑 /etc/crontab,加一条 9 月每周二以 sysadmin 执行 ls 的任务\n#   crontab 字段: 分 时 日 月 周 用户 命令\nvi /etc/crontab\n# 在文件末尾追加:\n# * * * 9 2 sysadmin ls\n\n# 第二步：树形结构显示所有进程,带 UID/PPID 等信息\n#   ps -xjf 中 -j 显示作业格式(含 PPID/PGID/SID),f 树形\nps -ejHf\n# 或:\nps -xjf\n\n# 第三步：查看显卡信息写入 vga.txt\n#   lspci 列设备,grep VGA 抓显卡\nlspci | grep VGA > /home/d5000/huadong/kaoshi/vga.txt\n\n# 第四步：建组 user2,指定 gid=10002\ngroupadd -g 10002 user2\n\n# 第五步：建用户 user1,主目录 /home/user1,基本组 users,附加组 user2,禁本地登录\n#   -m 自动建主目录,-d 指定主目录路径\n#   -g 基本组,-G 附加组,-s /sbin/nologin 禁登录\nuseradd -m -d /home/user1 -g users -G user2 -s /sbin/nologin user1\n\n# 第六步：只显示 /home 目录本身的长格式属性\n#   -l 长格式,-d 目录本身不展开\nls -ld /home > /home/d5000/huadong/kaoshi/home.txt\n```",
       "题源": "华东2018 第13题"
     },
     {
       "id": "操作系统-017",
       "title": "017-vi 多操作 + find 软链 + 22 端口 + df ",
       "题面": "- 创建文件 `/home/d5000/huadong/kaoshi/vi.txt`，文件中随意输入内容（其中需要掺杂 111 内容）至第 1000 行（内容可以重复，要求显示行号），同时删除 10 到 15 行，将文件中的 111 一次性都更换为 hello，最后保存退出\n- 查找 `/etc/` 目录下的所有软连接文件结果输出到 `/home/d5000/huadong/kaoshi/etc.txt`\n- 使用两种方法查看 22 端口对应的服务\n- 查看本地磁盘的 inode 使用情况，以更易懂的 K, M 显示，并显示磁盘文件系统格式。结果输出到 `/home/d5000/huadong/kaoshi/inode.txt`\n- 配置操作系统口令有效期为 90 天，提前 28 天通知",
+      "标答": "```bash\n# 第一步：vi 编辑 vi.txt\n#   进入后按 i 输入内容(含 111),用 yy/p 复制粘贴凑到 1000 行\n#   :set nu 显示行号\n#   光标移到第 10 行后按 5dd 删除 10-15 行(共 6 行用 6dd,题目说 10-15 即 6 行)\n#   :%s/111/hello/g 全文把 111 替换成 hello\n#   :wq 保存退出\nvi /home/d5000/huadong/kaoshi/vi.txt\n# 在 vi 中:\n#   i                  → 进入输入模式,随意输入掺杂 111 的内容\n#   ESC                → 回到普通模式\n#   :set nu            → 显示行号\n#   gg → 5yy → 199p    → 复制 5 行粘贴 199 次,凑到约 1000 行\n#   :10                → 跳到第 10 行\n#   6dd                → 删除 10~15 行(共 6 行)\n#   :%s/111/hello/g    → 全文替换 111 为 hello\n#   :wq                → 保存退出\n\n# 第二步：查 /etc 下所有软链接文件写入 etc.txt\n#   -type l → 软链接\nfind /etc/ -type l > /home/d5000/huadong/kaoshi/etc.txt\n\n# 第三步：两种方法查 22 端口对应的服务\n#   方法 1: netstat 看监听\nnetstat -anp | grep :22\n#   方法 2: lsof 看占用\nlsof -i :22\n\n# 第四步：查 inode 使用情况,易读单位 + 文件系统格式,写入 inode.txt\n#   -i inode  -h 易读  -T 文件系统类型\ndf -ihT > /home/d5000/huadong/kaoshi/inode.txt\n\n# 第五步：配置口令有效期 90 天,提前 28 天通知\n#   方法 1: 对已有账户用 chage 修改\nchage -M 90 用户名\nchage -W 28 用户名\n#   方法 2: 改 /etc/login.defs,对新建用户生效\nvi /etc/login.defs\n# 在文件中找到/添加:\n#   PASS_MAX_DAYS   90\n#   PASS_WARN_AGE   28\n```",
       "题源": "华东2018 第14题"
     },
     {
       "id": "操作系统-018",
       "title": "018-alias 自定义命令 + shell if 脚本",
       "题面": "按照以下要求完成系统操作：\n- 定义 nrcd 命令为 `cd /home/d5000/zhejiang/data/graph`，并执行 nrcd 命令，将执行结果截图保存至 `/home/d5000/zhejiang/kaoshi/02-1.png`\n- 在 `/home/d5000/zhejiang/kaoshi` 下编写脚本 `input.sh`，判断用户输入参数，如果输入 1，则显示 \"input is 1\"，若输入 2，显示 \"input is 2\"，输入其他显示 \"input out of range\" 并退出。编写完成后执行三次脚本，分别输入 \"1\"、\"2\"、\"a\" 显示结果，将执行过程及结果截图存放在 `/home/d5000/zhejiang/kaoshi/02-2.png`",
+      "标答": "```bash\n# 第一步：定义 nrcd 命令(凝思默认 csh,用 csh 语法)\n#   csh: alias 名字 '命令'  (无 =)\n#   bash: alias 名字='命令' (有 =)\nalias nrcd 'cd /home/d5000/zhejiang/data/graph'\n\n# 第二步：让 alias 生效\n#   把 alias 那行写进 ~/.cshrc 然后 source\nvi ~/.cshrc\n# 在文件末尾追加:\n#   alias nrcd 'cd /home/d5000/zhejiang/data/graph'\nsource ~/.cshrc\n\n# 第三步：执行 nrcd 验证并截图\nnrcd\npwd\n# 截图保存到 /home/d5000/zhejiang/kaoshi/02-1.png\n\n# 第四步：编写 input.sh 脚本\nvi /home/d5000/zhejiang/kaoshi/input.sh\n# 脚本内容:\n#   #!/bin/sh\n#   read -p \"input 1,2:\" i\n#   if [ $i -eq 1 ]\n#   then\n#       echo \"input is 1\"\n#   elif [ $i -eq 2 ]\n#   then\n#       echo \"input is 2\"\n#   else\n#       echo \"input out of range\"\n#   fi\n\n# 第五步：给脚本加执行权限\nchmod 777 /home/d5000/zhejiang/kaoshi/input.sh\n\n# 第六步：分别执行三次,输入 1 / 2 / a\n/home/d5000/zhejiang/kaoshi/input.sh\n# 输入 1 → 显示 input is 1\n/home/d5000/zhejiang/kaoshi/input.sh\n# 输入 2 → 显示 input is 2\n/home/d5000/zhejiang/kaoshi/input.sh\n# 输入 a → 显示 input out of range\n# 截图保存到 /home/d5000/zhejiang/kaoshi/02-2.png\n```",
       "题源": "华东2018 第15题"
     },
     {
       "id": "操作系统-019",
       "title": "019-touch + chown + chmod + tar 打包",
       "题面": "运用操作系统命令，在 `/home/d5000/zhejiang` 目录下创建文件，文件名为 \"create.txt\"，文件内容为 \"技术比武\"，将该文件的用户权限修改为可执行，将该文件的属组用户修改为 root 用户，将 \"create.txt\" 文件进行打包压缩成 \"create.tar.gz\"。",
+      "标答": "```bash\n# 第一步：进入目标目录\ncd /home/d5000/zhejiang\n\n# 第二步：创建 create.txt 并写入\"技术比武\"\n#   echo + 重定向最快;也可用 vi/touch\necho \"技术比武\" > create.txt\n\n# 第三步：切到 root(改属组到 root 需要 root 权限)\nsu - root\n\n# 第四步：改属组为 root(同时把属主也改为 root)\n#   chown 属主:属组 文件\nchown root:root /home/d5000/zhejiang/create.txt\n\n# 第五步：把用户权限改为可执行\n#   755 = rwxr-xr-x,属主有 x\nchmod 755 /home/d5000/zhejiang/create.txt\n\n# 第六步：打包压缩为 create.tar.gz\n#   -z gzip  -c 创建  -v 显示  -f 指定文件\ncd /home/d5000/zhejiang\ntar -zcvf create.tar.gz create.txt\n```",
       "题源": "华东2018 第16题"
     },
     {
       "id": "操作系统-020",
       "title": "020-grep 行首行尾 + 组合过滤",
       "题面": "在本地工作站上找到 xuanba.txt 文件，并完成下述操作要求：\n1. 将 xuanba.txt 文件中包含 \"alarm\" 的内容找出来保存在当前目录的 `xuanba_alarm.txt`\n2. 将 xuanba.txt 文件中以 \"a\" 为行首的内容找出来保存在当前目录的 `xuanba_a.txt`\n3. 将 xuanba.txt 文件中以 \"f\" 为行尾的内容找出来保存在当前目录的 `xuanba_f.txt`\n4. 将 xuanba.txt 文件中包含 \"d\" 和 \"f\" 的内容找出来保存在当前目录的 `xuanba_df.txt`",
+      "标答": "```bash\n# 第一步：先找 xuanba.txt 文件位置\n#   从根目录或当前目录找\nfind / -name xuanba.txt 2>/dev/null\n# 或当前目录:\nfind . -name xuanba.txt\n\n# 第二步：cd 到 xuanba.txt 所在目录(假设结果在某目录,进入即可)\ncd /找到的目录\n\n# 第三步：找含 alarm 的行写入 xuanba_alarm.txt\ngrep alarm xuanba.txt > xuanba_alarm.txt\n\n# 第四步：找 a 开头的行写入 xuanba_a.txt\n#   ^a → 行首是 a\ngrep '^a' xuanba.txt > xuanba_a.txt\n\n# 第五步：找 f 结尾的行写入 xuanba_f.txt\n#   f$ → 行尾是 f\ngrep 'f$' xuanba.txt > xuanba_f.txt\n\n# 第六步：找同时含 d 和 f 的行写入 xuanba_df.txt\n#   两次 grep 串起来 = 与逻辑\ngrep d xuanba.txt | grep f > xuanba_df.txt\n```",
       "题源": "华东2018 第17题"
     },
     {
       "id": "操作系统-021",
       "title": "021-find -user + ls+wc 统计 + grep 行",
       "题面": "- 查找本地工作站在 `/home/d5000/zhejiang/` 目录下，属主为 d5000 用户的目录，将其输出到 `/home/d5000/zhejiang/exam/102201.txt` 中\n- 在本工作站的 `/home/d5000/zhejiang/data/graph/ZJ/display/fac/` 中查找名称包含 \"电厂\" 的且以 g 为结尾的文件个数，将命令以及个数 X 录入到 `/home/d5000/zhejiang/exam/102202.txt` 中，录入内容为 \"包含电厂的 g 文件共有 X 个\"\n- 查找 `/home/d5000/zhejiang/exam` 文件夹下 1.txt 文件以 hello 开头的行，将其输出到 `/home/d5000/zhejiang/exam/102203.txt` 中",
+      "标答": "```bash\n# 第一步：查找 /home/d5000/zhejiang/ 下属主为 d5000 的目录,输出到 102201.txt\n#   -type d → 目录  -user d5000 → 属主\nfind /home/d5000/zhejiang/ -type d -user d5000 > /home/d5000/zhejiang/exam/102201.txt\n\n# 第二步：统计 fac 目录下名称含\"电厂\"且以 g 结尾的文件个数\n#   ls *.g 列所有 .g 结尾  grep '电厂' 过滤含电厂  wc -l 数行\ncd /home/d5000/zhejiang/data/graph/ZJ/display/fac/\nCOUNT=$(ls *.g 2>/dev/null | grep '电厂' | wc -l)\n\n# 第三步：把命令和结果按格式写入 102202.txt\necho \"包含电厂的 g 文件共有 ${COUNT} 个\" > /home/d5000/zhejiang/exam/102202.txt\n\n# 第四步：查找 exam/1.txt 中以 hello 开头的行,带行号输出到 102203.txt\n#   -n 显示行号  '^hello' 行首是 hello\ngrep -n '^hello' /home/d5000/zhejiang/exam/1.txt > /home/d5000/zhejiang/exam/102203.txt\n```",
       "题源": "华东2018 第18题"
     },
     {
       "id": "操作系统-022",
       "title": "022-find 大小 + ls+wc 统计 + vi 范围替换",
       "题面": "- 查找 bin 目录下文件大于 100k 的文件，结果追加输出到 `/home/d5000/zhejiang/exam/102702.txt` 文件中\n- 统计 `/home/d5000/zhejiang/` 当前目录下普通文件的数量（不遍历子目录），结果追加输出到 `/home/d5000/zhejiang/exam/102702.txt` 文件中\n- 将 `/etc/passwd` 文件的内容输出到 `/home/d5000/zhejiang/exam/a01.txt`\n- 将 a01.txt 中包含 `/bin/bash` 或 `/bin/false` 的行输出到 `/home/d5000/zhejiang/exam/a02.txt`\n- 将 a01.txt 中第 5 行到第 8 行中的 \"/bin/bash\" 替换成 \"/bin/fales\"，将修改后的文件保存到 `/home/d5000/zhejiang/exam/a03.txt`（a01.txt 不变）\n- 在 a01.txt 每一行的行尾添加 \"good\"，将修改后的文件保存到 `/home/d5000/zhejiang/exam/a04.txt`（a01.txt 不变）",
+      "标答": "```bash\n# 第一步：查找 /bin 下大于 100k 的文件,追加到 102702.txt\n#   -size +100k → 大于 100k\nfind /bin -type f -size +100k >> /home/d5000/zhejiang/exam/102702.txt\n\n# 第二步：统计 /home/d5000/zhejiang/ 当前目录下普通文件数量(不进子目录),追加\n#   ls -l 后 grep '^-' 留普通文件,wc -l 数行\nls -l /home/d5000/zhejiang/ | grep '^-' | wc -l >> /home/d5000/zhejiang/exam/102702.txt\n\n# 第三步：把 /etc/passwd 内容输出到 a01.txt\ncat /etc/passwd > /home/d5000/zhejiang/exam/a01.txt\n\n# 第四步：把 a01.txt 含 /bin/bash 或 /bin/false 的行输出到 a02.txt\n#   -e 多模式,任一匹配即 OR\ngrep -e '/bin/bash' -e '/bin/false' /home/d5000/zhejiang/exam/a01.txt > /home/d5000/zhejiang/exam/a02.txt\n\n# 第五步：把 a01.txt 第 5-8 行的 /bin/bash 替换为 /bin/fales,另存 a03.txt\n#   在 vi 中操作:\nvi /home/d5000/zhejiang/exam/a01.txt\n# 在 vi 中:\n#   :5,8 s#/bin/bash#/bin/fales#g    → 5-8 行范围替换(用 # 当分隔符省转义)\n#   :w /home/d5000/zhejiang/exam/a03.txt  → 另存\n#   :q!                               → 不保存 a01.txt 退出\n\n# 第六步：a01.txt 每行行尾加 good,另存 a04.txt\nvi /home/d5000/zhejiang/exam/a01.txt\n# 在 vi 中:\n#   :%s/$/good/g                      → 每行行尾追加 good\n#   :w /home/d5000/zhejiang/exam/a04.txt\n#   :q!                                → 不保存 a01.txt 退出\n```",
       "题源": "华东2018 第19题"
     },
     {
       "id": "操作系统-023",
       "title": "023-sftp 脚本 + 定时上传",
       "题面": "按照自动化月报报送要求在操作系统上增加定时任务：\n要求每月 7 日 15:30 以 d5000 用户将本地工作站主目录 `/kaoshi/yuebao` 目录下文件名以 \"huadong\" 开头的文件以 SFTP 方式上传到 hdsca1-1 主目录 `/kaoshi/yuebao` 文件夹，为防止堆积，上传完成后本地文件删除。",
+      "标答": "```bash\n# 第一步：编写 sftp 上传脚本 upload.sh\n#   hdsca1-1 主机 IP 假设 192.1.1.2(按实际机房填)\nvi /home/d5000/huadong/kaoshi/yuebao/upload.sh\n# 脚本内容:\n#   #!/bin/sh\n#   sftp d5000@hdsca1-1 <<EOF\n#   cd /home/d5000/huadong/kaoshi/yuebao\n#   lcd /home/d5000/huadong/kaoshi/yuebao\n#   mput huadong*\n#   quit\n#   EOF\n#   rm -f /home/d5000/huadong/kaoshi/yuebao/huadong*\n\n# 第二步：给脚本加执行权限\nchmod a+x /home/d5000/huadong/kaoshi/yuebao/upload.sh\n\n# 第三步：以 d5000 用户编辑 crontab,每月 7 日 15:30 跑脚本\n#   字段: 分 时 日 月 周 命令\ncrontab -e\n# 追加一行:\n# 30 15 7 * * /home/d5000/huadong/kaoshi/yuebao/upload.sh\n```",
       "题源": "华东2018 第20题"
     },
     {
       "id": "操作系统-024",
       "title": "024-NTP 对时 + 定时重启",
       "题面": "请正确处理 hdsta1-1 上的对时问题，正确显示对时结果，并实现 hdsta1-1 在每周周一 18:00 重启 NTP 对时进程。\n**要求**：hdsta1-1 工作站与 hdsca1-1 对时。",
+      "标答": "```bash\n# 第一步：修改 hdsta1-1 的 ntp 配置,server 指向 hdsca1-1 (192.1.1.2)\nvi /etc/ntp/ntp.conf\n# 把 server 行改为:\n#   server 192.1.1.2\n\n# 第二步：切到 root,给 ntpd 加执行权限(故障点: chmod 000 被锁了)\nsu - root\nchmod 755 /etc/init.d/ntpd\n\n# 第三步：重启 ntpd 服务\n/etc/init.d/ntpd restart\n\n# 第四步：验证对时结果\nntpq -p\n# 看到 hdsca1-1 (192.1.1.2) 那一行前有 * 号即对时成功\n\n# 第五步：root 下编辑 crontab,每周一 18:00 重启 ntpd\ncrontab -e\n# 追加:\n# 0 18 * * 1 /etc/init.d/ntpd restart\n```",
       "题源": "华东2018 第21题"
     },
     {
       "id": "操作系统-025",
       "title": "025-sed 批量替换 + grep+wc 统计",
       "题面": "按照要求完成以下系统操作：\n- 批量替换 `/home/d5000/zhejiang/kaoshi` 文件夹下的所有文件中的 fail 修改为 success\n- 查询 kaoshi 文件夹下所有文件中 success 数量，并将结果写入 kaoshi 目录下的 `2-3.txt` 中",
+      "标答": "```bash\n# 第一步：进入目标目录\ncd /home/d5000/zhejiang/kaoshi\n\n# 第二步：批量把所有文件里的 fail 替换为 success\n#   -i 原地修改  s/old/new/g 全局替换  * 匹配所有文件\nsed -i 's/fail/success/g' *\n\n# 第三步：统计含 success 的行数,写入 2-3.txt\n#   grep success * → 在所有文件中找 success,wc -l 数行\ngrep success * | wc -l > /home/d5000/zhejiang/kaoshi/2-3.txt\n```",
       "题源": "华东2018 第22题"
     },
     {
       "id": "操作系统-026",
       "title": "026-vi 范围保存 + awk 加行号",
       "题面": "1. 将 a01.txt 文件中第 20 行至第 40 行保存至新文件 `/home/d5000/zhejiang/kaoshi/a03.txt`\n2. 将 a01.txt 文件每行开头增加行号列（行号从 1 开始），结果输出到 `/home/d5000/zhejiang/kaoshi/a05.txt`",
+      "标答": "```bash\n# 第一步：用 vi 打开 a01.txt,把 20-40 行另存为 a03.txt\nvi a01.txt\n# 在 vi 中:\n#   :20,40 w /home/d5000/zhejiang/kaoshi/a03.txt    → 范围写入\n#   :q!                                              → 退出\n\n# 第二步：用 awk 给 a01.txt 每行前加行号,输出到 a05.txt\n#   NR = 当前行号  $0 = 整行\nawk '{print NR,$0}' a01.txt > /home/d5000/zhejiang/kaoshi/a05.txt\n```",
       "题源": "华东2018 第23题"
     },
     {
       "id": "操作系统-027",
       "title": "027-awk passwd + crontab 清理 + shel",
       "题面": "按照以下要求完成系统操作：\n- 请将本机所有用户及其对应主目录的信息输出到本机主目录 `/kaoshi/103002.txt`\n- 请在每月 1 号凌晨 2 点，清理本机主目录 `/kaoshi` 文件夹下的所有文件\n- 编写一个名为 test.sh 的 shell 脚本，将其保存在本机主目录 `/kaoshi` 文件夹下，要求该脚本能将本机当前目录下所有的以 \".txt\" 结尾的文件拷贝到本机主目录 `/exam` 文件夹下，并在本机主目录 `/kaoshi` 文件夹下执行该脚本。",
+      "标答": "```bash\n# 第一步：用 awk 把 /etc/passwd 的用户名和主目录输出到 103002.txt\n#   -F \":\" 指定冒号分隔  $1 = 用户名  $6 = 主目录\nawk -F \":\" '{print $1,$6}' /etc/passwd > /home/d5000/zhejiang/kaoshi/103002.txt\n\n# 第二步：root 用户编辑 crontab,每月 1 号 02:00 清理 /kaoshi 下所有文件\n#   字段: 分 时 日 月 周 命令\ncrontab -e\n# 追加一行:\n# 0 2 1 * * rm -f /home/d5000/zhejiang/kaoshi/*\n\n# 第三步：编写 test.sh 脚本,拷贝当前目录所有 .txt 到 /exam\nvi /home/d5000/zhejiang/kaoshi/test.sh\n# 脚本内容:\n#   #!/bin/bash\n#   for i in `ls *.txt`\n#   do\n#       cp $i /home/d5000/zhejiang/exam\n#   done\n\n# 第四步：加执行权限\nchmod +x /home/d5000/zhejiang/kaoshi/test.sh\n\n# 第五步：在 /kaoshi 目录下执行脚本\ncd /home/d5000/zhejiang/kaoshi\n./test.sh\n```",
       "题源": "华东2018 第24题"
     },
     {
       "id": "操作系统-028",
       "title": "028-tar bz2_gz + dmesg + 符号链 + awk",
       "题面": "- bzip2 程序压缩 `/etc` 目录，压缩到 `/home/d5000/huadong/kaoshi/etc.tar.bz2`；gzip 程序压缩 `/etc` 目录，压缩到 `/home/d5000/huadong/kaoshi/etc.tar.gz`\n- 查看系统启动信息命令\n- 建立文件 `/etc/group` 的符号连接文件 `/home/d5000/huadong/kaoshi/abc`\n- 使用 awk 把文件 `/etc/ssh/sshd_config` 文件的每一行的第一个字段输出，结果输出到 `/home/d5000/huadong/kaoshi/awk.txt`\n- 将 hellowork 内容输入到 `/home/d5000/huadong/kaoshi/hello.txt` 文件（vi、vim 除外）",
+      "标答": "```bash\n# 第一步：bzip2 方式打包 /etc 到 etc.tar.bz2\n#   -j 用 bzip2  -c 创建  -v 显示  -f 指定文件\ntar -jcvf /home/d5000/huadong/kaoshi/etc.tar.bz2 /etc\n\n# 第二步：gzip 方式打包 /etc 到 etc.tar.gz\n#   -z 用 gzip\ntar -zcvf /home/d5000/huadong/kaoshi/etc.tar.gz /etc\n\n# 第三步：查看系统启动信息\ndmesg\n\n# 第四步：建 /etc/group 的符号连接 /home/d5000/huadong/kaoshi/abc\n#   ln -s 源 目标\nln -s /etc/group /home/d5000/huadong/kaoshi/abc\n\n# 第五步：用 awk 取 sshd_config 每行第一个字段,输出到 awk.txt\n#   $1 = 第一列,awk 默认以空白分隔\nawk '{print $1}' /etc/ssh/sshd_config > /home/d5000/huadong/kaoshi/awk.txt\n\n# 第六步：用 echo 写 hellowork 到 hello.txt(题目禁止 vi/vim)\necho 'hellowork' > /home/d5000/huadong/kaoshi/hello.txt\n```",
       "题源": "华东2018 第25题"
     },
     {
       "id": "操作系统-029",
       "title": "029-crontab + ps-xj + lspci + user",
       "题面": "- 写一个计划任务在 9 月的周二以 sysadmin 用户执行 ls 命令\n- 树形结构显示系统所有进程信息，并显示 UID, PPIP 等信息\n- 查看系统显卡信息结果输出到 `/home/d5000/huadong/kaoshi/vga.txt`\n- 添加组帐号 user2，指定 gid 为 10002；添加用户 user1，指定 user1 主目录为 `/home/user1`；指定 user1 的基本组为 users，同时加入到组 user2；不允许 user 通过本地登录服务器\n- 单独长格式只显示 `/home` 目录本身的属性，如权限、属主、属组等信息（不得使用 grep 过滤方法）结果输出到 `/home/d5000/huadong/kaoshi/home.txt`",
+      "标答": "```bash\n# 第一步：编辑系统级 crontab，新增 9 月周二以 sysadmin 身份执行 ls\n#   crontab 5 个时间字段：分 时 日 月 周；星号=任意；周二=2\nvim /etc/crontab\n# 在文件末尾添加：\n# * * * 9 2 sysadmin  ls\n\n# 第二步：树形显示所有进程并带 UID/PPID/PGID/SID 等\n#   -x 显示无终端进程；-j 用作业格式输出（含 PGID/SID）\nps -xj\n\n# 第三步：查看显卡信息（VGA 控制器）并追加到 vga.txt\n#   lspci 列 PCI 设备；grep VGA 只留显卡那行\nlspci | grep VGA >> /home/d5000/huadong/kaoshi/vga.txt\n\n# 第四步：建组 user2（gid=10002），建用户 user1（基本组 users + 附加组 user2 + 禁本地登录）\n#   -g 基本组；-G 附加组；-s /sbin/nologin 禁止本地登录\ngroupadd -g 10002 user2\nuseradd -m -d /home/user1 -g users -G user2 -s /sbin/nologin user1\n\n# 第五步：长格式查看 /home 目录本身的属性并追加到 home.txt\n#   -l 长格式；-d 显示目录本身而非内容（不用 grep 过滤）\nls -ld /home >> /home/d5000/huadong/kaoshi/home.txt\n```",
       "题源": "华东2018 第26题"
     },
     {
       "id": "操作系统-030",
       "title": "030-系统加固（关服务 + 超时 + 锁定 + 密码策略 + um",
       "题面": "- 关闭操作系统中不是正常业务所需的多余的以及存在风险的服务 ftp、Telnet、rlogin、rshell\n- 设置系统所有 bash 帐户与 tcsh 帐户登录超时退出时间为 10 分钟\n- 设置用户连续登录 5 次失败后，账户锁定 10 分钟\n- 配置口令的长度及复杂度策略，保证后期创建活修改的口令满足 8 位以上，至少一个大写字母、3 个小写字母、2 个数字以及 1 个特殊字符，同时新密码中至少 4 个字符是和以前的密码不同的\n- 设置系统 root 用户创建文件默认权限：1）新创建目录的默认权限为：属主：读写执行；属组：读；其他用户：无权限。2）新创建文件的默认权限为：属主：读写；属组：读；其他用户：无权限",
+      "标答": "```bash\n# 第一步：关闭 ftp 服务（proftpd）并删除其开机自启链接\n/etc/init.d/proftpd stop\nrm -rf /etc/rc.d/rc5.d/S280proftpd\nrm -rf /etc/rc.d/rc3.d/S280proftpd\n\n# 第二步：关闭 telnet、rlogin、rshell —— 编辑 inetd 配置注释三行后重启\nvim /etc/inetd.conf\n# 找到 telnet、login、shell 三行，行首加 # 注释掉\n/etc/init.d/inetd restart\n\n# 第三步：bash 用户登录 10 分钟超时（TMOUT=600 秒）\nvim /etc/profile\n# 在文件末尾增加：\n# export TMOUT=600\n\n# 第四步：tcsh 用户登录 10 分钟超时\nvim /etc/csh.cshrc\n# 在文件末尾增加：\n# set -r autologout=10\n\n# 第五步：连续登录失败 5 次锁定 10 分钟（kde/login/sshd 三个 PAM 文件都改）\nvim /etc/pam.d/kde\nvim /etc/pam.d/login\nvim /etc/pam.d/sshd\n# 三个文件各添加一行：\n# auth required /lib64/security/pam_tally.so per_user unlock_time=600 onerr=succeed audit deny=5\n\n# 第六步：口令复杂度策略 ≥8 位、1 大写+3 小写+2 数字+1 特殊、至少 4 位与旧密码不同\nvim /etc/pam.d/passwd\n# 添加一行：\n# password required /lib64/security/pam_cracklib.so retry=3 minlen=8 difok=4 ucredit=-1 lcredit=-3 dcredit=-2 ocredit=-1\n\n# 第七步：root 默认 umask=037（目录 740 → 属主 rwx 属组 r 其他无；文件 640 → 属主 rw 属组 r 其他无）\nvim /root/.bashrc\n# 在文件末尾增加：\n# umask 037\n```",
       "题源": "华东2018 第27题"
     },
     {
       "id": "操作系统-031",
       "title": "031-多主机远程检查磁盘脚本",
       "题面": "在 hdsca1-1 服务器主目录下编写脚本 \"jianshi_考生姓名.sh\"，要求该脚本能检查 hdsca1-1、hdhis1-1、hdpas1-1 服务器 zhejiang 目录的磁盘使用率，当超过 80%，打印越限信息。",
+      "标答": "```bash\n# 第一步：在 hdsca1-1 主目录下新建脚本\nvi /home/d5000/jianshi_考生姓名.sh\n\n# 第二步：脚本内容如下\ncat <<'EOF' > /home/d5000/jianshi_考生姓名.sh\n#!/bin/sh\necho nowtime is `date`\n# 循环 3 台主机\nfor host in hdsca1-1 hdhis1-1 hdpas1-1\ndo\n    # 用 sshpass 免交互 ssh 上去执行 df，过滤 zhejiang 目录所在行\n    use=`sshpass -p d5000 ssh d5000@$host \"df -h\" | grep zhejiang | awk '{print $5}' | sed 's/%//'`\n    if [ $use -gt 80 ]\n    then\n        echo \"$host zhejiang 目录磁盘使用率 ${use}% 越限（>80%）\"\n    else\n        echo \"$host zhejiang 目录磁盘使用率 ${use}% 正常\"\n    fi\ndone\nEOF\n\n# 第三步：赋予执行权限并运行\nchmod +x /home/d5000/jianshi_考生姓名.sh\n./jianshi_考生姓名.sh\n```",
       "题源": "华东2018 第28题"
     },
     {
       "id": "操作系统-032",
       "title": "032-在服务器上，利用操作系统自带的定时器crontab",
       "题面": "在服务器上，利用操作系统自带的定时器crontab,设置每天3点对系统数据库中的模型进行自动备份并检查脚本文件配置是否正确。备份脚本为/home/nusp/**/backup.sh",
+      "标答": "```bash\n# 第一步：查看当前 crontab 任务，确认原 12 点备份在哪行\ncrontab -l\n\n# 第二步：编辑 crontab，把 12 点改成 3 点\ncrontab -e\n# 找到原有行（举例）：\n#   0 12 * * * /home/nusp/**/backup.sh\n# 改为：\n#   0 3  * * * /home/nusp/**/backup.sh\n\n# 第三步：检查备份脚本是否有可执行权限\nls -l /home/nusp/**/backup.sh\n\n# 第四步：发现无 x 权限 → 加上可执行权限\nchmod +x /home/nusp/**/backup.sh\n\n# 第五步：手动跑一次脚本验证配置正确\n/home/nusp/**/backup.sh\n```",
       "题源": "主站V6 操作系统 第1题"
     },
     {
       "id": "操作系统-033",
       "title": "033-检查_home_nusp分区的硬盘使用情况（分区大",
       "题面": "检查/home/nusp分区的硬盘使用情况（分区大小、已用空间、未用空间，以MB为单位，精确到个位），将结果写入文件/home/nusp/zhejiang/disk.txt,利用vmstat 查看系统资源使用情况，以2秒钟为间隔，将持续超过钟的结果输出至文件：/home/nusp/sys.txt。",
+      "标答": "```bash\n# 第一步：以 MB 为单位查看 /home/nusp 分区硬盘使用情况，重定向到 disk.txt\n#   -m 以 MB 显示；输出含分区大小、已用、未用\ndf -m /home/nusp > /home/nusp/zhejiang/disk.txt\n\n# 第二步：vmstat 以 2 秒为间隔持续采集系统资源使用情况，输出到 sys.txt\n#   vmstat 2 不指定次数 → 持续输出，运行一段时间后 Ctrl+C 终止\nvmstat 2 > /home/nusp/sys.txt\n```",
       "题源": "主站V6 操作系统 第2题"
     },
     {
       "id": "操作系统-034",
       "title": "034-将服务器上文件ceshi.txt拷贝到本机_hom",
       "题面": "将服务器上文件ceshi.txt拷贝到本机/home/nusp/目录下，并改名为姓名.txt，查看本机硬盘容量并输出到该文件最后。",
+      "标答": "```bash\n# 第一步：通过 hosts 文件确认本机 IP（题目要求改为 192.168.1.100）\ncat /etc/hosts\n\n# 第二步：从服务器远程拷贝 ceshi.txt 到本机 /home/nusp/\n#   scp 用户@服务器:源路径 目的路径\nscp nusp@服务器:/path/ceshi.txt /home/nusp/\n\n# 第三步：改名为「姓名.txt」（举例 sunyiting.txt）\nmv /home/nusp/ceshi.txt /home/nusp/姓名.txt\n\n# 第四步：查看本机硬盘容量并追加到该文件末尾\n#   >> 追加而非覆盖，保留原文件内容\ndf -h >> /home/nusp/姓名.txt\n```",
       "题源": "主站V6 操作系统 第3题"
     },
     {
       "id": "操作系统-035",
       "title": "035-请配置工作站与服务器对时，采用ntp对时，并展示工",
       "题面": "请配置工作站与服务器对时，采用ntp对时，并展示工作站与服务器时间一致",
+      "标答": "```bash\n# 第一步：编辑工作站 ntp 配置，把错误的 server IP 改对（171.1.1.3 → 17.1.1.3）\nvi /etc/ntp/ntp.conf\n# 找到 server 171.1.1.3 → 改成 server 17.1.1.3\n# :wq 保存退出\n\n# 第二步：重启 ntpd 服务使配置生效\n/etc/init.d/ntpd restart\n\n# 第三步：手动触发一次对时（可选，加快收敛）\nntpdate 17.1.1.3\n\n# 第四步：分别在工作站与服务器执行 date，对比时间是否一致\ndate\nssh 服务器 date\n```",
       "题源": "主站V6 操作系统 第4题"
     },
     {
       "id": "操作系统-036",
       "title": "036-将主目录下_home_nusp____kaoshi",
       "题面": "将主目录下/home/nusp/**/kaoshi目录下kaoshi1.txt文件的前20行输出到daan1.txt；将kaoshi1.txt的后20行输出到daan2.txt；将kaoshi1.txt文件的第5至15行输入到daan3.txt，并替换kaoshi1.txt中的kkk字符为kaoshi\n要求：",
+      "标答": "```bash\n# 第一步：进入题目目录\ncd /home/nusp/**/kaoshi\n\n# 第二步：把 kaoshi1.txt 的前 20 行输出到 daan1.txt\n#   head -n N 取前 N 行\nhead -n 20 kaoshi1.txt > daan1.txt\n\n# 第三步：把 kaoshi1.txt 的后 20 行输出到 daan2.txt\n#   tail -n N 取后 N 行\ntail -n 20 kaoshi1.txt > daan2.txt\n\n# 第四步：把 kaoshi1.txt 第 5 至 15 行输出到 daan3.txt\n#   sed -n 'a,bp' 打印 a~b 行\nsed -n '5,15p' kaoshi1.txt > daan3.txt\n\n# 第五步：用 vi 进入 kaoshi1.txt 替换 kkk 为 kaoshi\nvi kaoshi1.txt\n# 在 vi 命令模式下执行：\n# :%s/kkk/kaoshi/g\n# :wq\n```",
       "题源": "主站V6 操作系统 第5题"
     },
     {
       "id": "操作系统-037",
       "title": "037-查看系统物理内存、交换分区的大小，系统内存使用率和",
       "题面": "查看系统物理内存、交换分区的大小，系统内存使用率和cpu的使用率，将结果保存到ceshi3_cpu，并放在主目录下",
+      "标答": "```bash\n# 第一步：进入主目录\ncd ~\n\n# 第二步：用 free 查看物理内存和交换分区大小，输出到 ceshi3_cpu\n#   free 默认 KB；-m MB；-h 人类可读\nfree >> ceshi3_cpu\n\n# 第三步：用 top 查看进程内存与 CPU 使用率，追加到同一文件\n#   -b 批处理模式；-n 1 只输出一次（否则 top 是交互的）\ntop -b -n 1 >> ceshi3_cpu\n```",
       "题源": "主站V6 操作系统 第6题"
     },
     {
       "id": "操作系统-038",
       "title": "038-在服务器上找出文件名为的ceshi3_kkk文件，",
       "题面": "在服务器上找出文件名为的ceshi3_kkk文件，并压缩成ceshi3_kkk.tar文件，然后复制到工作站的主目录下，并解压，改名为ceshi3_sss，并将ceshi3_sss内的所有kkk替换成sss",
+      "标答": "```bash\n# 第一步：服务器上从根开始找出 ceshi3_kkk 文件位置\nfind / -name ceshi3_kkk\n\n# 第二步：cd 到该文件所在目录，打包成 tar\ncd /path/to/找到的目录\ntar cvf ceshi3_kkk.tar ceshi3_kkk\n\n# 第三步：把 tar 包远程拷贝到工作站 wh1-1 的主目录\n#   wh1-1: 表示目的主机的当前用户主目录\nscp ceshi3_kkk.tar wh1-1:\n\n# 第四步：在工作站 wh1-1 上解压\nssh wh1-1\ncd ~\ntar xvf ceshi3_kkk.tar\n\n# 第五步：把解压出来的 ceshi3_kkk 改名为 ceshi3_sss\nmv ceshi3_kkk ceshi3_sss\n\n# 第六步：用 vi 把 ceshi3_sss 内的 kkk 全部替换成 sss\nvi ceshi3_sss\n# 在 vi 命令模式下执行：\n# :%s/kkk/sss/g\n# :wq\n```",
       "题源": "主站V6 操作系统 第7题"
     },
     {
       "id": "操作系统-039",
       "title": "039-使用vi工具完成下列操作，编辑_var_log_m",
       "题面": "使用vi工具完成下列操作，编辑/var/log/messages文件，删除文件的第100-300行，将/etc/hosts文件中的内容添加到messages文件最后，然后在文件每行的行首增加kaoshi。",
+      "标答": "```bash\n# 第一步：vi 打开 /var/log/messages\nvi /var/log/messages\n\n# 第二步：在 vi 命令模式下依次执行：\n# 删除第 100-300 行\n# :100,300 d\n#\n# 把 /etc/hosts 的内容追加到当前文件最后（光标先用 G 跳到末尾，或直接 :$r）\n# :$r /etc/hosts\n#\n# 给每一行行首加上 kaoshi\n# :1,$ s/^/kaoshi/g\n#\n# 保存退出\n# :wq\n```",
       "题源": "主站V6 操作系统 第8题"
     },
     {
       "id": "操作系统-040",
       "title": "040-查看系统nusp用户当前打开的句柄数量并将结果输出",
       "题面": "查看系统nusp用户当前打开的句柄数量并将结果输出到主目录下的xuanba_jubin.txt，并修改配置文件将nusp用户的句柄数设置为60000。",
+      "标答": "```bash\n# 第一步：用 lsof 列出所有打开的句柄，过滤 nusp 用户，追加到主目录下 xuanba_jubin.txt\n#   lsof = list open files；grep nusp 过滤出 nusp 用户的那些行\nlsof | grep nusp >> ~/xuanba_jubin.txt\n\n# 第二步：（可选）只看条目数，用 wc -l 统计\nlsof | grep nusp | wc -l >> ~/xuanba_jubin.txt\n\n# 第三步：修改句柄数限制配置文件\nvi /etc/security/limits.conf\n# 在文件末尾添加两行：\n# nusp   soft    nofile   60000\n# nusp   hard    nofile   60000\n# :wq 保存\n\n# 第四步：nusp 用户重新登录后用 ulimit -n 验证生效\nsu - nusp\nulimit -n\n```",
       "题源": "主站V6 操作系统 第9题"
     },
     {
       "id": "操作系统-041",
       "title": "041-检查系统磁盘的空间和inode的使用率，并计算出系",
       "题面": "检查系统磁盘的空间和inode的使用率，并计算出系统日志/var/log目录的大小。并将结果保存到主目录下的xuanba_rizhi。",
+      "标答": "```bash\n# 第一步：查看磁盘空间使用率，追加到主目录下 xuanba_rizhi\n#   -h 人类可读（K/M/G）\ndf -h >> ~/xuanba_rizhi\n\n# 第二步：查看 inode 使用率，追加到同一文件\n#   -i 显示 inode 信息\ndf -i >> ~/xuanba_rizhi\n\n# 第三步：计算 /var/log 目录总大小，追加到同一文件\n#   -s 只显示汇总（不递归列出子目录）；可叠加 -h 更直观\ndu -sh /var/log >> ~/xuanba_rizhi\n```",
       "题源": "主站V6 操作系统 第10题"
     },
     {
       "id": "操作系统-042",
       "title": "042-说明：自动化值班员小明发现sca1-1 服务器的C",
       "题面": "说明：自动化值班员小明发现sca1-1 服务器的CPU和硬盘在使用率很低的情况下，告警窗也一直有“sca1-1 CPU越限 ...”和“sca1-1 硬盘分区越限...”的告警信息，请处理该异常现象。\n已知：sca1-1的 CPU告警极限为90%，磁盘的告警极限为98%",
+      "标答": "```bash\n# 排查思路：使用率很低但仍报越限，说明告警极限阈值被人改低了（不是真正越限）\n# 处理动作：进图模工具，把 sca1-1 的告警极限改回正常值\n\n# 第一步：登录 D5000 调度系统，打开「图模管理工具」（或 sysCtrl 命令）\nsysCtrl &\n# 或在 D5000 后台启动应用：showService 看 sysCtrl 在哪台机器\n\n# 第二步：修改磁盘监视信息告警极限\n#   定位「硬盘分区监视表」→ 找到 sca1-1 主机的记录\n#   将「告警极限」字段改回 98%\n\n# 第三步：修改 CPU 及内存负荷表告警极限\n#   定位「CPU负荷表」/「内存负荷表」→ 找到 sca1-1 主机的记录\n#   将「告警极限」字段改回 90%\n\n# 第四步：保存图模，等待几个采样周期，确认告警窗不再刷 sca1-1 越限信息\n```",
       "题源": "主站V6 操作系统 第11题"
     },
     {
       "id": "操作系统-043",
       "title": "043-请在考试工作站_home_nusp_zhejian",
       "题面": "请在考试工作站/home/nusp/zhejiang/data/graph_client/ZJ/display/fac/中查找包含”XX”的g文件个数，将个数X录入到考试工作站home/nusp/zhejiang/test/test_txt.log中，录入内容为“包含”XX”的g文件共有X个”。",
+      "标答": "```bash\n# 第一步：进入目标目录\ncd /home/nusp/zhejiang/data/graph_client/ZJ/display/fac/\n\n# 第二步：统计包含 \"XX\" 的 g 文件个数\n#   ls -l 长列表输出该目录所有文件\n#   grep \"XX\" 过滤文件名含 XX 的行\n#   wc -l 统计行数 = 文件个数\nls -l | grep \"XX\" | wc -l\n\n# 第三步：将结果按要求格式写入日志\n#   先把统计数量存到变量 X\n#   再用 echo 拼接固定文案输出到日志\nX=$(ls -l | grep \"XX\" | wc -l)\necho \"包含\\\"XX\\\"的g文件共有${X}个\" > /home/nusp/zhejiang/test/test_txt.log\n```",
       "题源": "主站V6 操作系统 第12题"
     },
     {
       "id": "操作系统-044",
       "title": "044-说明：查询系统的信息（包括系统的内核、内核名、主机",
       "题面": "说明：查询系统的信息（包括系统的内核、内核名、主机名）；用户在root下进行过的命令操作；主目录下一天内修改过的文件。\n要求：将以上查询结果保存至维护工作站主目录下的chaxun2.txt文件中。",
+      "标答": "```bash\n# 第一步：切换到维护工作站主目录\ncd ~\n\n# 第二步：查询系统信息（内核版本、内核名、主机名）写入 chaxun2.txt\n#   uname -a 一次性显示系统所有信息\n#   > 覆盖建文件\nuname -a > chaxun2.txt\n\n# 第三步：切换到 root 并把 root 历史命令追加进去\n#   su root 进入 root（要密码）\n#   history 列出当前用户历史命令\n#   >> 追加，不覆盖前一步内容\nsu root\nhistory >> chaxun2.txt\n\n# 第四步：查找主目录下 1 天内修改过的文件并追加\n#   -mtime -1 表示修改时间在 24 小时内\nfind /home/nusp/zhejiang -mtime -1 >> chaxun2.txt\n```",
       "题源": "主站V6 操作系统 第13题"
     },
     {
       "id": "操作系统-045",
       "title": "045-在zj1-sca1服务器上，利用crontab定时",
       "题面": "在zj1-sca1服务器上，利用crontab定时器设置每周一至周五凌晨4:30，自动执行配置文件conf目录备份脚本/home/nusp/zhejiang/backup_2026.sh，并检查脚本执行权限。要求备份日志输出到~/var/log/backup/2026_backup.log。",
+      "标答": "```bash\n# 第一步：检查备份脚本是否有执行权限\nls -l /home/nusp/zhejiang/backup_2026.sh\n\n# 第二步：若无执行权限，则赋予执行权限\nchmod +x /home/nusp/zhejiang/backup_2026.sh\n\n# 第三步：确保日志目录存在（防止 crontab 写日志失败）\nmkdir -p ~/var/log/backup\n\n# 第四步：编辑当前用户的 crontab\ncrontab -e\n\n# 第五步：在 crontab 中添加定时任务\n#   30 4 * * 1-5 = 每周一至周五凌晨 4:30\n#   >> 追加日志到 2026_backup.log\n30 4 * * 1-5 /home/nusp/zhejiang/backup_2026.sh >> ~/var/log/backup/2026_backup.log\n\n# 第六步：验证定时任务已写入\ncrontab -l\n```",
       "题源": "主站2026 操作系统 第1题"
     },
     {
       "id": "操作系统-046",
       "title": "046-在系统中，检查_home_nusp_zhejian",
       "题面": "在系统中，检查/home/nusp/zhejiang/var分区的磁盘使用情况（要求显示分区大小、已用空间、可用空间、使用率，单位为GB），将结果写入/home/nusp/zhejiang/2026_disk_usage.log；同时使用vmstat监控系统CPU、内存、IO状态，以3秒为间隔，采集10次数据并输出到/home/nusp/zhejiang/2026_system_monitor.txt。",
+      "标答": "```bash\n# 第一步：查看 /home/nusp/zhejiang/var 分区磁盘使用情况\n#   -h 以 GB/MB 等人类可读单位显示\n#   > 覆盖写入日志\ndf -h /home/nusp/zhejiang/var > /home/nusp/zhejiang/2026_disk_usage.log\n\n# 第二步：用 vmstat 采集 CPU/内存/IO 状态，3 秒一次共 10 次\n#   3 = 间隔秒数；10 = 采样次数\n#   > 写入监控文件\nvmstat 3 10 > /home/nusp/zhejiang/2026_system_monitor.txt\n\n# 第三步：验证两个输出文件\ncat /home/nusp/zhejiang/2026_disk_usage.log\ncat /home/nusp/zhejiang/2026_system_monitor.txt\n```",
       "题源": "主站2026 操作系统 第2题"
     },
     {
       "id": "操作系统-047",
       "title": "047-在系统中，通过SSH将远程服务器（zj1-sca1",
       "题面": "在系统中，通过SSH将远程服务器（zj1-sca1）上的~/var/log/test/access_2026.log文件拷贝到本地/home/nusp/zhejiang/log_backup/目录下，并重命名为nusp_access_2026.log；然后查看本地分区的磁盘容量，将容量信息追加到该日志文件末尾。",
+      "标答": "```bash\n# 第一步：创建本地备份目录（防止 scp 报路径不存在）\n#   -p 父目录不存在也一起建\nmkdir -p /home/nusp/zhejiang/log_backup\n\n# 第二步：用 scp 从远程拷贝日志文件到本地\n#   user@zj1-sca1: 指定远程主机\n#   冒号后是远程文件绝对路径\nscp root@zj1-sca1:~/var/log/test/access_2026.log /home/nusp/zhejiang/log_backup/\n\n# 第三步：重命名为 nusp_access_2026.log\nmv /home/nusp/zhejiang/log_backup/access_2026.log /home/nusp/zhejiang/log_backup/nusp_access_2026.log\n\n# 第四步：查看本地分区磁盘容量并追加到日志末尾\n#   -h 人类可读单位\n#   >> 追加而非覆盖（保留原 log 内容）\ndf -h >> /home/nusp/zhejiang/log_backup/nusp_access_2026.log\n```",
       "题源": "主站2026 操作系统 第3题"
     },
     {
       "id": "操作系统-048",
       "title": "048-在工作站上，配置与NTP服务器（zj1-sca1）",
       "题面": "在工作站上，配置与NTP服务器（zj1-sca1）的时间同步，要求同步频率为每30分钟一次，同步误差不超过1秒。配置完成后重启NTP服务并验证同步结果。",
+      "标答": "```bash\n# 第一步：编辑 NTP 配置文件\nvi /etc/ntp.conf\n\n# 第二步：在 ntp.conf 中添加 NTP 服务器（vi 内操作）\n#   minpoll 10 maxpoll 11 = 同步间隔 2^10~2^11 秒，约 17~34 分钟（覆盖 30 分钟）\n#   注释掉其他干扰用的 server 行\n#   保存退出 :wq\nserver zj1-sca1 minpoll 10 maxpoll 11\n\n# 第三步：重启 ntpd 服务使配置生效\nsystemctl restart ntpd\n\n# 第四步：设置 ntpd 开机自启\nsystemctl enable ntpd\n\n# 第五步：验证同步状态\n#   * 号表示当前选中的同步源\nntpq -p\n```",
       "题源": "主站2026 操作系统 第4题"
     },
     {
       "id": "操作系统-049",
       "title": "049-在系统的_home_nusp_zhejiang_2",
       "题面": "在系统的/home/nusp/zhejiang/2026_project/目录下，对report_2026.txt文件执行以下操作：1. 将前25行输出到report_head_2026.txt；2. 将后15行输出到report_tail_2026.txt；3. 将第10至30行提取到report_mid_2026.txt；4. 将文件中所有的'2025'字符串替换为'2026'并保存修改。",
+      "标答": "```bash\n# 第一步：切换到目标目录\ncd /home/nusp/zhejiang/2026_project/\n\n# 第二步：提取前 25 行到 report_head_2026.txt\n#   -n 25 指定行数\nhead -n 25 report_2026.txt > report_head_2026.txt\n\n# 第三步：提取后 15 行到 report_tail_2026.txt\ntail -n 15 report_2026.txt > report_tail_2026.txt\n\n# 第四步：提取第 10 至 30 行到 report_mid_2026.txt\n#   sed -n '10,30p' 只打印 10-30 行，不打其他\nsed -n '10,30p' report_2026.txt > report_mid_2026.txt\n\n# 第五步：把文件中所有 '2025' 替换为 '2026'\n#   -i 直接修改原文件\n#   s/旧/新/g  g 表示全局（一行内多个也都换）\nsed -i 's/2025/2026/g' report_2026.txt\n```",
       "题源": "主站2026 操作系统 第5题"
     },
     {
       "id": "操作系统-050",
       "title": "050-在系统中，查看系统物理内存、交换分区的详细使用情况",
       "题面": "在系统中，查看系统物理内存、交换分区的详细使用情况（单位：GB），以及CPU的平均负载（1分钟、5分钟、15分钟）和每个CPU核心的使用率。将所有结果保存到/home/nusp/zhejiang/2026_system_resources.log文件中。",
+      "标答": "```bash\n# 第一步：查看物理内存与交换分区使用情况\n#   -h 用 GB/MB 人类可读单位（题目要求 GB）\n#   > 覆盖建文件\nfree -h > /home/nusp/zhejiang/2026_system_resources.log\n\n# 第二步：追加 CPU 1/5/15 分钟平均负载\n#   uptime 输出末尾的 load average 即三段负载\nuptime >> /home/nusp/zhejiang/2026_system_resources.log\n\n# 第三步：追加每个 CPU 核心的使用率\n#   -P ALL 显示所有 CPU 核心\nmpstat -P ALL >> /home/nusp/zhejiang/2026_system_resources.log\n\n# 第四步：验证文件内容\ncat /home/nusp/zhejiang/2026_system_resources.log\n```",
       "题源": "主站2026 操作系统 第6题"
     },
     {
       "id": "操作系统-051",
       "title": "051-在系统中，查看当前dev用户打开的文件句柄数量，并",
       "题面": "在系统中，查看当前dev用户打开的文件句柄数量，并将结果输出到/home/nusp/zhejiang/2026_dev_handles.log；然后修改系统配置文件，将dev用户的最大文件句柄数软限制设置为80000，硬限制设置为100000，配置完成后验证生效。",
+      "标答": "```bash\n# 第一步：统计 dev 用户当前打开的文件句柄数并写入日志\n#   lsof -u dev 列出该用户所有打开的文件\n#   wc -l 统计行数 = 句柄数\n#   > 覆盖建文件\nlsof -u dev | wc -l > /home/nusp/zhejiang/2026_dev_handles.log\n\n# 第二步：编辑系统句柄限制配置文件\nvi /etc/security/limits.conf\n\n# 第三步：在 limits.conf 末尾添加 dev 用户的软/硬限制（vi 内操作）\n#   soft nofile 80000  = 软限制 8 万\n#   hard nofile 100000 = 硬限制 10 万\n#   保存退出 :wq\ndev soft nofile 80000\ndev hard nofile 100000\n\n# 第四步：重新登录 dev 用户使配置生效\nsu - dev\n\n# 第五步：验证软硬限制是否生效\n#   -Sn 显示软限制；-Hn 显示硬限制\nulimit -Sn\nulimit -Hn\n```",
       "题源": "主站2026 操作系统 第7题"
     },
     {
       "id": "操作系统-052",
       "title": "052-在系统中，检查所有磁盘分区的空间使用率和inode",
       "题面": "在系统中，检查所有磁盘分区的空间使用率和inode使用率，找出使用率超过80%的分区；计算~/var/log/2026/目录及其子目录下所有日志文件的总大小，并按大小排序显示前10个最大文件。将所有结果保存到/home/nusp/zhejiang/2026_disk_analysis.log。",
+      "标答": "```bash\n# 第一步：查看所有分区空间使用率并写入日志（覆盖建文件）\ndf -h > /home/nusp/zhejiang/2026_disk_analysis.log\n\n# 第二步：追加 inode 使用率（加分隔符便于阅读）\necho '===== Inode Usage =====' >> /home/nusp/zhejiang/2026_disk_analysis.log\ndf -i >> /home/nusp/zhejiang/2026_disk_analysis.log\n\n# 第三步：追加使用率超过 80% 的分区\n#   grep -E 用扩展正则，匹配 8x% 或 9x%\necho '===== Usage > 80% =====' >> /home/nusp/zhejiang/2026_disk_analysis.log\ndf -h | grep -E '8[0-9]%|9[0-9]%|100%' >> /home/nusp/zhejiang/2026_disk_analysis.log\n\n# 第四步：追加 ~/var/log/2026/ 下最大的 10 个日志文件\n#   du -sh 每个子项汇总大小（人类可读）\n#   sort -rh 按大小逆序（h 识别 K/M/G 单位）\n#   head -n 10 取前 10\necho '===== Top 10 Largest Log Files =====' >> /home/nusp/zhejiang/2026_disk_analysis.log\ndu -sh ~/var/log/2026/* | sort -rh | head -n 10 >> /home/nusp/zhejiang/2026_disk_analysis.log\n```",
       "题源": "主站2026 操作系统 第8题"
     },
     {
       "id": "操作系统-053",
       "title": "053-在系统中，查询以下系统信息并将所有结果按分类保存到",
       "题面": "在系统中，查询以下系统信息并将所有结果按分类保存到/root/2026_system_info.log：1. 系统内核版本、操作系统版本、主机名；2. root用户2026年4月执行过的所有命令操作；3. /opt/2026_app/目录下72小时内修改过且大小超过100MB的文件。",
+      "标答": "```bash\n# 第一步：写入系统基础信息（内核版本/系统版本/主机名）\necho '===== System Info =====' > /root/2026_system_info.log\nuname -r >> /root/2026_system_info.log\ncat /etc/os-release | grep PRETTY_NAME >> /root/2026_system_info.log\nhostname >> /root/2026_system_info.log\n\n# 第二步：追加 root 用户 2026 年 4 月的命令历史\n#   history 列出 root 命令记录\n#   grep '2026-04' 过滤出 4 月的（依赖 HISTTIMEFORMAT 显示日期）\necho '===== Root Commands in 2026-04 =====' >> /root/2026_system_info.log\nhistory | grep '2026-04' >> /root/2026_system_info.log\n\n# 第三步：追加 /opt/2026_app/ 下 72 小时内修改且大于 100MB 的文件\n#   -mtime -3  3 天内修改\n#   -size +100M 大于 100MB\necho '===== Large Files Modified in 72h =====' >> /root/2026_system_info.log\nfind /opt/2026_app/ -mtime -3 -size +100M >> /root/2026_system_info.log\n\n# 第四步：验证文件内容\ncat /root/2026_system_info.log\n```",
       "题源": "主站2026 操作系统 第9题"
     },
     {
       "id": "操作系统-054",
       "title": "054-在系统中，为应用创建专用用户appuser2026",
       "题面": "在系统中，为应用创建专用用户appuser2026：1. 创建用户并指定家目录为/home/appuser2026；2. 设置用户密码为App@2026Pass；3. 将用户添加到wheel组；4. 限制用户密码有效期为90天，密码最小长度为8位；5. 配置用户登录后自动执行/opt/app/2026_start.sh脚本。",
+      "标答": "```bash\n# 第一步：创建用户并指定家目录\n#   -d 指定家目录路径\n#   -m 没指定时家目录不会自动建，加 -m 顺带创建\nuseradd -d /home/appuser2026 -m appuser2026\n\n# 第二步：设置用户密码 App@2026Pass\n#   --stdin 直接从管道读密码（凝思/CentOS 支持）\necho 'App@2026Pass' | passwd --stdin appuser2026\n\n# 第三步：把用户追加到 wheel 组（保留原有组）\n#   -a 追加；-G 指定附加组\nusermod -aG wheel appuser2026\n\n# 第四步：设置密码有效期 90 天\n#   -M 90 = max days\nchage -M 90 appuser2026\n\n# 第五步：设置密码最小长度 8 位（chage 不能改，必须改 PAM）\nvi /etc/pam.d/system-auth\n#   找到 password requisite pam_pwquality.so 那行，\n#   在行末加 minlen=8，保存退出 :wq\n\n# 第六步：配置用户登录后自动执行启动脚本\necho '/opt/app/2026_start.sh' >> /home/appuser2026/.bash_profile\n\n# 第七步：把家目录所有权改为新用户\n#   -R 递归修改子文件\nchown -R appuser2026:appuser2026 /home/appuser2026\n\n# 第八步：切换到该用户验证脚本是否被自动执行\nsu - appuser2026\n```",
       "题源": "主站2026 操作系统 第10题"
     },
     {
       "id": "操作系统-055",
       "title": "055-ifconfig 临时 IP + route 加路由 + 重定向",
       "题面": "对工作站的eth3网口ip添加临时ip192.1.1.1/24，并添加192.1.10.0/16网段路由，将本工作站的网络及路由信息打印打文件ip_route.txt中",
+      "标答": "```bash\n# 第一步：给 eth3 添加临时 IP 192.1.1.1/24\n#   /24 → 子网掩码 255.255.255.0\n#   up 顺带激活网卡\nifconfig eth3 192.1.1.1 netmask 255.255.255.0 up\n\n# 第二步：添加 192.1.10.0/16 网段路由\n#   -net 表示是网络路由（不是 host 路由）\n#   /16 → 掩码 255.255.0.0\n#   dev eth3 指出口网卡\nroute add -net 192.1.10.0 netmask 255.255.0.0 dev eth3\n\n# 第三步：把网络 + 路由信息输出到 ip_route.txt\n#   > 覆盖写（建文件）\n#   >> 追加（两段信息合并进同一个文件）\nifconfig > ip_route.txt\nroute >> ip_route.txt\n```",
       "题源": "D60基础平台 2026-05-13 课堂练习 第8题"
     },
     {
       "id": "操作系统-056",
       "title": "056-route 删路由 + 追加路由信息",
       "题面": "删除对工作站的eth3网口添加的192.1.10.0/16网段路由，将路由信息追加到打文件ip_route.txt中",
+      "标答": "```bash\n# 第一步：删除 192.1.10.0/16 网段路由\n#   del 与 add 对称，参数要一致\n#   /16 → 掩码 255.255.0.0\n#   dev eth3 指出口网卡\nroute del -net 192.1.10.0 netmask 255.255.0.0 dev eth3\n\n# 第二步：把当前路由信息追加到 ip_route.txt\n#   >> 追加（保留 055 题写入的内容）\nroute >> ip_route.txt\n```",
       "题源": "D60基础平台 2026-05-13 课堂练习 第9题"
     },
     {
       "id": "操作系统-057",
       "title": "057-shell 脚本处理 value.txt 空格分隔",
       "题面": "编写简单脚本make.sh对value.txt进行处理使得只需要采样值，并显示在一行中按空格分割",
+      "标答": "```bash\n# 第一步：用 vi 新建脚本 make.sh\nvi make.sh\n\n# 第二步：脚本内容（vi 内输入，:wq 保存）\n#   假设 value.txt 每行格式为「字段:采样值」或多列空白分隔，采样值在第 2 列\n#   awk 取第二列输出\n#   xargs 把多行汇成一行，默认按空白分隔（实现\"按空格分割显示一行\"）\n#!/bin/bash\nawk '{print $2}' value.txt | xargs\n\n# 第三步：给脚本添加可执行权限（评分细则要求\"执行权限\"）\nchmod +x make.sh\n\n# 第四步：执行脚本验证\n./make.sh\n```",
       "题源": "D60基础平台 2026-05-13 课堂练习 第12题"
     }
   ]

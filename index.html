@@ -6,113 +6,193 @@
 <title>惩罚清单 · 主网自动化竞赛</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#1a1a1a;color:#e0e0e0;font-family:'SF Mono',Consolas,Menlo,monospace;padding:40px 20px;min-height:100vh}
+body{background:#1a1a1a;color:#e0e0e0;font-family:'SF Mono',Consolas,Menlo,monospace;padding:30px 20px;min-height:100vh}
 .container{max-width:900px;margin:0 auto}
-h1{font-size:28px;margin-bottom:16px}
-p{margin-bottom:12px;color:#aaa}
+h1{font-size:24px;margin-bottom:16px}
+p{margin-bottom:8px;color:#aaa}
 code{background:#333;padding:2px 6px;border-radius:3px;color:#ffd54f}
-textarea{width:100%;min-height:240px;padding:14px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:14px;margin:12px 0;line-height:1.6;resize:vertical}
-button{padding:10px 22px;background:#4caf50;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer;margin:4px 4px 4px 0}
+button{padding:9px 18px;background:#4caf50;color:#fff;border:none;border-radius:6px;font-size:14px;cursor:pointer;margin:4px 6px 4px 0;font-family:inherit}
 button:hover{background:#45a049}
-button.s{background:#555}
-button.s:hover{background:#666}
-#status{font-size:13px;color:#888;display:flex;gap:24px;margin-bottom:16px;font-variant-numeric:tabular-nums}
-#status span:before{content:'';display:inline-block}
-#header{color:#888;font-style:italic;margin-bottom:12px;font-size:14px}
-#target{font-size:24px;line-height:1.7;background:#232323;padding:24px;border-radius:8px;min-height:80px;white-space:pre-wrap;word-break:break-all;letter-spacing:0.5px}
+button.s{background:#555}button.s:hover{background:#666}
+button.warn{background:#f57c00}button.warn:hover{background:#ef6c00}
+button.red{background:#c62828}button.red:hover{background:#b71c1c}
+textarea{width:100%;min-height:200px;padding:14px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:13px;line-height:1.6;resize:vertical}
+
+#topnav{display:flex;justify-content:space-between;margin-bottom:20px;font-size:13px}
+#topnav a{color:#4caf50;text-decoration:none}
+#topnav a:hover{text-decoration:underline}
+
+#historyBar{background:#232323;padding:12px 20px;border-radius:8px;margin:12px 0;color:#aaa;font-size:13px}
+#historyBar b{color:#fff}
+#historyBar span{margin-right:20px}
+
+.bar{display:flex;align-items:center;gap:16px;margin-bottom:14px;font-size:13px;color:#888}
+.bar .qprog{font-size:14px;color:#ffd54f;font-weight:bold}
+.bar .qid{color:#aaa}
+.bar .rep{margin-left:auto;color:#888}
+
+#qti{background:#232323;padding:14px 20px;border-left:3px solid #ffd54f;border-radius:6px;color:#ddd;line-height:1.7;margin-bottom:14px;font-size:14px;white-space:pre-wrap}
+
+#target{font-size:18px;line-height:1.9;background:#232323;padding:24px;border-radius:8px;min-height:120px;white-space:pre-wrap;word-break:break-all;letter-spacing:0.4px}
 .untyped{color:#555}
 .correct{color:#4caf50}
 .wrong{background:#d32f2f;color:#fff;border-radius:2px}
 .cursor{background:#ffeb3b;color:#000;border-radius:2px;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:0.5}}
-#hint{color:#666;font-size:13px;margin-top:16px}
-#summary,#historyBar{background:#232323;padding:14px 20px;border-radius:8px;font-size:14px;margin:16px 0;line-height:1.8}
-#historyBar{color:#aaa;font-size:13px}
-#historyBar b{color:#fff}
-#historyBar .stat{display:inline-block;margin-right:20px}
-.row{padding:3px 0}
-.row.ok{color:#4caf50}
-.row.bad{color:#ff9800}
-.row.skip{color:#888}
-.row.head{color:#fff;font-weight:bold;border-bottom:1px solid #444;padding-bottom:8px;margin-bottom:8px}
-hr{border:0;border-top:1px solid #333;margin:12px 0}
+
+#stats{margin-top:10px;font-size:13px;color:#888;display:flex;gap:20px;font-variant-numeric:tabular-nums}
+#completeFlag{color:#4caf50;font-weight:bold;display:none}
+#completeFlag.show{display:inline}
+
+.btnbar{margin-top:18px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.btnbar .gap{flex:1}
+
+#summary{background:#232323;padding:16px 20px;border-radius:8px;margin:14px 0;font-size:14px;line-height:1.8}
+#summary .row{padding:3px 0}
+#summary .head{color:#ffd54f;font-weight:bold;border-bottom:1px solid #444;padding-bottom:8px;margin-bottom:8px}
+#summary .perfect{color:#4caf50}
+#summary .imperfect{color:#ff9800}
 </style>
 </head>
 <body><div class="container">
 
+<div id="topnav">
+  <a href="exam.html">→ 切到试卷训练</a>
+  <span>主网自动化竞赛 · 惩罚清单</span>
+</div>
+
+<!-- 起始页 -->
 <div id="setup">
   <h1>📝 惩罚清单</h1>
-  <p style="margin-bottom:12px"><a href="exam.html" style="color:#4caf50">→ 切到试卷训练模式</a></p>
+  <p>盲敲薄弱命令、形成肌肉记忆。题目+命令 一起呈现，自己控制练几遍。</p>
   <div id="historyBar" style="display:none"></div>
-  <p>盲敲薄弱命令巩固肌肉记忆。每行一条命令；<code># 注释</code> 给下一行打标签（注释自己不用敲）</p>
-  <textarea id="cmds" placeholder="# 错点 1: ifconfig 多写 add
-ifconfig eth1 10.20.30.40 netmask 255.255.255.0 up
-# 错点 2: route 漏 -net
-route add -net 10.20.0.0 netmask 255.255.0.0 dev eth1
-# 错点 3: 首次重定向应用 >
-ifconfig > net_info.txt"></textarea>
-  <button onclick="start()">开始训练</button>
+  <p>从 URL <code>?q=</code> 参数自动加载（推荐），或粘贴 JSON：</p>
+  <textarea id="jsonInput" placeholder='{"subject":"操作系统","questions":[{"id":"...","题面":"...","drills":["cmd1","cmd2"]}]}'></textarea>
+  <button onclick="startFromInput()">开始训练</button>
   <button class="s" onclick="loadDemo()">载入示例</button>
-  <button class="s" onclick="exportHistory()">导出历史 JSON</button>
+  <button class="s" onclick="exportHistory()">导出历史</button>
   <button class="s" onclick="clearHistory()">清空历史</button>
 </div>
 
+<!-- 练习页 -->
 <div id="practice" style="display:none">
-  <div id="status">
-    <span id="prog">1/3</span>
+  <div class="bar">
+    <span class="qprog" id="qprog">1/1</span>
+    <span class="qid" id="qid"></span>
+    <span class="rep" id="rep">本题第 1 遍</span>
+  </div>
+
+  <div id="qti"></div>
+  <div id="target"></div>
+
+  <div id="stats">
+    <span id="prog">0/0</span>
     <span id="errs">错击 0</span>
     <span id="bs">退格 0</span>
     <span id="timer">0.0s</span>
     <span id="wpm">0 wpm</span>
+    <span id="completeFlag">✅ 本遍完成</span>
   </div>
-  <div id="header"></div>
-  <div id="target"></div>
-  <div id="hint">直接敲键开始 · Esc 退出 · Tab 跳过</div>
+
+  <div class="btnbar">
+    <button class="s" onclick="prevQ()">← 上一题</button>
+    <button onclick="retry()">🔄 再来一次</button>
+    <button onclick="nextQ()">下一题 →</button>
+    <div class="gap"></div>
+    <button class="red" onclick="finish()">结束训练</button>
+  </div>
 </div>
 
+<!-- 完成页 -->
 <div id="done" style="display:none">
-  <h1>✅ 训练完成</h1>
+  <h1>✅ 训练结束</h1>
   <div id="summary"></div>
-  <button onclick="copyJSON()">复制结果 JSON</button>
+  <button onclick="copyJSON()">复制本次结果 JSON</button>
   <button class="s" onclick="downloadJSON()">下载 JSON</button>
-  <button class="s" onclick="restart()">再来</button>
-  <p style="margin-top:16px;color:#888;font-size:13px">把 JSON 贴回 Claudian，他会分析你的击键数据并更新薄弱点。</p>
+  <button class="s" onclick="backToSetup()">回起始页</button>
 </div>
 
 </div>
 <script>
-let drills=[],idx=0,typed='',errors=0,bs=0,errPos=[],t0=0,timer=null,results=[];
 const $=id=>document.getElementById(id);
+const STORE_KEY='drillHistory';
 
-function parseCommands(text){
-  const lines=text.split('\n');const out=[];let h='';
-  for(const line of lines){
-    if(!line.trim())continue;
-    if(line.startsWith('#')){h=line.replace(/^#\s*/,'');}
-    else{out.push({header:h||'(无注释)',cmd:line});h='';}
+// 全局状态
+let DATA=null;       // {subject, questions:[{id, 题面, drills}]}
+let qIdx=0;          // 当前题号
+let typed='';        // 当前已输入
+let errors=0;        // 错击数
+let bs=0;            // 退格数
+let errPos=[];       // 错击位置
+let t0=0;            // 本遍起始时间
+let timer=null;      // 计时器
+let complete=false;  // 本遍是否完成
+let sessionData=null; // 本次完整会话数据
+
+// ---- 历史 ----
+function loadHistory(){
+  try{return JSON.parse(localStorage.getItem(STORE_KEY))||[];}catch(e){return[];}
+}
+function saveHistory(h){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(h));}catch(e){alert('存储失败: '+e.message);}
+}
+function renderHistoryBar(){
+  const bar=$('historyBar');const h=loadHistory();
+  if(!h.length){bar.style.display='none';return;}
+  const today=new Date().toISOString().slice(0,10);
+  const todayCnt=h.filter(s=>s.date===today).length;
+  let totReps=0,totFirst=0;
+  for(const s of h){
+    for(const q of (s.questions||[])){
+      for(const r of (q.reps||[])){
+        totReps++;
+        if(r.first_try)totFirst++;
+      }
+    }
   }
-  return out;
+  const rate=totReps?Math.round(totFirst/totReps*100):0;
+  bar.style.display='';
+  bar.innerHTML=
+    '<span>📊 累计 <b>'+h.length+'</b> 场</span>'+
+    '<span>今日 <b>'+todayCnt+'</b></span>'+
+    '<span>一次过率 <b>'+rate+'%</b> ('+totFirst+'/'+totReps+')</span>';
 }
 
+// ---- 输入/启动 ----
 function loadDemo(){
-  $('cmds').value=`# 错点 1: ifconfig 多写 add 子命令
-ifconfig eth1 10.20.30.40 netmask 255.255.255.0 up
-# 错点 2: route add 漏 -net 与 netmask
-route add -net 10.20.0.0 netmask 255.255.0.0 dev eth1
-# 错点 3: 首次重定向应用 > 而非 >>
-ifconfig > net_info.txt`;
+  const demo={
+    subject:'示例',
+    questions:[
+      {id:'示例-001',题面:'每隔 1 分钟查看内存使用情况, 追加写入 /home/nusp/zhejiang/Desktop/zhangsan.txt。',
+       drills:['touch /home/nusp/zhejiang/Desktop/zhangsan.txt','crontab -e','crontab -l']},
+      {id:'示例-055',题面:'对 eth3 添加临时 IP + 加路由 + 输出到文件',
+       drills:['ifconfig eth3 192.1.1.1 netmask 255.255.255.0 up','route add -net 192.1.10.0 netmask 255.255.0.0 dev eth3','ifconfig > ip_route.txt']},
+    ]};
+  $('jsonInput').value=JSON.stringify(demo,null,2);
 }
 
-function start(){
-  drills=parseCommands($('cmds').value);
-  if(!drills.length){alert('请输入至少一条命令');return;}
+function startFromInput(){
+  try{DATA=JSON.parse($('jsonInput').value);}
+  catch(e){alert('JSON 解析失败: '+e.message);return;}
+  if(!DATA.questions||!DATA.questions.length){alert('没有题目');return;}
+  // 初始化 sessionData
+  sessionData={
+    ts:Date.now(),
+    date:new Date().toISOString().slice(0,10),
+    subject:DATA.subject||'',
+    questions:DATA.questions.map(q=>({id:q.id,reps:[]})),
+  };
   $('setup').style.display='none';$('practice').style.display='';
-  idx=0;results=[];startDrill();
+  qIdx=0;startQuestion();
 }
 
-function startDrill(){
-  typed='';errors=0;bs=0;errPos=[];t0=Date.now();
-  $('header').textContent='['+(idx+1)+'/'+drills.length+'] # '+drills[idx].header;
+function currentQ(){return DATA.questions[qIdx];}
+function currentTarget(){return currentQ().drills.join('\n');}
+
+function startQuestion(){
+  typed='';errors=0;bs=0;errPos=[];complete=false;
+  $('completeFlag').classList.remove('show');
+  t0=Date.now();
   render();
   if(timer)clearInterval(timer);
   timer=setInterval(updateTimer,100);
@@ -121,20 +201,29 @@ function startDrill(){
 function escapeHtml(c){return c.replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]));}
 
 function render(){
-  const tgt=drills[idx].cmd;let html='';
+  const q=currentQ();const tgt=currentTarget();
+  $('qprog').textContent=(qIdx+1)+'/'+DATA.questions.length;
+  $('qid').textContent=q.id;
+  $('qti').textContent='题面：'+q.题面;
+  $('rep').textContent='本题已练 '+sessionData.questions[qIdx].reps.length+' 遍'+(complete?'（本遍✅）':'');
+  let html='';
   for(let i=0;i<tgt.length;i++){
     const c=tgt[i];
     if(i<typed.length){
-      if(typed[i]===c)html+='<span class="correct">'+escapeHtml(c)+'</span>';
-      else html+='<span class="wrong">'+escapeHtml(typed[i])+'</span>';
+      const tc=typed[i];
+      if(c==='\n')html+=tc==='\n'?'<span class="correct">↵</span>\n':'<span class="wrong">↵</span>\n';
+      else if(tc===c)html+='<span class="correct">'+escapeHtml(c)+'</span>';
+      else html+='<span class="wrong">'+escapeHtml(tc)+'</span>';
     }else if(i===typed.length){
-      html+='<span class="cursor">'+escapeHtml(c)+'</span>';
+      if(c==='\n')html+='<span class="cursor">↵</span>\n';
+      else html+='<span class="cursor">'+escapeHtml(c)+'</span>';
     }else{
-      html+='<span class="untyped">'+escapeHtml(c)+'</span>';
+      if(c==='\n')html+='<span class="untyped">↵</span>\n';
+      else html+='<span class="untyped">'+escapeHtml(c)+'</span>';
     }
   }
   $('target').innerHTML=html;
-  $('prog').textContent=(idx+1)+'/'+drills.length;
+  $('prog').textContent=typed.length+'/'+tgt.length;
   $('errs').textContent='错击 '+errors;
   $('bs').textContent='退格 '+bs;
 }
@@ -146,153 +235,123 @@ function updateTimer(){
   $('wpm').textContent=wpm+' wpm';
 }
 
+// ---- 键盘输入 ----
 document.addEventListener('keydown',e=>{
   if($('practice').style.display==='none')return;
-  e.preventDefault();
-  const tgt=drills[idx].cmd;
-  if(e.key==='Escape'){if(confirm('退出训练？'))restart();return;}
-  if(e.key==='Tab'){
-    results.push({header:drills[idx].header,cmd:drills[idx].cmd,skipped:true});
-    nextDrill();return;
+  if(document.activeElement&&document.activeElement.tagName==='BUTTON'){
+    // 让按钮的 Enter 等正常工作
+    if(e.key==='Enter'||e.key===' ')return;
   }
+  const tgt=currentTarget();
   if(e.key==='Backspace'){
-    if(typed.length>0){typed=typed.slice(0,-1);bs++;}
+    e.preventDefault();
+    if(typed.length>0){typed=typed.slice(0,-1);bs++;complete=false;
+      $('completeFlag').classList.remove('show');}
     render();return;
   }
   if(e.key.length===1||e.key==='Enter'){
+    e.preventDefault();
+    if(complete)return; // 已完成，禁止再输入
     const ch=e.key==='Enter'?'\n':e.key;
     if(typed.length<tgt.length){
       typed+=ch;
       if(ch!==tgt[typed.length-1]){errors++;errPos.push(typed.length-1);}
       render();
-      if(typed===tgt)finishDrill();
+      if(typed===tgt)markComplete();
     }
   }
 });
 
-function finishDrill(){
+function markComplete(){
+  if(complete)return;
+  complete=true;
+  if(timer)clearInterval(timer);
   const dt=(Date.now()-t0)/1000;
-  results.push({
-    header:drills[idx].header,
-    cmd:drills[idx].cmd,
-    correct:true,errors:errors,error_positions:errPos,
+  const rep={
+    errors:errors,error_positions:errPos.slice(),
     backspaces:bs,time_ms:Math.round(dt*1000),
     first_try:errors===0,
-    wpm:Math.round(drills[idx].cmd.length/Math.max(dt,0.1)*12),
-  });
-  nextDrill();
-}
-
-function nextDrill(){
-  idx++;
-  if(idx>=drills.length)done();
-  else startDrill();
-}
-
-function done(){
-  if(timer)clearInterval(timer);
-  $('practice').style.display='none';
-  $('done').style.display='';
-  let html='',ok=0,bad=0,sk=0,totErr=0;
-  for(const r of results){
-    if(r.skipped){html+='<div class="row skip">⏭ '+escapeHtml(r.cmd)+'</div>';sk++;}
-    else{
-      totErr+=r.errors;
-      const flag=r.first_try?'✅ 一次过':'⚠️ 错'+r.errors;
-      const cls=r.first_try?'ok':'bad';
-      if(r.first_try)ok++;else bad++;
-      html+='<div class="row '+cls+'">'+flag+' · '+escapeHtml(r.cmd)+' · '+(r.time_ms/1000).toFixed(1)+'s · '+r.wpm+'wpm</div>';
-    }
-  }
-  html='<div class="row head">一次过 '+ok+' · 出错 '+bad+' · 跳过 '+sk+' · 总错击 '+totErr+'</div>'+html;
-  $('summary').innerHTML=html;
-  // 持久化到 localStorage
-  saveSession();
-}
-
-const STORE_KEY='drillHistory';
-function loadHistory(){
-  try{return JSON.parse(localStorage.getItem(STORE_KEY))||[];}catch(e){return[];}
-}
-function saveSession(){
-  const hist=loadHistory();
-  hist.push(sessionPayload());
-  try{localStorage.setItem(STORE_KEY,JSON.stringify(hist));}catch(e){alert('本地存储失败: '+e.message);}
-}
-
-function sessionPayload(){
-  return{
-    ts:Date.now(),
-    date:new Date().toISOString().slice(0,10),
-    subject:new URLSearchParams(location.search).get('s')||'',
-    results:results,
+    wpm:Math.round(currentTarget().length/Math.max(dt,0.1)*12),
+    ts:new Date().toISOString(),
   };
+  sessionData.questions[qIdx].reps.push(rep);
+  $('completeFlag').classList.add('show');
+  render();
 }
 
+// ---- 控制按钮 ----
+function retry(){startQuestion();}
+function nextQ(){
+  if(qIdx<DATA.questions.length-1){qIdx++;startQuestion();}
+  else{
+    if(confirm('已是最后一题，结束训练？'))finish();
+  }
+}
+function prevQ(){if(qIdx>0){qIdx--;startQuestion();}}
+function finish(){
+  if(!confirm('结束本次训练？'))return;
+  if(timer)clearInterval(timer);
+  // 过滤掉一遍未练的题
+  sessionData.questions=sessionData.questions.filter(q=>q.reps.length>0);
+  // 存历史
+  const h=loadHistory();h.push(sessionData);saveHistory(h);
+  $('practice').style.display='none';$('done').style.display='';
+  renderSummary();
+}
+
+function renderSummary(){
+  let totReps=0,totFirst=0,totErr=0;
+  let qLines='';
+  for(const q of sessionData.questions){
+    const first=q.reps.filter(r=>r.first_try).length;
+    const total=q.reps.length;
+    const err=q.reps.reduce((s,r)=>s+r.errors,0);
+    totReps+=total;totFirst+=first;totErr+=err;
+    const allPerfect=first===total;
+    qLines+='<div class="row '+(allPerfect?'perfect':'imperfect')+'">'+
+      (allPerfect?'✅':'⚠️')+' '+q.id+' · 练 '+total+' 遍 · '+first+' 遍一次过 · 错击 '+err+'</div>';
+  }
+  const head='<div class="row head">本场 '+sessionData.questions.length+' 题 / '+totReps+' 遍 / '+totFirst+' 遍一次过 / 总错击 '+totErr+'</div>';
+  $('summary').innerHTML=head+qLines;
+}
+
+// ---- 导出 / 历史 ----
 function copyJSON(){
-  navigator.clipboard.writeText(JSON.stringify(sessionPayload(),null,2))
+  navigator.clipboard.writeText(JSON.stringify(sessionData,null,2))
     .then(()=>alert('已复制本次 JSON · 粘贴回 Claudian'));
 }
-
 function downloadJSON(){
-  const p=sessionPayload();
-  const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='打字训练_'+p.date+'.json';
-  a.click();
+  const blob=new Blob([JSON.stringify(sessionData,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='惩罚清单_'+sessionData.date+'.json';a.click();
 }
-
 function exportHistory(){
   const h=loadHistory();
-  if(!h.length){alert('暂无历史');return;}
-  navigator.clipboard.writeText(JSON.stringify({exported_at:new Date().toISOString(),total_sessions:h.length,sessions:h},null,2))
-    .then(()=>alert('已复制 '+h.length+' 次训练历史 · 粘贴回 Claudian 分析'));
+  if(!h.length){alert('无历史');return;}
+  navigator.clipboard.writeText(JSON.stringify({exported_at:new Date().toISOString(),sessions:h},null,2))
+    .then(()=>alert('已复制 '+h.length+' 场历史 · 粘贴回 Claudian'));
 }
-
 function clearHistory(){
-  if(!confirm('确定清空全部本地历史？此操作不可逆。'))return;
-  localStorage.removeItem(STORE_KEY);
-  renderHistoryBar();
-  alert('历史已清空');
+  if(!confirm('清空全部本地历史？此操作不可逆。'))return;
+  localStorage.removeItem(STORE_KEY);renderHistoryBar();
 }
-
-function renderHistoryBar(){
-  const bar=$('historyBar');
-  const h=loadHistory();
-  if(!h.length){bar.style.display='none';return;}
-  // 统计：总场次、今日、累计一次过率、最近一次时间
-  const today=new Date().toISOString().slice(0,10);
-  const todayCnt=h.filter(s=>s.date===today).length;
-  let totDrills=0,totFirst=0;
-  for(const s of h){
-    for(const r of s.results){
-      if(r.skipped)continue;
-      totDrills++;
-      if(r.first_try)totFirst++;
-    }
-  }
-  const rate=totDrills?Math.round(totFirst/totDrills*100):0;
-  const last=h[h.length-1];
-  const lastTime=new Date(last.ts).toLocaleString('zh-CN',{hour12:false}).slice(5);
-  bar.style.display='';
-  bar.innerHTML=
-    '<span class="stat">📊 累计 <b>'+h.length+'</b> 场</span>'+
-    '<span class="stat">今日 <b>'+todayCnt+'</b> 场</span>'+
-    '<span class="stat">一次过率 <b>'+rate+'%</b> ('+totFirst+'/'+totDrills+')</span>'+
-    '<span class="stat">最近 <b>'+lastTime+'</b></span>';
-}
-
-function restart(){
-  $('done').style.display='none';$('practice').style.display='none';
-  $('setup').style.display='';results=[];
+function backToSetup(){
+  $('done').style.display='none';$('setup').style.display='';
   renderHistoryBar();
 }
 
-// 页面加载: 渲染历史栏 + 支持 URL 参数预填 ?d=BASE64(commands)
+// ---- URL ?q= 自动加载 ----
 renderHistoryBar();
-const enc=new URLSearchParams(location.search).get('d');
-if(enc){try{$('cmds').value=decodeURIComponent(escape(atob(enc)));}catch(e){}}
+const enc=new URLSearchParams(location.search).get('q');
+if(enc){
+  try{
+    const json=decodeURIComponent(escape(atob(enc)));
+    DATA=JSON.parse(json);
+    $('jsonInput').value=JSON.stringify(DATA,null,2);
+    // 自动开始
+    startFromInput();
+  }catch(e){alert('URL 参数解析失败: '+e.message);}
+}
 </script>
 </body>
 </html>

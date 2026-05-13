@@ -3,164 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>试卷训练 · 主网自动化竞赛</title>
+<title>一站式训练 · 主网自动化竞赛</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#1a1a1a;color:#e0e0e0;font-family:'SF Mono',Consolas,Menlo,monospace;padding:30px 20px;min-height:100vh}
-.container{max-width:900px;margin:0 auto}
-h1{font-size:24px;margin-bottom:16px}
-h2{font-size:18px;margin:16px 0 12px;color:#ffd54f}
-p{margin-bottom:8px;color:#aaa}
+body{background:#1a1a1a;color:#e0e0e0;font-family:'SF Mono',Consolas,Menlo,monospace;padding:24px 18px;min-height:100vh}
+.container{max-width:920px;margin:0 auto}
+h1{font-size:22px;margin-bottom:14px}
+h2{font-size:15px;margin:14px 0 8px;color:#ffd54f}
+p{margin-bottom:8px;color:#aaa;font-size:13px}
 code{background:#333;padding:2px 6px;border-radius:3px;color:#ffd54f}
-button{padding:8px 18px;background:#4caf50;color:#fff;border:none;border-radius:6px;font-size:14px;cursor:pointer;margin:4px 6px 4px 0;font-family:inherit}
+a{color:#4caf50;text-decoration:none}
+a:hover{text-decoration:underline}
+
+button{padding:8px 16px;background:#4caf50;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;margin:3px 5px 3px 0;font-family:inherit}
 button:hover{background:#45a049}
-button.s{background:#555}
-button.s:hover{background:#666}
-button.warn{background:#f57c00}
-button.warn:hover{background:#ef6c00}
-button.red{background:#c62828}
-button.red:hover{background:#b71c1c}
-textarea{width:100%;min-height:200px;padding:14px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:14px;line-height:1.6;resize:vertical}
-select{padding:8px 12px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:14px}
+button:disabled{background:#444;cursor:not-allowed;opacity:0.6}
+button.s{background:#555}button.s:hover:not(:disabled){background:#666}
+button.warn{background:#f57c00}button.warn:hover:not(:disabled){background:#ef6c00}
+button.red{background:#c62828}button.red:hover:not(:disabled){background:#b71c1c}
+button.big{padding:11px 24px;font-size:14px}
 
-.bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:13px;color:#888}
-.progress{flex:1;height:6px;background:#333;border-radius:3px;overflow:hidden}
+textarea,input[type=text],input[type=password],select{width:100%;padding:10px 12px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:13px;line-height:1.6}
+textarea{min-height:140px;resize:vertical}
+select{padding:8px 10px}
+.row{display:flex;gap:10px;margin:8px 0;align-items:center}
+.row label{min-width:110px;font-size:13px;color:#aaa}
+.row input,.row select{flex:1}
+
+/* 顶部进度条 */
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:12px;color:#888;padding-bottom:10px;border-bottom:1px solid #2a2a2a}
+.progress{flex:1;height:5px;background:#2a2a2a;border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;background:#4caf50;transition:width 0.3s}
-.marks{display:flex;gap:12px;font-size:12px}
-.marks .m{padding:2px 8px;border-radius:10px;background:#333}
-.marks .m.skip{color:#888}
-.marks .m.dontknow{color:#f57c00}
-.marks .m.answered{color:#4caf50}
+.topbar .qp{color:#ffd54f;font-weight:bold;font-size:13px}
 
-#qbox{background:#232323;padding:18px 22px;border-radius:8px;margin:12px 0;line-height:1.7;white-space:pre-wrap;font-size:15px}
-#qmeta{color:#666;font-size:12px;margin-bottom:6px}
-#qtitle{color:#ffd54f;font-weight:bold;font-size:16px;margin-bottom:10px}
+/* 题面 */
+#qti{background:#232323;padding:14px 18px;border-left:3px solid #ffd54f;border-radius:6px;color:#ddd;line-height:1.7;margin-bottom:12px;font-size:14px;white-space:pre-wrap}
+#qmeta{color:#666;font-size:12px;margin-bottom:4px}
 
-#status-row{margin-top:10px;font-size:13px;color:#888;min-height:20px}
-#status-row.skip{color:#888}
-#status-row.dontknow{color:#f57c00}
-#status-row.answered{color:#4caf50}
+/* 阶段块 */
+.stage{margin:14px 0;padding:12px 14px;background:#1f1f1f;border-radius:6px;border-left:2px solid #444}
+.stage.active{border-left-color:#4caf50}
+.stage.done{border-left-color:#888;opacity:0.85}
+.stage h2{margin-top:0}
+.stage-status{font-size:11px;color:#888;float:right;font-weight:normal;font-style:italic}
 
-#summary{background:#232323;padding:16px 20px;border-radius:8px;margin:14px 0}
-#summary .row{padding:4px 0;font-size:14px}
-#summary .row.s{color:#888}
-#summary .row.d{color:#f57c00}
-#summary .row.a{color:#4caf50}
+/* 评分结果 */
+.verdict{padding:10px 14px;border-radius:6px;margin:10px 0;font-size:14px}
+.v-correct{background:#1b3a1c;color:#81c784;border-left:3px solid #4caf50}
+.v-partial{background:#3a3315;color:#ffd54f;border-left:3px solid #ff9800}
+.v-wrong{background:#3a1f1f;color:#ef9a9a;border-left:3px solid #c62828}
+.v-dontknow{background:#2a2a2a;color:#aaa;border-left:3px solid #555}
+.wp-list{margin:6px 0 0 16px;font-size:13px;color:#ddd}
+.wp-list li{margin:3px 0}
 
-#exportBox{background:#1a1a1a;border:1px solid #444;padding:12px;border-radius:6px;font-size:11px;color:#888;max-height:280px;overflow:auto;font-family:'SF Mono',monospace;white-space:pre-wrap;margin:12px 0}
+/* 盲敲区 */
+#drillTarget{font-size:17px;line-height:1.9;background:#232323;padding:18px;border-radius:6px;min-height:80px;white-space:pre-wrap;word-break:break-all;letter-spacing:0.3px;margin:10px 0}
+.untyped{color:#555}
+.correct{color:#4caf50}
+.wrong{background:#d32f2f;color:#fff;border-radius:2px}
+.cursor{background:#ffeb3b;color:#000;border-radius:2px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0.5}}
+#drillStats{font-size:12px;color:#888;display:flex;gap:18px;margin-top:6px;font-variant-numeric:tabular-nums}
+.drill-complete{color:#4caf50;font-weight:bold;display:none}
+.drill-complete.show{display:inline}
 
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-top:14px}
-.toolbar .left,.toolbar .right{display:flex;gap:6px}
+/* 控制条 */
+.controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid #2a2a2a}
+.controls .gap{flex:1}
 
-#topnav{display:flex;justify-content:space-between;margin-bottom:20px;font-size:13px}
-#topnav a{color:#4caf50;text-decoration:none}
-#topnav a:hover{text-decoration:underline}
+/* spinner */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #555;border-top-color:#4caf50;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.muted{color:#888;font-size:12px}
+
+#summary{background:#232323;padding:14px 18px;border-radius:8px;margin:12px 0;font-size:13px;line-height:1.8}
+#summary .h{color:#ffd54f;font-weight:bold;border-bottom:1px solid #444;padding-bottom:6px;margin-bottom:8px}
+
+#exportBox{background:#1a1a1a;border:1px solid #444;padding:10px;border-radius:6px;font-size:10px;color:#888;max-height:240px;overflow:auto;white-space:pre-wrap;margin:10px 0}
 </style>
 </head>
 <body><div class="container">
 
-<div id="topnav">
-  <a href="./">← 惩罚清单</a>
-  <span>主网自动化竞赛 · 试卷训练</span>
-</div>
-
-<!-- 起始页 -->
+<!-- ============ 起始页 ============ -->
 <div id="setup">
-  <h1>📋 试卷训练</h1>
-  <p>选学科 → 开始答题。进度自动存浏览器，关页面明天接着做。</p>
-  <p>每题完成 → 自动下一题。答完所有题 → 导出 JSON 贴回 Claudian 评分。</p>
-  <div style="margin:20px 0">
-    <label>学科：</label>
-    <select id="subjSel"></select>
-    <button onclick="startOrResume()">开始 / 继续</button>
-    <button class="s" onclick="resetSubject()">重置当前学科</button>
+  <h1>📋 一站式训练</h1>
+  <p>答题 → API 批卷 → 错点提示 → 盲敲惩罚 → 下一题。完整闭环在本页完成。</p>
+  <p>切到 <a href="./">惩罚清单单独模式</a></p>
+  <h2>设置</h2>
+  <div class="row">
+    <label>AIHUBMIX Key:</label>
+    <input type="password" id="apiKey" placeholder="sk-...（存浏览器，不外传）">
   </div>
-  <div id="resumeInfo" style="color:#888;font-size:13px"></div>
+  <div class="row">
+    <label>批卷模型:</label>
+    <select id="model">
+      <option value="gpt-4o-mini">gpt-4o-mini (默认 · 快/便宜)</option>
+      <option value="claude-3-5-haiku-latest">claude-3-5-haiku</option>
+      <option value="claude-sonnet-4-5">claude-sonnet-4-5 (准但贵)</option>
+      <option value="gpt-4o">gpt-4o</option>
+    </select>
+  </div>
+  <div class="row">
+    <label>学科:</label>
+    <select id="subj"></select>
+  </div>
+  <button class="big" onclick="startOrResume()">开始 / 继续</button>
+  <button class="s" onclick="resetProgress()">重置进度</button>
+  <button class="s" onclick="exportAll()">导出全部历史 JSON</button>
+  <p id="resumeInfo" class="muted" style="margin-top:10px"></p>
 </div>
 
-<!-- 答题页 -->
-<div id="exam" style="display:none">
-  <div class="bar">
-    <span id="progText">0/0</span>
-    <div class="progress"><div class="progress-fill" id="progFill"></div></div>
-    <div class="marks">
-      <span class="m answered">答 <b id="cntA">0</b></span>
-      <span class="m skip">跳 <b id="cntS">0</b></span>
-      <span class="m dontknow">不会 <b id="cntD">0</b></span>
+<!-- ============ 训练页 ============ -->
+<div id="trainer" style="display:none">
+  <div class="topbar">
+    <span class="qp" id="qp">1/57</span>
+    <div class="progress"><div class="progress-fill" id="pf"></div></div>
+    <span id="counts">✏0  ⏭0  ❌0</span>
+    <button class="s" style="padding:5px 10px;font-size:12px;margin:0" onclick="exitSession()">退出</button>
+  </div>
+
+  <div id="qmeta"></div>
+  <div id="qti"></div>
+
+  <!-- 阶段 1: 答题 -->
+  <div class="stage" id="stage1">
+    <h2>1. 答题 <span class="stage-status" id="s1status">进行中</span></h2>
+    <textarea id="ans" placeholder="在此输入你的答案（多行 OK）。⌘+Enter 提交。"></textarea>
+    <div class="controls" style="border:0;padding:0;margin-top:8px">
+      <button class="warn" onclick="markAndNext('skip')">跳过</button>
+      <button class="red" onclick="markAndNext('dontknow')">不会</button>
+      <div class="gap"></div>
+      <button onclick="submitAnswer()">提交并批卷 →</button>
     </div>
   </div>
 
-  <div id="qbox">
-    <div id="qmeta"></div>
-    <div id="qtitle"></div>
-    <div id="qtext"></div>
+  <!-- 阶段 2: 批卷结果 -->
+  <div class="stage" id="stage2" style="display:none">
+    <h2>2. 批卷结果 <span class="stage-status" id="s2status"></span></h2>
+    <div id="verdictBox"></div>
   </div>
 
-  <h2>你的答案</h2>
-  <textarea id="answer" placeholder="在这里写你的答案（多行 OK）"></textarea>
-  <div id="status-row"></div>
-
-  <div class="toolbar">
-    <div class="left">
-      <button class="s" onclick="prev()">← 上一题</button>
-      <button class="warn" onclick="mark('skip')">跳过</button>
-      <button class="red" onclick="mark('dontknow')">不会</button>
-      <button onclick="submit()">提交 / 下一题 →</button>
+  <!-- 阶段 3: 盲敲惩罚 -->
+  <div class="stage" id="stage3" style="display:none">
+    <h2>3. 盲敲惩罚 <span class="stage-status" id="s3status">练到满意点下一题</span></h2>
+    <p class="muted">逐字符敲，错处红色高亮，本遍敲完自动判定。</p>
+    <div id="drillTarget"></div>
+    <div id="drillStats">
+      <span id="dprog">0/0</span>
+      <span id="derrs">错击 0</span>
+      <span id="dbs">退格 0</span>
+      <span id="dtimer">0.0s</span>
+      <span id="dwpm">0 wpm</span>
+      <span id="dcomplete" class="drill-complete">✅ 本遍完成</span>
+      <span id="drepCnt" class="muted">已练 0 遍</span>
     </div>
-    <div class="right">
-      <button class="s" onclick="exitToSetup()">退出（保存进度）</button>
-      <button class="s" onclick="goExport()">导出 JSON</button>
+    <div class="controls" style="border:0;padding:0;margin-top:10px">
+      <button onclick="drillRetry()">🔄 再来一次</button>
+      <button class="s" onclick="drillSkip()">⏭ 跳过惩罚</button>
+      <div class="gap"></div>
+      <button onclick="nextQuestion()">下一题 →</button>
     </div>
   </div>
 </div>
 
-<!-- 完成页 -->
+<!-- ============ 完成页 ============ -->
 <div id="done" style="display:none">
-  <h1>✅ 答题结束</h1>
+  <h1>✅ 训练结束</h1>
   <div id="summary"></div>
-  <p style="margin-top:14px;color:#aaa;font-size:13px">下面的 JSON <b>复制后贴回 Claudian</b>，我会逐题对比标准答案、提取错点、生成惩罚清单。</p>
-  <pre id="exportBox"></pre>
   <button onclick="copyExport()">复制 JSON 到剪贴板</button>
   <button class="s" onclick="downloadExport()">下载 JSON</button>
-  <button class="s" onclick="backToExam()">← 回到答题</button>
   <button class="s" onclick="backToSetup()">回起始页</button>
+  <pre id="exportBox"></pre>
 </div>
 
 </div>
 <script>
 const $=id=>document.getElementById(id);
-let DATA={};        // exam_data.json 全集
-let SUBJ='';        // 当前学科
-let QS=[];          // 当前学科题目
-let SESS=null;      // 当前 session（localStorage 持久化）
+const STORE='trainerState_v2';
+const HIST='trainerHistory_v2';
 
-const KEY='examSessions';
+let DATA={};      // exam_data.json 全集
+let SUBJ='';      // 当前学科
+let QS=[];        // 当前题集
+let STATE=null;   // 当前会话
 
-// ---- localStorage 工具 ----
-function loadAll(){
-  try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}
-}
-function saveAll(all){
-  localStorage.setItem(KEY,JSON.stringify(all));
-}
-function loadSess(subj){
-  return loadAll()[subj]||null;
-}
-function saveSess(){
-  const all=loadAll();
-  all[SUBJ]=SESS;
-  saveAll(all);
-}
+// drill state
+let dTyped='',dErrors=0,dBs=0,dErrPos=[],dT0=0,dTimer=null,dComplete=false,dReps=[];
 
-// ---- 初始化：拉 exam_data.json ----
+// ---- localStorage ----
+function loadState(){try{return JSON.parse(localStorage.getItem(STORE))||{};}catch(e){return{};}}
+function saveState(){const all=loadState();all[SUBJ]=STATE;localStorage.setItem(STORE,JSON.stringify(all));}
+function loadHist(){try{return JSON.parse(localStorage.getItem(HIST))||[];}catch(e){return[];}}
+
+// ---- 初始化 ----
 async function init(){
+  // 恢复 API key
+  $('apiKey').value=localStorage.getItem('apiKey')||'';
+  $('model').value=localStorage.getItem('model')||'gpt-4o-mini';
+  $('apiKey').addEventListener('change',()=>localStorage.setItem('apiKey',$('apiKey').value.trim()));
+  $('model').addEventListener('change',()=>localStorage.setItem('model',$('model').value));
   try{
     const r=await fetch('exam_data.json?_t='+Date.now());
     DATA=await r.json();
-  }catch(e){
-    alert('加载题目失败：'+e.message);return;
-  }
-  const sel=$('subjSel');
+  }catch(e){alert('加载题库失败: '+e.message);return;}
+  const sel=$('subj');
   for(const s of Object.keys(DATA)){
     const o=document.createElement('option');o.value=s;o.textContent=s+' ('+DATA[s].length+'题)';
     sel.appendChild(o);
@@ -170,176 +216,337 @@ async function init(){
 }
 
 function updateResumeInfo(){
-  const s=$('subjSel').value;
-  const sess=loadSess(s);
-  if(sess){
-    const done=sess.entries.filter(e=>e.mark!=='').length;
-    $('resumeInfo').textContent='⏯ 上次进度: '+done+'/'+DATA[s].length+'  (起始: '+new Date(sess.started_at).toLocaleString('zh-CN',{hour12:false})+')';
-  }else{
-    $('resumeInfo').textContent='⚪ 此学科尚未开始';
-  }
+  const s=$('subj').value;
+  const all=loadState();const st=all[s];
+  if(st){
+    const done=st.entries.filter(e=>e.phase==='completed'||e.mark==='skip').length;
+    $('resumeInfo').textContent='⏯ 上次进度: '+done+'/'+DATA[s].length;
+  }else{$('resumeInfo').textContent='⚪ 此学科尚未开始';}
 }
 
-// ---- 开始 / 继续 ----
+// ---- 开始 / 恢复 ----
 function startOrResume(){
-  SUBJ=$('subjSel').value;
-  QS=DATA[SUBJ];
-  SESS=loadSess(SUBJ);
-  if(!SESS){
-    SESS={
-      subject:SUBJ,
-      started_at:new Date().toISOString(),
-      idx:0,
-      entries:QS.map(q=>({id:q.id,answer:'',mark:'',ts:null})),
+  if(!$('apiKey').value.trim()){alert('请先填 AIHUBMIX API Key');return;}
+  localStorage.setItem('apiKey',$('apiKey').value.trim());
+  localStorage.setItem('model',$('model').value);
+  SUBJ=$('subj').value;QS=DATA[SUBJ];
+  const all=loadState();STATE=all[SUBJ];
+  if(!STATE){
+    STATE={
+      subject:SUBJ,started_at:new Date().toISOString(),idx:0,
+      entries:QS.map(q=>({id:q.id,mark:'',phase:'answering',user_answer:'',
+        verdict:null,wrong_points:[],drills:[],drill_reps:[]})),
     };
-    saveSess();
+    saveState();
   }
   $('setup').style.display='none';$('done').style.display='none';
-  $('exam').style.display='';
+  $('trainer').style.display='';
   renderQ();
 }
 
-function resetSubject(){
-  const s=$('subjSel').value;
-  if(!confirm('确定重置「'+s+'」全部答题进度？此操作不可逆。'))return;
-  const all=loadAll();delete all[s];saveAll(all);
+function resetProgress(){
+  const s=$('subj').value;
+  if(!confirm('重置「'+s+'」全部进度？'))return;
+  const all=loadState();delete all[s];localStorage.setItem(STORE,JSON.stringify(all));
   updateResumeInfo();
 }
 
 // ---- 渲染当前题 ----
 function renderQ(){
-  const i=SESS.idx;const q=QS[i];const e=SESS.entries[i];
-  $('qmeta').textContent='第 '+(i+1)+' / '+QS.length+' 题  ·  '+q.id+(q.题源?'  ·  '+q.题源:'');
-  $('qtitle').textContent=q.title;
-  $('qtext').textContent=q.题面;
-  $('answer').value=e.answer||'';
-  // 状态行
-  const sr=$('status-row');sr.className='';sr.textContent='';
-  if(e.mark==='skip'){sr.className='skip';sr.textContent='⏭ 已标记跳过';}
-  if(e.mark==='dontknow'){sr.className='dontknow';sr.textContent='❌ 已标记不会';}
-  if(e.mark==='answered'){sr.className='answered';sr.textContent='✏ 已作答';}
-  // 进度
-  const done=SESS.entries.filter(x=>x.mark!=='').length;
-  $('progText').textContent=done+'/'+QS.length;
-  $('progFill').style.width=(done/QS.length*100)+'%';
-  $('cntA').textContent=SESS.entries.filter(x=>x.mark==='answered').length;
-  $('cntS').textContent=SESS.entries.filter(x=>x.mark==='skip').length;
-  $('cntD').textContent=SESS.entries.filter(x=>x.mark==='dontknow').length;
-  // 聚焦
-  $('answer').focus();
-}
+  const i=STATE.idx;const q=QS[i];const e=STATE.entries[i];
+  $('qp').textContent=(i+1)+'/'+QS.length;
+  const done=STATE.entries.filter(x=>x.phase==='completed'||x.mark==='skip').length;
+  $('pf').style.width=(done/QS.length*100)+'%';
+  const ansC=STATE.entries.filter(x=>x.phase==='completed').length;
+  const skC=STATE.entries.filter(x=>x.mark==='skip').length;
+  const dkC=STATE.entries.filter(x=>x.mark==='dontknow').length;
+  $('counts').textContent='✏'+ansC+'  ⏭'+skC+'  ❌'+dkC;
+  $('qmeta').textContent='第 '+(i+1)+' / '+QS.length+' 题 · '+q.id+(q.题源?' · '+q.题源:'');
+  $('qti').textContent='题面：'+q.题面;
 
-// ---- 保存当前题的答案/标记 ----
-function commitCurrent(markIfBlank){
-  const i=SESS.idx;const e=SESS.entries[i];
-  const txt=$('answer').value.trim();
-  if(txt){
-    e.answer=txt;e.mark='answered';e.ts=new Date().toISOString();
-  }else if(markIfBlank){
-    e.mark=markIfBlank;e.ts=new Date().toISOString();e.answer='';
+  // 根据 phase 显示不同阶段
+  $('stage1').style.display='';
+  $('stage2').style.display=e.verdict?'':'none';
+  $('stage3').style.display=(e.drills&&e.drills.length)?'':'none';
+
+  // 阶段 1 状态
+  $('ans').value=e.user_answer||'';
+  if(e.phase==='completed'){$('s1status').textContent='已完成';$('stage1').classList.add('done');$('stage1').classList.remove('active');}
+  else if(e.phase==='graded'){$('s1status').textContent='已批卷';$('stage1').classList.add('done');$('stage1').classList.remove('active');}
+  else{$('s1status').textContent='进行中';$('stage1').classList.add('active');$('stage1').classList.remove('done');}
+
+  // 阶段 2 渲染
+  if(e.verdict)renderVerdict(e);
+
+  // 阶段 3 渲染（盲敲）
+  if(e.drills&&e.drills.length){
+    dReps=e.drill_reps||[];
+    drillStartFromState();
   }
-  // 如果 mark 已是 skip/dontknow，但又写了答案：覆盖为 answered
-  saveSess();
+
+  $('ans').focus();
 }
 
-function submit(){
-  const txt=$('answer').value.trim();
-  if(!txt){alert('请填答案，或点「跳过」/「不会」');return;}
-  commitCurrent(null);
-  next();
-}
-
-function mark(m){
-  commitCurrent(m);
-  next();
-}
-
-function next(){
-  if(SESS.idx<QS.length-1){
-    SESS.idx++;saveSess();renderQ();
-  }else{
-    finish();
+function renderVerdict(e){
+  const map={correct:['v-correct','✅ 正确'],partial:['v-partial','⚠️ 部分正确'],
+    wrong:['v-wrong','❌ 错'],dontknow:['v-dontknow','❌ 不会（直接进惩罚）']};
+  const [cls,label]=map[e.verdict]||['v-wrong','❌'];
+  let html='<div class="verdict '+cls+'"><b>'+label+'</b>';
+  if(e.wrong_points&&e.wrong_points.length){
+    html+='<ul class="wp-list">';
+    for(const p of e.wrong_points)html+='<li>'+escapeHtml(p)+'</li>';
+    html+='</ul>';
+  }
+  html+='</div>';
+  $('verdictBox').innerHTML=html;
+  $('s2status').textContent=label;
+  if(e.verdict==='correct'){
+    $('s3status').textContent='完美！可直接下一题，或点再来一次巩固。';
   }
 }
 
-function prev(){
-  // 先保存当前内容（不强制 mark）
-  const i=SESS.idx;const e=SESS.entries[i];
-  const txt=$('answer').value.trim();
-  if(txt){e.answer=txt;e.mark='answered';e.ts=new Date().toISOString();}
-  saveSess();
-  if(SESS.idx>0){SESS.idx--;saveSess();renderQ();}
+// ---- 阶段 1: 提交 / 跳过 / 不会 ----
+async function submitAnswer(){
+  const i=STATE.idx;const q=QS[i];const e=STATE.entries[i];
+  const ans=$('ans').value.trim();
+  if(!ans){alert('请填答案，或点跳过/不会');return;}
+  e.user_answer=ans;
+  saveState();
+  // 切到批卷中状态
+  $('s2status').innerHTML='<span class="spinner"></span>批卷中...';
+  $('stage2').style.display='';
+  $('verdictBox').innerHTML='<div class="muted">调用 '+($('model').value)+' 中，约需 5-15 秒...</div>';
+  try{
+    const result=await callGrader(q,ans);
+    e.verdict=result.verdict;
+    e.wrong_points=result.wrong_points||[];
+    e.drills=result.drills||[];
+    e.phase='graded';
+    saveState();
+    renderQ();
+    // 若 correct 自动跳到阶段 3 但显示"通过"，让用户决定
+  }catch(err){
+    $('verdictBox').innerHTML='<div class="verdict v-wrong"><b>批卷失败</b><div style="margin-top:6px;font-size:12px">'+escapeHtml(err.message)+'</div><button class="s" style="margin-top:8px" onclick="submitAnswer()">重试</button></div>';
+  }
 }
 
-function finish(){
-  SESS.ended_at=new Date().toISOString();saveSess();
-  $('exam').style.display='none';$('done').style.display='';
+function markAndNext(m){
+  const e=STATE.entries[STATE.idx];
+  e.mark=m;e.user_answer=$('ans').value.trim();
+  if(m==='dontknow'){
+    // 不会 → 直接走批卷流程拿 drills
+    submitAnswer();return;
+  }
+  // 跳过 → 直接下一题
+  saveState();gotoNext();
+}
+
+// ---- 调 API ----
+async function callGrader(q,userAns){
+  const key=$('apiKey').value.trim();const model=$('model').value;
+  const prompt=`你是 Linux/凝思系统实操题判官。逐条对比用户答案和标准答案，判定正误并提取应训练的命令。
+
+题面：
+${q.题面}
+
+标准答案：
+${q.标答}
+
+用户答案：
+${userAns||'(空白/不会)'}
+
+严格按下面 JSON 格式返回，不要任何其他文字、解释、Markdown 包装：
+{"verdict":"correct|partial|wrong|dontknow","wrong_points":["错点1","错点2"],"drills":["要练命令1","要练命令2"]}
+
+判定规则：
+- correct: 用户答案功能上等价于标准答案（参数顺序无关、等价命令算对）
+- partial: 大部分对但有遗漏或个别错误
+- wrong: 大部分错或思路偏
+- dontknow: 用户答案为空或表达"不会"
+- wrong_points: 中文短句，每条 < 30 字，描述具体错处。correct 时为空数组
+- drills: 用户应该盲敲的核心正确命令字符串数组，每条一行命令文本。correct 时为空数组。dontknow/wrong 时给标准答案的核心命令`;
+  const res=await fetch('https://aihubmix.com/v1/chat/completions',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
+    body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],temperature:0.1}),
+  });
+  if(!res.ok){throw new Error('API '+res.status+': '+(await res.text()).slice(0,200));}
+  const data=await res.json();
+  let content=data.choices[0].message.content.trim();
+  // 兼容某些模型给的 ```json ... ``` 包装
+  content=content.replace(/^```(?:json)?\s*/,'').replace(/```\s*$/,'').trim();
+  try{return JSON.parse(content);}
+  catch(e){throw new Error('JSON 解析失败 (模型可能不支持)：'+content.slice(0,200));}
+}
+
+// ---- 阶段 3: 盲敲 ----
+function drillStartFromState(){
+  dTyped='';dErrors=0;dBs=0;dErrPos=[];dComplete=false;
+  dT0=Date.now();
+  $('dcomplete').classList.remove('show');
+  renderDrill();
+  if(dTimer)clearInterval(dTimer);
+  dTimer=setInterval(updateDrillTimer,100);
+}
+
+function currentDrillTarget(){
+  const e=STATE.entries[STATE.idx];
+  return (e.drills||[]).join('\n');
+}
+
+function renderDrill(){
+  const tgt=currentDrillTarget();
+  let html='';
+  for(let i=0;i<tgt.length;i++){
+    const c=tgt[i];
+    if(i<dTyped.length){
+      const tc=dTyped[i];
+      if(c==='\n')html+=tc==='\n'?'<span class="correct">↵</span>\n':'<span class="wrong">↵</span>\n';
+      else if(tc===c)html+='<span class="correct">'+escapeHtml(c)+'</span>';
+      else html+='<span class="wrong">'+escapeHtml(tc)+'</span>';
+    }else if(i===dTyped.length){
+      if(c==='\n')html+='<span class="cursor">↵</span>\n';
+      else html+='<span class="cursor">'+escapeHtml(c)+'</span>';
+    }else{
+      if(c==='\n')html+='<span class="untyped">↵</span>\n';
+      else html+='<span class="untyped">'+escapeHtml(c)+'</span>';
+    }
+  }
+  $('drillTarget').innerHTML=html;
+  $('dprog').textContent=dTyped.length+'/'+tgt.length;
+  $('derrs').textContent='错击 '+dErrors;
+  $('dbs').textContent='退格 '+dBs;
+  $('drepCnt').textContent='已练 '+dReps.length+' 遍'+(dComplete?'（本遍✅）':'');
+}
+
+function updateDrillTimer(){
+  const dt=(Date.now()-dT0)/1000;
+  $('dtimer').textContent=dt.toFixed(1)+'s';
+  const wpm=Math.round(dTyped.length/Math.max(dt,0.1)*12);
+  $('dwpm').textContent=wpm+' wpm';
+}
+
+// 键盘监听（仅在 stage3 active 时拦截）
+document.addEventListener('keydown',e=>{
+  // 在 textarea 输入时不拦截
+  if(document.activeElement&&document.activeElement.tagName==='TEXTAREA'){
+    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){
+      e.preventDefault();submitAnswer();return;
+    }
+    return;
+  }
+  if(document.activeElement&&document.activeElement.tagName==='BUTTON')return;
+  if($('trainer').style.display==='none')return;
+  if($('stage3').style.display==='none')return;
+  const cur=STATE.entries[STATE.idx];
+  if(!cur.drills||!cur.drills.length)return;
+  const tgt=currentDrillTarget();
+  if(e.key==='Backspace'){
+    e.preventDefault();
+    if(dTyped.length>0){dTyped=dTyped.slice(0,-1);dBs++;dComplete=false;$('dcomplete').classList.remove('show');}
+    renderDrill();return;
+  }
+  if(e.key.length===1||e.key==='Enter'){
+    e.preventDefault();
+    if(dComplete)return;
+    const ch=e.key==='Enter'?'\n':e.key;
+    if(dTyped.length<tgt.length){
+      dTyped+=ch;
+      if(ch!==tgt[dTyped.length-1]){dErrors++;dErrPos.push(dTyped.length-1);}
+      renderDrill();
+      if(dTyped===tgt)drillMarkComplete();
+    }
+  }
+});
+
+function drillMarkComplete(){
+  if(dComplete)return;
+  dComplete=true;
+  if(dTimer)clearInterval(dTimer);
+  const dt=(Date.now()-dT0)/1000;
+  const rep={errors:dErrors,backspaces:dBs,time_ms:Math.round(dt*1000),
+    first_try:dErrors===0,wpm:Math.round(currentDrillTarget().length/Math.max(dt,0.1)*12),
+    ts:new Date().toISOString()};
+  dReps.push(rep);
+  STATE.entries[STATE.idx].drill_reps=dReps;
+  saveState();
+  $('dcomplete').classList.add('show');
+  renderDrill();
+}
+
+function drillRetry(){drillStartFromState();}
+function drillSkip(){
+  STATE.entries[STATE.idx].phase='completed';
+  STATE.entries[STATE.idx].drill_skipped=true;
+  saveState();gotoNext();
+}
+
+function nextQuestion(){
+  // 标记为已完成
+  STATE.entries[STATE.idx].phase='completed';
+  saveState();
+  gotoNext();
+}
+
+function gotoNext(){
+  if(STATE.idx<QS.length-1){STATE.idx++;saveState();renderQ();}
+  else{finishAll();}
+}
+
+function exitSession(){
+  if(!confirm('退出本次训练？进度已自动保存。'))return;
+  if(dTimer)clearInterval(dTimer);
+  saveState();
+  backToSetup();
+}
+
+function finishAll(){
+  STATE.ended_at=new Date().toISOString();saveState();
+  // 写历史
+  const h=loadHist();h.push(STATE);localStorage.setItem(HIST,JSON.stringify(h));
+  $('trainer').style.display='none';$('done').style.display='';
   renderSummary();
 }
 
-function goExport(){
-  // 保存当前再去导出
-  commitCurrent(null);
-  finish();
-}
-
 function renderSummary(){
-  const a=SESS.entries.filter(x=>x.mark==='answered').length;
-  const s=SESS.entries.filter(x=>x.mark==='skip').length;
-  const d=SESS.entries.filter(x=>x.mark==='dontknow').length;
-  const blank=QS.length-a-s-d;
-  let html='';
-  html+='<div class="row a">✏ 作答 '+a+'</div>';
-  html+='<div class="row s">⏭ 跳过 '+s+'</div>';
-  html+='<div class="row d">❌ 不会 '+d+'</div>';
-  if(blank>0)html+='<div class="row">⚪ 未触碰 '+blank+'</div>';
-  $('summary').innerHTML=html;
-  $('exportBox').textContent=JSON.stringify(payload(),null,2);
-}
-
-function payload(){
-  return{
-    subject:SUBJ,
-    started_at:SESS.started_at,
-    ended_at:SESS.ended_at||new Date().toISOString(),
-    total:QS.length,
-    submitted:SESS.entries.filter(e=>e.mark!=='').map(e=>({
-      id:e.id,answer:e.answer,mark:e.mark,ts:e.ts,
-    })),
-  };
+  const e=STATE.entries;
+  const correct=e.filter(x=>x.verdict==='correct').length;
+  const partial=e.filter(x=>x.verdict==='partial').length;
+  const wrong=e.filter(x=>x.verdict==='wrong').length;
+  const dk=e.filter(x=>x.verdict==='dontknow').length;
+  const skip=e.filter(x=>x.mark==='skip').length;
+  let totReps=0,totFirst=0;
+  for(const ent of e){
+    for(const r of (ent.drill_reps||[])){totReps++;if(r.first_try)totFirst++;}
+  }
+  $('summary').innerHTML=
+    '<div class="h">本场总结</div>'+
+    '<div>✅ 正确 '+correct+' · ⚠️ 部分 '+partial+' · ❌ 错 '+wrong+' · ❌ 不会 '+dk+' · ⏭ 跳过 '+skip+'</div>'+
+    '<div>🔨 盲敲共 '+totReps+' 遍，其中 '+totFirst+' 遍一次过</div>';
+  $('exportBox').textContent=JSON.stringify(STATE,null,2);
 }
 
 function copyExport(){
-  navigator.clipboard.writeText(JSON.stringify(payload(),null,2))
-    .then(()=>alert('已复制 JSON · 切到 Claudian 直接粘贴'));
+  navigator.clipboard.writeText(JSON.stringify(STATE,null,2))
+    .then(()=>alert('已复制本次结果 · 粘贴回 Claudian 让我归档'));
 }
-
 function downloadExport(){
-  const p=payload();
-  const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify(STATE,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='试卷_'+SUBJ+'_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  a.download='训练_'+SUBJ+'_'+new Date().toISOString().slice(0,10)+'.json';a.click();
 }
-
-function exitToSetup(){
-  commitCurrent(null);
-  backToSetup();
+function exportAll(){
+  const h=loadHist();
+  const all=loadState();
+  navigator.clipboard.writeText(JSON.stringify({history:h,current:all},null,2))
+    .then(()=>alert('已复制全部历史+当前进度'));
 }
 function backToSetup(){
-  $('exam').style.display='none';$('done').style.display='none';
-  $('setup').style.display='';
-  updateResumeInfo();
-}
-function backToExam(){
-  $('done').style.display='none';$('exam').style.display='';
-  renderQ();
+  $('trainer').style.display='none';$('done').style.display='none';
+  $('setup').style.display='';updateResumeInfo();
 }
 
-// 键盘快捷键: Ctrl/Cmd+Enter 提交
-document.addEventListener('keydown',e=>{
-  if($('exam').style.display==='none')return;
-  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();submit();}
-});
+function escapeHtml(c){return String(c).replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]));}
 
 init();
 </script>

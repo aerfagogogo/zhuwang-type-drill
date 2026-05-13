@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>打字训练 · 主网自动化竞赛</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;color:#e0e0e0;font-family:'SF Mono',Consolas,Menlo,monospace;padding:40px 20px;min-height:100vh}
+.container{max-width:900px;margin:0 auto}
+h1{font-size:28px;margin-bottom:16px}
+p{margin-bottom:12px;color:#aaa}
+code{background:#333;padding:2px 6px;border-radius:3px;color:#ffd54f}
+textarea{width:100%;min-height:240px;padding:14px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:14px;margin:12px 0;line-height:1.6;resize:vertical}
+button{padding:10px 22px;background:#4caf50;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer;margin:4px 4px 4px 0}
+button:hover{background:#45a049}
+button.s{background:#555}
+button.s:hover{background:#666}
+#status{font-size:13px;color:#888;display:flex;gap:24px;margin-bottom:16px;font-variant-numeric:tabular-nums}
+#status span:before{content:'';display:inline-block}
+#header{color:#888;font-style:italic;margin-bottom:12px;font-size:14px}
+#target{font-size:24px;line-height:1.7;background:#232323;padding:24px;border-radius:8px;min-height:80px;white-space:pre-wrap;word-break:break-all;letter-spacing:0.5px}
+.untyped{color:#555}
+.correct{color:#4caf50}
+.wrong{background:#d32f2f;color:#fff;border-radius:2px}
+.cursor{background:#ffeb3b;color:#000;border-radius:2px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0.5}}
+#hint{color:#666;font-size:13px;margin-top:16px}
+#summary{background:#232323;padding:16px 20px;border-radius:8px;font-size:14px;margin:16px 0;line-height:1.8}
+.row{padding:3px 0}
+.row.ok{color:#4caf50}
+.row.bad{color:#ff9800}
+.row.skip{color:#888}
+.row.head{color:#fff;font-weight:bold;border-bottom:1px solid #444;padding-bottom:8px;margin-bottom:8px}
+hr{border:0;border-top:1px solid #333;margin:12px 0}
+</style>
+</head>
+<body><div class="container">
+
+<div id="setup">
+  <h1>📝 打字训练</h1>
+  <p>每行一条命令；<code># 注释</code> 给下一行打标签（注释自己不用敲）</p>
+  <textarea id="cmds" placeholder="# 错点 1: ifconfig 多写 add
+ifconfig eth1 10.20.30.40 netmask 255.255.255.0 up
+# 错点 2: route 漏 -net
+route add -net 10.20.0.0 netmask 255.255.0.0 dev eth1
+# 错点 3: 首次重定向应用 >
+ifconfig > net_info.txt"></textarea>
+  <button onclick="start()">开始训练</button>
+  <button class="s" onclick="loadDemo()">载入示例</button>
+</div>
+
+<div id="practice" style="display:none">
+  <div id="status">
+    <span id="prog">1/3</span>
+    <span id="errs">错击 0</span>
+    <span id="bs">退格 0</span>
+    <span id="timer">0.0s</span>
+    <span id="wpm">0 wpm</span>
+  </div>
+  <div id="header"></div>
+  <div id="target"></div>
+  <div id="hint">直接敲键开始 · Esc 退出 · Tab 跳过</div>
+</div>
+
+<div id="done" style="display:none">
+  <h1>✅ 训练完成</h1>
+  <div id="summary"></div>
+  <button onclick="copyJSON()">复制结果 JSON</button>
+  <button class="s" onclick="downloadJSON()">下载 JSON</button>
+  <button class="s" onclick="restart()">再来</button>
+  <p style="margin-top:16px;color:#888;font-size:13px">把 JSON 贴回 Claudian，他会分析你的击键数据并更新薄弱点。</p>
+</div>
+
+</div>
+<script>
+let drills=[],idx=0,typed='',errors=0,bs=0,errPos=[],t0=0,timer=null,results=[];
+const $=id=>document.getElementById(id);
+
+function parseCommands(text){
+  const lines=text.split('\n');const out=[];let h='';
+  for(const line of lines){
+    if(!line.trim())continue;
+    if(line.startsWith('#')){h=line.replace(/^#\s*/,'');}
+    else{out.push({header:h||'(无注释)',cmd:line});h='';}
+  }
+  return out;
+}
+
+function loadDemo(){
+  $('cmds').value=`# 错点 1: ifconfig 多写 add 子命令
+ifconfig eth1 10.20.30.40 netmask 255.255.255.0 up
+# 错点 2: route add 漏 -net 与 netmask
+route add -net 10.20.0.0 netmask 255.255.0.0 dev eth1
+# 错点 3: 首次重定向应用 > 而非 >>
+ifconfig > net_info.txt`;
+}
+
+function start(){
+  drills=parseCommands($('cmds').value);
+  if(!drills.length){alert('请输入至少一条命令');return;}
+  $('setup').style.display='none';$('practice').style.display='';
+  idx=0;results=[];startDrill();
+}
+
+function startDrill(){
+  typed='';errors=0;bs=0;errPos=[];t0=Date.now();
+  $('header').textContent='['+(idx+1)+'/'+drills.length+'] # '+drills[idx].header;
+  render();
+  if(timer)clearInterval(timer);
+  timer=setInterval(updateTimer,100);
+}
+
+function escapeHtml(c){return c.replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]));}
+
+function render(){
+  const tgt=drills[idx].cmd;let html='';
+  for(let i=0;i<tgt.length;i++){
+    const c=tgt[i];
+    if(i<typed.length){
+      if(typed[i]===c)html+='<span class="correct">'+escapeHtml(c)+'</span>';
+      else html+='<span class="wrong">'+escapeHtml(typed[i])+'</span>';
+    }else if(i===typed.length){
+      html+='<span class="cursor">'+escapeHtml(c)+'</span>';
+    }else{
+      html+='<span class="untyped">'+escapeHtml(c)+'</span>';
+    }
+  }
+  $('target').innerHTML=html;
+  $('prog').textContent=(idx+1)+'/'+drills.length;
+  $('errs').textContent='错击 '+errors;
+  $('bs').textContent='退格 '+bs;
+}
+
+function updateTimer(){
+  const dt=(Date.now()-t0)/1000;
+  $('timer').textContent=dt.toFixed(1)+'s';
+  const wpm=Math.round(typed.length/Math.max(dt,0.1)*12);
+  $('wpm').textContent=wpm+' wpm';
+}
+
+document.addEventListener('keydown',e=>{
+  if($('practice').style.display==='none')return;
+  e.preventDefault();
+  const tgt=drills[idx].cmd;
+  if(e.key==='Escape'){if(confirm('退出训练？'))restart();return;}
+  if(e.key==='Tab'){
+    results.push({header:drills[idx].header,cmd:drills[idx].cmd,skipped:true});
+    nextDrill();return;
+  }
+  if(e.key==='Backspace'){
+    if(typed.length>0){typed=typed.slice(0,-1);bs++;}
+    render();return;
+  }
+  if(e.key.length===1||e.key==='Enter'){
+    const ch=e.key==='Enter'?'\n':e.key;
+    if(typed.length<tgt.length){
+      typed+=ch;
+      if(ch!==tgt[typed.length-1]){errors++;errPos.push(typed.length-1);}
+      render();
+      if(typed===tgt)finishDrill();
+    }
+  }
+});
+
+function finishDrill(){
+  const dt=(Date.now()-t0)/1000;
+  results.push({
+    header:drills[idx].header,
+    cmd:drills[idx].cmd,
+    correct:true,errors:errors,error_positions:errPos,
+    backspaces:bs,time_ms:Math.round(dt*1000),
+    first_try:errors===0,
+    wpm:Math.round(drills[idx].cmd.length/Math.max(dt,0.1)*12),
+  });
+  nextDrill();
+}
+
+function nextDrill(){
+  idx++;
+  if(idx>=drills.length)done();
+  else startDrill();
+}
+
+function done(){
+  if(timer)clearInterval(timer);
+  $('practice').style.display='none';
+  $('done').style.display='';
+  let html='',ok=0,bad=0,sk=0,totErr=0;
+  for(const r of results){
+    if(r.skipped){html+='<div class="row skip">⏭ '+escapeHtml(r.cmd)+'</div>';sk++;}
+    else{
+      totErr+=r.errors;
+      const flag=r.first_try?'✅ 一次过':'⚠️ 错'+r.errors;
+      const cls=r.first_try?'ok':'bad';
+      if(r.first_try)ok++;else bad++;
+      html+='<div class="row '+cls+'">'+flag+' · '+escapeHtml(r.cmd)+' · '+(r.time_ms/1000).toFixed(1)+'s · '+r.wpm+'wpm</div>';
+    }
+  }
+  html='<div class="row head">一次过 '+ok+' · 出错 '+bad+' · 跳过 '+sk+' · 总错击 '+totErr+'</div>'+html;
+  $('summary').innerHTML=html;
+}
+
+function payload(){
+  return{date:new Date().toISOString().slice(0,10),subject:new URLSearchParams(location.search).get('s')||'',results:results};
+}
+
+function copyJSON(){
+  navigator.clipboard.writeText(JSON.stringify(payload(),null,2))
+    .then(()=>alert('已复制 JSON · 粘贴回 Claudian 即可'));
+}
+
+function downloadJSON(){
+  const p=payload();
+  const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='打字训练_'+p.date+'.json';
+  a.click();
+}
+
+function restart(){
+  $('done').style.display='none';$('practice').style.display='none';
+  $('setup').style.display='';results=[];
+}
+
+// 支持 URL 参数预填: ?d=BASE64(commands)
+const enc=new URLSearchParams(location.search).get('d');
+if(enc){try{$('cmds').value=decodeURIComponent(escape(atob(enc)));}catch(e){}}
+</script>
+</body>
+</html>

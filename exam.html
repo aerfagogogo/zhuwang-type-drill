@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>试卷训练 · 主网自动化竞赛</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;color:#e0e0e0;font-family:'SF Mono',Consolas,Menlo,monospace;padding:30px 20px;min-height:100vh}
+.container{max-width:900px;margin:0 auto}
+h1{font-size:24px;margin-bottom:16px}
+h2{font-size:18px;margin:16px 0 12px;color:#ffd54f}
+p{margin-bottom:8px;color:#aaa}
+code{background:#333;padding:2px 6px;border-radius:3px;color:#ffd54f}
+button{padding:8px 18px;background:#4caf50;color:#fff;border:none;border-radius:6px;font-size:14px;cursor:pointer;margin:4px 6px 4px 0;font-family:inherit}
+button:hover{background:#45a049}
+button.s{background:#555}
+button.s:hover{background:#666}
+button.warn{background:#f57c00}
+button.warn:hover{background:#ef6c00}
+button.red{background:#c62828}
+button.red:hover{background:#b71c1c}
+textarea{width:100%;min-height:200px;padding:14px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:14px;line-height:1.6;resize:vertical}
+select{padding:8px 12px;background:#2a2a2a;color:#fff;border:1px solid #444;border-radius:6px;font-family:inherit;font-size:14px}
+
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:13px;color:#888}
+.progress{flex:1;height:6px;background:#333;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:#4caf50;transition:width 0.3s}
+.marks{display:flex;gap:12px;font-size:12px}
+.marks .m{padding:2px 8px;border-radius:10px;background:#333}
+.marks .m.skip{color:#888}
+.marks .m.dontknow{color:#f57c00}
+.marks .m.answered{color:#4caf50}
+
+#qbox{background:#232323;padding:18px 22px;border-radius:8px;margin:12px 0;line-height:1.7;white-space:pre-wrap;font-size:15px}
+#qmeta{color:#666;font-size:12px;margin-bottom:6px}
+#qtitle{color:#ffd54f;font-weight:bold;font-size:16px;margin-bottom:10px}
+
+#status-row{margin-top:10px;font-size:13px;color:#888;min-height:20px}
+#status-row.skip{color:#888}
+#status-row.dontknow{color:#f57c00}
+#status-row.answered{color:#4caf50}
+
+#summary{background:#232323;padding:16px 20px;border-radius:8px;margin:14px 0}
+#summary .row{padding:4px 0;font-size:14px}
+#summary .row.s{color:#888}
+#summary .row.d{color:#f57c00}
+#summary .row.a{color:#4caf50}
+
+#exportBox{background:#1a1a1a;border:1px solid #444;padding:12px;border-radius:6px;font-size:11px;color:#888;max-height:280px;overflow:auto;font-family:'SF Mono',monospace;white-space:pre-wrap;margin:12px 0}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-top:14px}
+.toolbar .left,.toolbar .right{display:flex;gap:6px}
+
+#topnav{display:flex;justify-content:space-between;margin-bottom:20px;font-size:13px}
+#topnav a{color:#4caf50;text-decoration:none}
+#topnav a:hover{text-decoration:underline}
+</style>
+</head>
+<body><div class="container">
+
+<div id="topnav">
+  <a href="./">← 打字训练</a>
+  <span>主网自动化竞赛 · 试卷训练</span>
+</div>
+
+<!-- 起始页 -->
+<div id="setup">
+  <h1>📋 试卷训练</h1>
+  <p>选学科 → 开始答题。进度自动存浏览器，关页面明天接着做。</p>
+  <p>每题完成 → 自动下一题。答完所有题 → 导出 JSON 贴回 Claudian 评分。</p>
+  <div style="margin:20px 0">
+    <label>学科：</label>
+    <select id="subjSel"></select>
+    <button onclick="startOrResume()">开始 / 继续</button>
+    <button class="s" onclick="resetSubject()">重置当前学科</button>
+  </div>
+  <div id="resumeInfo" style="color:#888;font-size:13px"></div>
+</div>
+
+<!-- 答题页 -->
+<div id="exam" style="display:none">
+  <div class="bar">
+    <span id="progText">0/0</span>
+    <div class="progress"><div class="progress-fill" id="progFill"></div></div>
+    <div class="marks">
+      <span class="m answered">答 <b id="cntA">0</b></span>
+      <span class="m skip">跳 <b id="cntS">0</b></span>
+      <span class="m dontknow">不会 <b id="cntD">0</b></span>
+    </div>
+  </div>
+
+  <div id="qbox">
+    <div id="qmeta"></div>
+    <div id="qtitle"></div>
+    <div id="qtext"></div>
+  </div>
+
+  <h2>你的答案</h2>
+  <textarea id="answer" placeholder="在这里写你的答案（多行 OK）"></textarea>
+  <div id="status-row"></div>
+
+  <div class="toolbar">
+    <div class="left">
+      <button class="s" onclick="prev()">← 上一题</button>
+      <button class="warn" onclick="mark('skip')">跳过</button>
+      <button class="red" onclick="mark('dontknow')">不会</button>
+      <button onclick="submit()">提交 / 下一题 →</button>
+    </div>
+    <div class="right">
+      <button class="s" onclick="exitToSetup()">退出（保存进度）</button>
+      <button class="s" onclick="goExport()">导出 JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- 完成页 -->
+<div id="done" style="display:none">
+  <h1>✅ 答题结束</h1>
+  <div id="summary"></div>
+  <p style="margin-top:14px;color:#aaa;font-size:13px">下面的 JSON <b>复制后贴回 Claudian</b>，我会逐题对比标准答案、提取错点、生成惩罚清单。</p>
+  <pre id="exportBox"></pre>
+  <button onclick="copyExport()">复制 JSON 到剪贴板</button>
+  <button class="s" onclick="downloadExport()">下载 JSON</button>
+  <button class="s" onclick="backToExam()">← 回到答题</button>
+  <button class="s" onclick="backToSetup()">回起始页</button>
+</div>
+
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let DATA={};        // exam_data.json 全集
+let SUBJ='';        // 当前学科
+let QS=[];          // 当前学科题目
+let SESS=null;      // 当前 session（localStorage 持久化）
+
+const KEY='examSessions';
+
+// ---- localStorage 工具 ----
+function loadAll(){
+  try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}
+}
+function saveAll(all){
+  localStorage.setItem(KEY,JSON.stringify(all));
+}
+function loadSess(subj){
+  return loadAll()[subj]||null;
+}
+function saveSess(){
+  const all=loadAll();
+  all[SUBJ]=SESS;
+  saveAll(all);
+}
+
+// ---- 初始化：拉 exam_data.json ----
+async function init(){
+  try{
+    const r=await fetch('exam_data.json?_t='+Date.now());
+    DATA=await r.json();
+  }catch(e){
+    alert('加载题目失败：'+e.message);return;
+  }
+  const sel=$('subjSel');
+  for(const s of Object.keys(DATA)){
+    const o=document.createElement('option');o.value=s;o.textContent=s+' ('+DATA[s].length+'题)';
+    sel.appendChild(o);
+  }
+  sel.onchange=updateResumeInfo;
+  updateResumeInfo();
+}
+
+function updateResumeInfo(){
+  const s=$('subjSel').value;
+  const sess=loadSess(s);
+  if(sess){
+    const done=sess.entries.filter(e=>e.mark!=='').length;
+    $('resumeInfo').textContent='⏯ 上次进度: '+done+'/'+DATA[s].length+'  (起始: '+new Date(sess.started_at).toLocaleString('zh-CN',{hour12:false})+')';
+  }else{
+    $('resumeInfo').textContent='⚪ 此学科尚未开始';
+  }
+}
+
+// ---- 开始 / 继续 ----
+function startOrResume(){
+  SUBJ=$('subjSel').value;
+  QS=DATA[SUBJ];
+  SESS=loadSess(SUBJ);
+  if(!SESS){
+    SESS={
+      subject:SUBJ,
+      started_at:new Date().toISOString(),
+      idx:0,
+      entries:QS.map(q=>({id:q.id,answer:'',mark:'',ts:null})),
+    };
+    saveSess();
+  }
+  $('setup').style.display='none';$('done').style.display='none';
+  $('exam').style.display='';
+  renderQ();
+}
+
+function resetSubject(){
+  const s=$('subjSel').value;
+  if(!confirm('确定重置「'+s+'」全部答题进度？此操作不可逆。'))return;
+  const all=loadAll();delete all[s];saveAll(all);
+  updateResumeInfo();
+}
+
+// ---- 渲染当前题 ----
+function renderQ(){
+  const i=SESS.idx;const q=QS[i];const e=SESS.entries[i];
+  $('qmeta').textContent='第 '+(i+1)+' / '+QS.length+' 题  ·  '+q.id+(q.题源?'  ·  '+q.题源:'');
+  $('qtitle').textContent=q.title;
+  $('qtext').textContent=q.题面;
+  $('answer').value=e.answer||'';
+  // 状态行
+  const sr=$('status-row');sr.className='';sr.textContent='';
+  if(e.mark==='skip'){sr.className='skip';sr.textContent='⏭ 已标记跳过';}
+  if(e.mark==='dontknow'){sr.className='dontknow';sr.textContent='❌ 已标记不会';}
+  if(e.mark==='answered'){sr.className='answered';sr.textContent='✏ 已作答';}
+  // 进度
+  const done=SESS.entries.filter(x=>x.mark!=='').length;
+  $('progText').textContent=done+'/'+QS.length;
+  $('progFill').style.width=(done/QS.length*100)+'%';
+  $('cntA').textContent=SESS.entries.filter(x=>x.mark==='answered').length;
+  $('cntS').textContent=SESS.entries.filter(x=>x.mark==='skip').length;
+  $('cntD').textContent=SESS.entries.filter(x=>x.mark==='dontknow').length;
+  // 聚焦
+  $('answer').focus();
+}
+
+// ---- 保存当前题的答案/标记 ----
+function commitCurrent(markIfBlank){
+  const i=SESS.idx;const e=SESS.entries[i];
+  const txt=$('answer').value.trim();
+  if(txt){
+    e.answer=txt;e.mark='answered';e.ts=new Date().toISOString();
+  }else if(markIfBlank){
+    e.mark=markIfBlank;e.ts=new Date().toISOString();e.answer='';
+  }
+  // 如果 mark 已是 skip/dontknow，但又写了答案：覆盖为 answered
+  saveSess();
+}
+
+function submit(){
+  const txt=$('answer').value.trim();
+  if(!txt){alert('请填答案，或点「跳过」/「不会」');return;}
+  commitCurrent(null);
+  next();
+}
+
+function mark(m){
+  commitCurrent(m);
+  next();
+}
+
+function next(){
+  if(SESS.idx<QS.length-1){
+    SESS.idx++;saveSess();renderQ();
+  }else{
+    finish();
+  }
+}
+
+function prev(){
+  // 先保存当前内容（不强制 mark）
+  const i=SESS.idx;const e=SESS.entries[i];
+  const txt=$('answer').value.trim();
+  if(txt){e.answer=txt;e.mark='answered';e.ts=new Date().toISOString();}
+  saveSess();
+  if(SESS.idx>0){SESS.idx--;saveSess();renderQ();}
+}
+
+function finish(){
+  SESS.ended_at=new Date().toISOString();saveSess();
+  $('exam').style.display='none';$('done').style.display='';
+  renderSummary();
+}
+
+function goExport(){
+  // 保存当前再去导出
+  commitCurrent(null);
+  finish();
+}
+
+function renderSummary(){
+  const a=SESS.entries.filter(x=>x.mark==='answered').length;
+  const s=SESS.entries.filter(x=>x.mark==='skip').length;
+  const d=SESS.entries.filter(x=>x.mark==='dontknow').length;
+  const blank=QS.length-a-s-d;
+  let html='';
+  html+='<div class="row a">✏ 作答 '+a+'</div>';
+  html+='<div class="row s">⏭ 跳过 '+s+'</div>';
+  html+='<div class="row d">❌ 不会 '+d+'</div>';
+  if(blank>0)html+='<div class="row">⚪ 未触碰 '+blank+'</div>';
+  $('summary').innerHTML=html;
+  $('exportBox').textContent=JSON.stringify(payload(),null,2);
+}
+
+function payload(){
+  return{
+    subject:SUBJ,
+    started_at:SESS.started_at,
+    ended_at:SESS.ended_at||new Date().toISOString(),
+    total:QS.length,
+    submitted:SESS.entries.filter(e=>e.mark!=='').map(e=>({
+      id:e.id,answer:e.answer,mark:e.mark,ts:e.ts,
+    })),
+  };
+}
+
+function copyExport(){
+  navigator.clipboard.writeText(JSON.stringify(payload(),null,2))
+    .then(()=>alert('已复制 JSON · 切到 Claudian 直接粘贴'));
+}
+
+function downloadExport(){
+  const p=payload();
+  const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='试卷_'+SUBJ+'_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+
+function exitToSetup(){
+  commitCurrent(null);
+  backToSetup();
+}
+function backToSetup(){
+  $('exam').style.display='none';$('done').style.display='none';
+  $('setup').style.display='';
+  updateResumeInfo();
+}
+function backToExam(){
+  $('done').style.display='none';$('exam').style.display='';
+  renderQ();
+}
+
+// 键盘快捷键: Ctrl/Cmd+Enter 提交
+document.addEventListener('keydown',e=>{
+  if($('exam').style.display==='none')return;
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();submit();}
+});
+
+init();
+</script>
+</body>
+</html>

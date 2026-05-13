@@ -26,7 +26,10 @@ button.s:hover{background:#666}
 .cursor{background:#ffeb3b;color:#000;border-radius:2px;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:0.5}}
 #hint{color:#666;font-size:13px;margin-top:16px}
-#summary{background:#232323;padding:16px 20px;border-radius:8px;font-size:14px;margin:16px 0;line-height:1.8}
+#summary,#historyBar{background:#232323;padding:14px 20px;border-radius:8px;font-size:14px;margin:16px 0;line-height:1.8}
+#historyBar{color:#aaa;font-size:13px}
+#historyBar b{color:#fff}
+#historyBar .stat{display:inline-block;margin-right:20px}
 .row{padding:3px 0}
 .row.ok{color:#4caf50}
 .row.bad{color:#ff9800}
@@ -39,6 +42,7 @@ hr{border:0;border-top:1px solid #333;margin:12px 0}
 
 <div id="setup">
   <h1>📝 打字训练</h1>
+  <div id="historyBar" style="display:none"></div>
   <p>每行一条命令；<code># 注释</code> 给下一行打标签（注释自己不用敲）</p>
   <textarea id="cmds" placeholder="# 错点 1: ifconfig 多写 add
 ifconfig eth1 10.20.30.40 netmask 255.255.255.0 up
@@ -48,6 +52,8 @@ route add -net 10.20.0.0 netmask 255.255.0.0 dev eth1
 ifconfig > net_info.txt"></textarea>
   <button onclick="start()">开始训练</button>
   <button class="s" onclick="loadDemo()">载入示例</button>
+  <button class="s" onclick="exportHistory()">导出历史 JSON</button>
+  <button class="s" onclick="clearHistory()">清空历史</button>
 </div>
 
 <div id="practice" style="display:none">
@@ -199,19 +205,36 @@ function done(){
   }
   html='<div class="row head">一次过 '+ok+' · 出错 '+bad+' · 跳过 '+sk+' · 总错击 '+totErr+'</div>'+html;
   $('summary').innerHTML=html;
+  // 持久化到 localStorage
+  saveSession();
 }
 
-function payload(){
-  return{date:new Date().toISOString().slice(0,10),subject:new URLSearchParams(location.search).get('s')||'',results:results};
+const STORE_KEY='drillHistory';
+function loadHistory(){
+  try{return JSON.parse(localStorage.getItem(STORE_KEY))||[];}catch(e){return[];}
+}
+function saveSession(){
+  const hist=loadHistory();
+  hist.push(sessionPayload());
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(hist));}catch(e){alert('本地存储失败: '+e.message);}
+}
+
+function sessionPayload(){
+  return{
+    ts:Date.now(),
+    date:new Date().toISOString().slice(0,10),
+    subject:new URLSearchParams(location.search).get('s')||'',
+    results:results,
+  };
 }
 
 function copyJSON(){
-  navigator.clipboard.writeText(JSON.stringify(payload(),null,2))
-    .then(()=>alert('已复制 JSON · 粘贴回 Claudian 即可'));
+  navigator.clipboard.writeText(JSON.stringify(sessionPayload(),null,2))
+    .then(()=>alert('已复制本次 JSON · 粘贴回 Claudian'));
 }
 
 function downloadJSON(){
-  const p=payload();
+  const p=sessionPayload();
   const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -219,12 +242,54 @@ function downloadJSON(){
   a.click();
 }
 
+function exportHistory(){
+  const h=loadHistory();
+  if(!h.length){alert('暂无历史');return;}
+  navigator.clipboard.writeText(JSON.stringify({exported_at:new Date().toISOString(),total_sessions:h.length,sessions:h},null,2))
+    .then(()=>alert('已复制 '+h.length+' 次训练历史 · 粘贴回 Claudian 分析'));
+}
+
+function clearHistory(){
+  if(!confirm('确定清空全部本地历史？此操作不可逆。'))return;
+  localStorage.removeItem(STORE_KEY);
+  renderHistoryBar();
+  alert('历史已清空');
+}
+
+function renderHistoryBar(){
+  const bar=$('historyBar');
+  const h=loadHistory();
+  if(!h.length){bar.style.display='none';return;}
+  // 统计：总场次、今日、累计一次过率、最近一次时间
+  const today=new Date().toISOString().slice(0,10);
+  const todayCnt=h.filter(s=>s.date===today).length;
+  let totDrills=0,totFirst=0;
+  for(const s of h){
+    for(const r of s.results){
+      if(r.skipped)continue;
+      totDrills++;
+      if(r.first_try)totFirst++;
+    }
+  }
+  const rate=totDrills?Math.round(totFirst/totDrills*100):0;
+  const last=h[h.length-1];
+  const lastTime=new Date(last.ts).toLocaleString('zh-CN',{hour12:false}).slice(5);
+  bar.style.display='';
+  bar.innerHTML=
+    '<span class="stat">📊 累计 <b>'+h.length+'</b> 场</span>'+
+    '<span class="stat">今日 <b>'+todayCnt+'</b> 场</span>'+
+    '<span class="stat">一次过率 <b>'+rate+'%</b> ('+totFirst+'/'+totDrills+')</span>'+
+    '<span class="stat">最近 <b>'+lastTime+'</b></span>';
+}
+
 function restart(){
   $('done').style.display='none';$('practice').style.display='none';
   $('setup').style.display='';results=[];
+  renderHistoryBar();
 }
 
-// 支持 URL 参数预填: ?d=BASE64(commands)
+// 页面加载: 渲染历史栏 + 支持 URL 参数预填 ?d=BASE64(commands)
+renderHistoryBar();
 const enc=new URLSearchParams(location.search).get('d');
 if(enc){try{$('cmds').value=decodeURIComponent(escape(atob(enc)));}catch(e){}}
 </script>

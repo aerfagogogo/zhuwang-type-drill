@@ -177,8 +177,7 @@ select{padding:8px 10px}
   <!-- 阶段 3: 盲敲惩罚 -->
   <div class="stage" id="stage3" style="display:none">
     <h2>3. 盲敲惩罚 <span class="stage-status" id="s3status">练到满意点下一题</span></h2>
-    <p class="muted">逐字符敲，错处红色高亮，本遍敲完自动判定。</p>
-    <details id="drillRef" class="ans-ref"><summary>📖 详细答案（参考）</summary><pre id="drillRefText"></pre></details>
+    <p class="muted">逐字符敲，错处红色高亮，本遍敲完自动判定。详细答案见上面 2 节。</p>
     <div id="drillTarget"></div>
     <div id="drillStats">
       <span id="dprog">0/0</span>
@@ -528,8 +527,6 @@ function drillStartFromState(){
   dTyped='';dErrors=0;dBs=0;dErrPos=[];dComplete=false;
   dT0=Date.now();
   $('dcomplete').classList.remove('show');
-  const q=QS[STATE.idx];
-  if($('drillRefText')&&q)$('drillRefText').textContent=q.标答||'';
   renderDrill();
   if(dTimer)clearInterval(dTimer);
   dTimer=setInterval(updateDrillTimer,100);

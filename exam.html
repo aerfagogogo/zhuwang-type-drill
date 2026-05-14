@@ -81,6 +81,16 @@ select{padding:8px 10px}
 
 #exportBox{background:#1a1a1a;border:1px solid #444;padding:10px;border-radius:6px;font-size:10px;color:#888;max-height:240px;overflow:auto;white-space:pre-wrap;margin:10px 0}
 
+/* 顺便问一下（提问区） */
+.ask-box{background:#1a2530;border-radius:6px;border-left:2px solid #64b5f6;margin:10px 0}
+.ask-box summary{padding:8px 14px;cursor:pointer;color:#90caf9;font-size:13px;user-select:none;list-style:none}
+.ask-box summary::-webkit-details-marker{display:none}
+.ask-box .body{padding:10px 14px;border-top:1px solid #2a3a4a}
+.ask-box textarea{min-height:50px;font-size:12px;background:#1a2530;border-color:#3a4a5a}
+.qa-item{margin:6px 0;padding:8px 10px;background:#1f2a35;border-radius:4px;font-size:12px;line-height:1.65}
+.qa-item .q{color:#90caf9;margin-bottom:4px;font-weight:bold}
+.qa-item .a{color:#cfd8dc;white-space:pre-wrap}
+
 /* 详细答案折叠块 */
 .ans-ref{background:#1c2a1c;border:1px solid #3a5a3a;border-radius:6px;margin:10px 0}
 .ans-ref summary{padding:8px 14px;cursor:pointer;color:#81c784;font-size:13px;user-select:none;list-style:none}
@@ -130,6 +140,19 @@ select{padding:8px 10px}
 
   <div id="qmeta"></div>
   <div id="qti"></div>
+
+  <!-- 顺便问一下 (随时可用) -->
+  <details class="ask-box" id="askBox">
+    <summary>💬 顺便问一下 (gpt-4o-mini · 答 1-2 句省 token)</summary>
+    <div class="body">
+      <div id="qaList"></div>
+      <textarea id="askInput" placeholder="比如「chage -m 是什么意思？」⌘+Enter 提交"></textarea>
+      <div class="controls" style="border:0;padding:0;margin-top:6px">
+        <button class="s" onclick="submitQuestion()">提问</button>
+        <span class="muted" style="margin-left:8px">提的问题会记进导出 JSON</span>
+      </div>
+    </div>
+  </details>
 
   <!-- 阶段 1: 答题 -->
   <div class="stage" id="stage1">
@@ -244,7 +267,7 @@ function startOrResume(){
     STATE={
       subject:SUBJ,started_at:new Date().toISOString(),idx:0,
       entries:QS.map(q=>({id:q.id,mark:'',phase:'answering',user_answer:'',
-        verdict:null,wrong_points:[],drills:[],drill_reps:[]})),
+        verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[]})),
     };
     saveState();
   }
@@ -298,6 +321,10 @@ function renderQ(){
     dReps=e.drill_reps||[];
     drillStartFromState();
   }
+
+  // 渲染提问历史（每题独立）
+  renderQuestions();
+  $('askInput').value='';
 
   $('ans').focus();
 }
@@ -446,6 +473,56 @@ correct 时为空数组。dontknow/wrong 时给标准答案的核心命令 + 配
   catch(e){throw new Error('JSON 解析失败 (模型可能不支持)：'+content.slice(0,200));}
 }
 
+// ---- 顺便问一下 ----
+async function submitQuestion(){
+  const key=$('apiKey').value.trim();
+  if(!key){alert('请先填 AIHUBMIX Key');return;}
+  const question=$('askInput').value.trim();
+  if(!question)return;
+  const e=STATE.entries[STATE.idx];
+  const q=QS[STATE.idx];
+  e.questions=e.questions||[];
+  const item={q:question,a:'⏳ 调用中…',at:Date.now()};
+  e.questions.push(item);
+  $('askInput').value='';
+  $('askInput').disabled=true;
+  renderQuestions();saveState();
+  try{
+    item.a=await callAsker(q.题面||'',question);
+  }catch(err){
+    item.a='❌ '+err.message;
+  }finally{
+    $('askInput').disabled=false;
+    renderQuestions();saveState();
+  }
+}
+
+async function callAsker(qTitle,question){
+  // 固定 gpt-4o-mini 省 token，限 max_tokens=120
+  const key=$('apiKey').value.trim();
+  const prompt=`你是 Linux/凝思实操辅导员。1-2 句中文回答（<60字），只说核心不展开。\n题目背景：${qTitle.slice(0,120)}\n问题：${question}`;
+  const res=await fetch('https://aihubmix.com/v1/chat/completions',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
+    body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:prompt}],temperature:0.2,max_tokens:120}),
+  });
+  if(!res.ok)throw new Error('API '+res.status+': '+(await res.text()).slice(0,120));
+  const data=await res.json();
+  return data.choices[0].message.content.trim();
+}
+
+function renderQuestions(){
+  if(!STATE||STATE.idx==null)return;
+  const e=STATE.entries[STATE.idx];
+  const list=(e&&e.questions)||[];
+  const box=$('qaList');
+  if(!list.length){box.innerHTML='';return;}
+  box.innerHTML=list.map(it=>
+    '<div class="qa-item"><div class="q">❓ '+escapeHtml(it.q)+'</div><div class="a">'+escapeHtml(it.a)+'</div></div>'
+  ).join('');
+}
+
+
 // ---- 阶段 3: 盲敲 ----
 function drillStartFromState(){
   dTyped='';dErrors=0;dBs=0;dErrPos=[];dComplete=false;
@@ -500,7 +577,10 @@ document.addEventListener('keydown',e=>{
   // 在 textarea 输入时不拦截
   if(document.activeElement&&document.activeElement.tagName==='TEXTAREA'){
     if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){
-      e.preventDefault();submitAnswer();return;
+      e.preventDefault();
+      if(document.activeElement.id==='askInput')submitQuestion();
+      else submitAnswer();
+      return;
     }
     return;
   }

@@ -440,7 +440,7 @@ correct 时 wrong_points 为空数组。
 drills: 用户应该盲敲的核心正确**字符串数组**，用来训练肌肉记忆。
 
 drills 必须包含两类内容（不要漏!）：
-1. **shell 命令本体**：如 `vi /etc/pam.d/login`、`chmod +x backup.sh`、`scp nusp@ks-sca01:/home/file ~/`
+1. **shell 命令本体**：如 \`vi /etc/pam.d/login\`、\`chmod +x backup.sh\`、\`scp nusp@ks-sca01:/home/file ~/\`
 2. **编辑器内要写入的关键配置行 / 脚本行**：如果题目涉及 vi/vim 改配置文件、写 crontab、改 shell 脚本，那么**在 vi 里实际敲的那一行也是 drill**，必须单独列出
 
 ✅ 例如题目「在 /etc/pam.d/login 配置账户锁定」，drills 应该是：
@@ -455,7 +455,7 @@ drills 必须包含两类内容（不要漏!）：
   "* * * * * free >> /home/nusp/zhejiang/Desktop/zhangsan.txt"
 ]
 
-❌ 不要只给 `vi /etc/pam.d/login` 就不管里面写啥——里面的内容才是真正要背的核心。
+❌ 不要只给 \`vi /etc/pam.d/login\` 就不管里面写啥——里面的内容才是真正要背的核心。
 ❌ 不要写中文说明（如"在 vi 里写入配置行"），drills 里只能是要敲的字符串本身。
 
 correct 时为空数组。dontknow/wrong 时给标准答案的核心命令 + 配置行。`;

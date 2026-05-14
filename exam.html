@@ -80,6 +80,12 @@ select{padding:8px 10px}
 #summary .h{color:#ffd54f;font-weight:bold;border-bottom:1px solid #444;padding-bottom:6px;margin-bottom:8px}
 
 #exportBox{background:#1a1a1a;border:1px solid #444;padding:10px;border-radius:6px;font-size:10px;color:#888;max-height:240px;overflow:auto;white-space:pre-wrap;margin:10px 0}
+
+/* 详细答案折叠块 */
+.ans-ref{background:#1c2a1c;border:1px solid #3a5a3a;border-radius:6px;margin:10px 0}
+.ans-ref summary{padding:8px 14px;cursor:pointer;color:#81c784;font-size:13px;user-select:none;list-style:none}
+.ans-ref summary::-webkit-details-marker{display:none}
+.ans-ref pre{padding:10px 14px;font-size:12px;color:#bbb;white-space:pre-wrap;word-break:break-all;line-height:1.7;border-top:1px solid #2a3a2a;max-height:420px;overflow-y:auto;font-family:inherit}
 </style>
 </head>
 <body><div class="container">
@@ -149,6 +155,7 @@ select{padding:8px 10px}
   <div class="stage" id="stage3" style="display:none">
     <h2>3. 盲敲惩罚 <span class="stage-status" id="s3status">练到满意点下一题</span></h2>
     <p class="muted">逐字符敲，错处红色高亮，本遍敲完自动判定。</p>
+    <details id="drillRef" class="ans-ref"><summary>📖 详细答案（参考）</summary><pre id="drillRefText"></pre></details>
     <div id="drillTarget"></div>
     <div id="drillStats">
       <span id="dprog">0/0</span>
@@ -306,6 +313,11 @@ function renderVerdict(e){
     html+='</ul>';
   }
   html+='</div>';
+  const q=QS[STATE.idx];
+  if(q&&q.标答){
+    const autoOpen=e.verdict!=='correct';
+    html+='<details class="ans-ref"'+(autoOpen?' open':'')+'><summary>📖 详细答案</summary><pre>'+escapeHtml(q.标答)+'</pre></details>';
+  }
   $('verdictBox').innerHTML=html;
   $('s2status').textContent=label;
   if(e.verdict==='correct'){
@@ -402,6 +414,8 @@ function drillStartFromState(){
   dTyped='';dErrors=0;dBs=0;dErrPos=[];dComplete=false;
   dT0=Date.now();
   $('dcomplete').classList.remove('show');
+  const q=QS[STATE.idx];
+  if($('drillRefText')&&q)$('drillRefText').textContent=q.标答||'';
   renderDrill();
   if(dTimer)clearInterval(dTimer);
   dTimer=setInterval(updateDrillTimer,100);

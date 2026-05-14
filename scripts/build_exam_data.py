@@ -11,7 +11,7 @@ ROOT = Path("/Users/sunyiting/Library/Mobile Documents/iCloud~md~obsidian/Docume
 WEB = Path("/Users/sunyiting/Library/Mobile Documents/iCloud~md~obsidian/Documents/苍茫云海间/50-项目/主网自动化竞赛/99-工作流/web")
 
 # 扫描哪些学科
-SUBJECTS = ["操作系统"]  # 后续可加 "D60基础平台", "达梦数据库", "综合试题"
+SUBJECTS = ["操作系统", "基础平台"]  # 后续可加 "达梦数据库", "综合试题"
 
 SKIP_FILES = {"惩罚清单.md", "薄弱点.json", "MOC.md"}
 

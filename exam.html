@@ -81,6 +81,12 @@ select{padding:8px 10px}
 
 #exportBox{background:#1a1a1a;border:1px solid #444;padding:10px;border-radius:6px;font-size:10px;color:#888;max-height:240px;overflow:auto;white-space:pre-wrap;margin:10px 0}
 
+/* 探索模式 · 图片缩略图 */
+.img-thumb{position:relative;width:90px;height:90px;border:1px solid #444;border-radius:4px;overflow:hidden;background:#1a1a1a}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb .rm{position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);color:#fff;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:13px;padding:0;line-height:1}
+.img-thumb .rm:hover{background:#c62828}
+
 /* 顺便问一下（提问区） */
 .ask-box{background:#1a2530;border-radius:6px;border-left:2px solid #64b5f6;margin:10px 0}
 .ask-box summary{padding:8px 14px;cursor:pointer;color:#90caf9;font-size:13px;user-select:none;list-style:none}
@@ -123,6 +129,13 @@ select{padding:8px 10px}
     <label>学科:</label>
     <select id="subj"></select>
   </div>
+  <div class="row">
+    <label>模式:</label>
+    <select id="mode">
+      <option value="train">📋 训练 (有标答 · API 批卷 · 盲敲)</option>
+      <option value="explore">📓 探索 (无标答 · 记笔记 + 图片 · 导出给 Claude 整理)</option>
+    </select>
+  </div>
   <button class="big" onclick="startOrResume()">开始 / 继续</button>
   <button class="s" onclick="resetProgress()">重置进度</button>
   <button class="s" onclick="exportAll()">导出全部历史 JSON</button>
@@ -159,13 +172,24 @@ select{padding:8px 10px}
   <div class="stage" id="stage1">
     <h2>1. 答题 <span class="stage-status" id="s1status">进行中</span></h2>
     <textarea id="ans" placeholder="在此输入你的答案（多行 OK）。⌘+Enter 提交。"></textarea>
+
+    <!-- 探索模式专属：笔记 + 图片上传 -->
+    <div id="exploreExtras" style="display:none;margin-top:10px">
+      <h3 style="font-size:13px;color:#64b5f6;margin:8px 0 6px">📝 实操要点 / 关键点 / 注意事项</h3>
+      <textarea id="notes" placeholder="记下你白天实操时观察到的要点、坑、命令变化等。回头 Claude 会根据你的笔记和图片整理成标答。"></textarea>
+      <h3 style="font-size:13px;color:#64b5f6;margin:10px 0 6px">📷 截图 / 拍照（多张 OK · 自动 base64 入 JSON）</h3>
+      <input type="file" id="imgUpload" accept="image/*" multiple style="background:none;border:none;padding:4px 0;font-size:12px;color:#aaa">
+      <div id="imgList" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>
+    </div>
+
     <div class="controls" style="border:0;padding:0;margin-top:8px">
       <button class="s" onclick="prevQ()" title="回上一题，可重答">← 上一题</button>
       <button class="warn" onclick="markAndNext('skip')" title="暂时跳过；下次会话用「← 上一题」回到这里">⏭ 跳过</button>
-      <button class="red" onclick="markAndNext('dontknow')" title="完全不会，直接拿标答的命令进盲敲">❌ 不会</button>
-      <button class="s" onclick="markAndNext('flagged')" title="发现标准答案有误，标记后跳过；后续我会修正">⚠️ 答案有误</button>
+      <button class="red" id="dkBtn" onclick="markAndNext('dontknow')" title="完全不会，直接拿标答的命令进盲敲">❌ 不会</button>
+      <button class="s" id="flagBtn" onclick="markAndNext('flagged')" title="发现标准答案有误，标记后跳过；后续我会修正">⚠️ 答案有误</button>
       <div class="gap"></div>
-      <button onclick="submitAnswer()">提交并批卷 →</button>
+      <button id="submitBtn" onclick="submitAnswer()">提交并批卷 →</button>
+      <button id="saveBtn" onclick="saveAndNextExplore()" style="display:none;background:#64b5f6">保存并下一题 →</button>
     </div>
   </div>
 
@@ -219,6 +243,7 @@ let SUBJ='';      // 当前学科
 let QS=[];        // 当前题集
 let STATE=null;   // 当前会话
 let DRILL=null;   // 薄弱项特训数据（sessionStorage 来）
+let MODE='train'; // train | explore
 
 // drill state
 let dTyped='',dErrors=0,dBs=0,dErrPos=[],dT0=0,dTimer=null,dComplete=false,dReps=[];
@@ -236,8 +261,12 @@ async function init(){
   // 恢复 API key
   $('apiKey').value=localStorage.getItem('apiKey')||'';
   $('model').value=localStorage.getItem('model')||'gpt-4o-mini';
+  $('mode').value=localStorage.getItem('examMode')||'train';
   $('apiKey').addEventListener('change',()=>localStorage.setItem('apiKey',$('apiKey').value.trim()));
   $('model').addEventListener('change',()=>localStorage.setItem('model',$('model').value));
+  $('mode').addEventListener('change',()=>localStorage.setItem('examMode',$('mode').value));
+  // 图片上传监听
+  $('imgUpload').addEventListener('change',handleImageUpload);
 
   // 检测 URL 参数
   const params=new URLSearchParams(location.search);
@@ -298,28 +327,45 @@ function startDrillSession(){
 }
 
 function updateResumeInfo(){
-  const s=$('subj').value;
-  const all=loadState();const st=all[s];
-  if(st){
-    const done=st.entries.filter(e=>e.phase==='completed'||e.mark==='skip').length;
-    $('resumeInfo').textContent='⏯ 上次进度: '+done+'/'+DATA[s].length;
-  }else{$('resumeInfo').textContent='⚪ 此学科尚未开始';}
+  const s=$('subj').value;if(!s||!DATA[s]){$('resumeInfo').textContent='';return;}
+  const all=loadState();
+  const stTrain=all[s], stExp=all['[探索]'+s];
+  const lines=[];
+  if(stTrain){
+    const done=stTrain.entries.filter(e=>e.phase==='completed'||e.mark==='skip').length;
+    lines.push('📋 训练进度: '+done+'/'+DATA[s].length);
+  }
+  if(stExp){
+    const done=stExp.entries.filter(e=>e.phase==='completed'||e.mark==='skip').length;
+    lines.push('📓 探索进度: '+done+'/'+DATA[s].length);
+  }
+  $('resumeInfo').textContent=lines.length?lines.join(' · '):'⚪ 此学科尚未开始';
 }
 
 // ---- 开始 / 恢复 ----
 function startOrResume(){
-  if(!$('apiKey').value.trim()){alert('请先填 AIHUBMIX API Key');return;}
-  localStorage.setItem('apiKey',$('apiKey').value.trim());
+  MODE=$('mode').value||'train';
+  localStorage.setItem('examMode',MODE);
+  // 探索模式不强制要 key（不调 API）；训练模式必须有
+  if(MODE==='train'&&!$('apiKey').value.trim()){alert('训练模式需要 AIHUBMIX API Key');return;}
+  if($('apiKey').value.trim()){localStorage.setItem('apiKey',$('apiKey').value.trim());}
   localStorage.setItem('model',$('model').value);
-  SUBJ=$('subj').value;QS=DATA[SUBJ];
+  SUBJ=$('subj').value;
+  if(MODE==='explore')SUBJ='[探索]'+SUBJ; // 探索 vs 训练分开存
+  const rawSubj=$('subj').value;
+  QS=DATA[rawSubj];
   const all=loadState();STATE=all[SUBJ];
   if(!STATE){
     STATE={
-      subject:SUBJ,started_at:new Date().toISOString(),idx:0,
+      subject:SUBJ,mode:MODE,started_at:new Date().toISOString(),idx:0,
       entries:QS.map(q=>({id:q.id,mark:'',phase:'answering',user_answer:'',
-        verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[]})),
+        verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[],
+        notes:'',images:[]})),
     };
     saveState();
+  }else if(STATE.mode&&STATE.mode!==MODE){
+    // 恢复之前会话的模式（不允许中途切换）
+    MODE=STATE.mode;
   }
   $('setup').style.display='none';$('done').style.display='none';
   $('trainer').style.display='';
@@ -349,11 +395,22 @@ function renderQ(){
 
   // 根据 phase 显示不同阶段
   $('stage1').style.display='';
-  $('stage2').style.display=e.verdict?'':'none';
-  $('stage3').style.display=(e.drills&&e.drills.length)?'':'none';
+  // 探索模式：永远不显示 stage2/stage3
+  $('stage2').style.display=(MODE==='explore'?'none':(e.verdict?'':'none'));
+  $('stage3').style.display=(MODE==='explore'?'none':((e.drills&&e.drills.length)?'':'none'));
+
+  // 探索模式 UI 切换
+  $('exploreExtras').style.display=(MODE==='explore'?'':'none');
+  $('submitBtn').style.display=(MODE==='explore'?'none':'');
+  $('saveBtn').style.display=(MODE==='explore'?'':'none');
+  $('dkBtn').style.display=(MODE==='explore'?'none':'');
+  $('flagBtn').style.display=(MODE==='explore'?'none':'');
+  $('askBox').style.display=(MODE==='explore'?'none':''); // 探索模式不显示提问
 
   // 阶段 1 状态
   $('ans').value=e.user_answer||'';
+  $('notes').value=e.notes||'';
+  renderImageList(e.images||[]);
   let s1='进行中';
   if(e.mark==='flagged')s1='⚠️ 标记答案有误';
   else if(e.mark==='skip')s1='⏭ 已跳过 (可重答)';
@@ -755,6 +812,55 @@ function backToSetup(){
 }
 
 function escapeHtml(c){return String(c).replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]));}
+
+// ============ 探索模式 ============
+function saveAndNextExplore(){
+  const e=STATE.entries[STATE.idx];
+  e.user_answer=$('ans').value;
+  e.notes=$('notes').value;
+  e.phase='completed';
+  e.mark='';
+  saveState();
+  gotoNext();
+}
+
+function handleImageUpload(ev){
+  const files=Array.from(ev.target.files||[]);
+  if(!files.length)return;
+  const e=STATE.entries[STATE.idx];
+  e.images=e.images||[];
+  let done=0;
+  for(const f of files){
+    const reader=new FileReader();
+    reader.onload=ee=>{
+      e.images.push({name:f.name,type:f.type,size:f.size,data:ee.target.result,added_at:Date.now()});
+      done++;
+      if(done===files.length){
+        saveState();
+        renderImageList(e.images);
+        ev.target.value=''; // reset input
+      }
+    };
+    reader.readAsDataURL(f);
+  }
+}
+
+function renderImageList(images){
+  const box=$('imgList');
+  if(!images||!images.length){box.innerHTML='';return;}
+  box.innerHTML=images.map((img,idx)=>
+    '<div class="img-thumb"><img src="'+img.data+'" alt="'+escapeHtml(img.name||'')+'">'
+    +'<button class="rm" onclick="removeImage('+idx+')" title="删除">×</button></div>'
+  ).join('');
+}
+
+function removeImage(idx){
+  const e=STATE.entries[STATE.idx];
+  if(!e.images||idx<0||idx>=e.images.length)return;
+  e.images.splice(idx,1);
+  saveState();
+  renderImageList(e.images);
+}
 
 init();
 </script>

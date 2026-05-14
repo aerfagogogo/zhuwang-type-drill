@@ -102,9 +102,9 @@ select{padding:8px 10px}
 
 <!-- ============ 起始页 ============ -->
 <div id="setup">
-  <h1>📋 一站式训练</h1>
+  <h1 id="setupTitle">📋 一站式训练</h1>
   <p>答题 → API 批卷 → 错点提示 → 盲敲惩罚 → 下一题。完整闭环在本页完成。</p>
-  <p>切到 <a href="./">惩罚清单单独模式</a></p>
+  <p>← <a href="./">回训练中心</a></p>
   <h2>设置</h2>
   <div class="row">
     <label>AIHUBMIX Key:</label>
@@ -135,6 +135,7 @@ select{padding:8px 10px}
     <span class="qp" id="qp">1/57</span>
     <div class="progress"><div class="progress-fill" id="pf"></div></div>
     <span id="counts">✏0  ⏭0  ❌0</span>
+    <span id="drillBadge" style="display:none;color:#ba68c8;font-weight:bold;font-size:12px;margin-right:8px">💪 薄弱项特训</span>
     <button class="s" style="padding:5px 10px;font-size:12px;margin:0" onclick="exitSession()">退出</button>
   </div>
 
@@ -217,13 +218,17 @@ let DATA={};      // exam_data.json 全集
 let SUBJ='';      // 当前学科
 let QS=[];        // 当前题集
 let STATE=null;   // 当前会话
+let DRILL=null;   // 薄弱项特训数据（sessionStorage 来）
 
 // drill state
 let dTyped='',dErrors=0,dBs=0,dErrPos=[],dT0=0,dTimer=null,dComplete=false,dReps=[];
 
 // ---- localStorage ----
 function loadState(){try{return JSON.parse(localStorage.getItem(STORE))||{};}catch(e){return{};}}
-function saveState(){const all=loadState();all[SUBJ]=STATE;localStorage.setItem(STORE,JSON.stringify(all));}
+function saveState(){
+  if(DRILL){sessionStorage.setItem('drillState',JSON.stringify(STATE));return;}
+  const all=loadState();all[SUBJ]=STATE;localStorage.setItem(STORE,JSON.stringify(all));
+}
 function loadHist(){try{return JSON.parse(localStorage.getItem(HIST))||[];}catch(e){return[];}}
 
 // ---- 初始化 ----
@@ -233,6 +238,25 @@ async function init(){
   $('model').value=localStorage.getItem('model')||'gpt-4o-mini';
   $('apiKey').addEventListener('change',()=>localStorage.setItem('apiKey',$('apiKey').value.trim()));
   $('model').addEventListener('change',()=>localStorage.setItem('model',$('model').value));
+
+  // 检测 URL 参数
+  const params=new URLSearchParams(location.search);
+  const mode=params.get('mode');
+  const subjParam=params.get('subj');
+
+  // ---- 薄弱项特训模式：从 sessionStorage 取题，不拉 exam_data.json ----
+  if(mode==='drill'){
+    const raw=sessionStorage.getItem('drillData');
+    if(!raw){alert('特训数据丢失，请回训练中心重新进入');location.href='./';return;}
+    try{DRILL=JSON.parse(raw);}catch(e){alert('特训数据损坏: '+e.message);location.href='./';return;}
+    if(!DRILL.questions||!DRILL.questions.length){alert('特训数据没题');location.href='./';return;}
+    $('drillBadge').style.display='';
+    document.title='💪 薄弱项特训 · 主网竞赛';
+    startDrillSession();
+    return;
+  }
+
+  // ---- 正常模式：拉题库 + 填学科 ----
   try{
     const r=await fetch('exam_data.json?_t='+Date.now());
     DATA=await r.json();
@@ -242,8 +266,35 @@ async function init(){
     const o=document.createElement('option');o.value=s;o.textContent=s+' ('+DATA[s].length+'题)';
     sel.appendChild(o);
   }
+  // 若 URL 带 subj 参数，预选
+  if(subjParam&&DATA[subjParam])sel.value=subjParam;
   sel.onchange=updateResumeInfo;
   updateResumeInfo();
+}
+
+// ---- 启动薄弱项特训会话 ----
+function startDrillSession(){
+  if(!$('apiKey').value.trim()){
+    if(!confirm('未设置 API Key，批卷会失败。是否仍要继续？\n(可以做题但不能 API 批卷)'))return;
+  }
+  SUBJ='特训-'+(DRILL.subject||'未知');
+  QS=DRILL.questions;
+  // drill 状态独立存 sessionStorage，不污染 trainerState_v2
+  let st=null;
+  try{st=JSON.parse(sessionStorage.getItem('drillState'));}catch(e){}
+  // 同一批 drill (ts 一样) 可恢复；新一批就重建
+  if(!st||st.ts!==DRILL.ts){
+    st={
+      subject:SUBJ,started_at:new Date().toISOString(),idx:0,ts:DRILL.ts,
+      entries:QS.map(q=>({id:q.id,mark:'',phase:'answering',user_answer:'',
+        verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[]})),
+    };
+  }
+  STATE=st;
+  saveState();
+  $('setup').style.display='none';$('done').style.display='none';
+  $('trainer').style.display='';
+  renderQ();
 }
 
 function updateResumeInfo(){
@@ -640,16 +691,20 @@ function gotoNext(){
 }
 
 function exitSession(){
-  if(!confirm('退出本次训练？进度已自动保存。'))return;
+  const msg=DRILL?'退出特训？特训进度不会保存。':'退出本次训练？进度已自动保存。';
+  if(!confirm(msg))return;
   if(dTimer)clearInterval(dTimer);
   saveState();
+  if(DRILL){location.href='./';return;}
   backToSetup();
 }
 
 function finishAll(){
   STATE.ended_at=new Date().toISOString();saveState();
-  // 写历史
-  const h=loadHist();h.push(STATE);localStorage.setItem(HIST,JSON.stringify(h));
+  // 正常模式才写永久历史；drill 模式不写
+  if(!DRILL){
+    const h=loadHist();h.push(STATE);localStorage.setItem(HIST,JSON.stringify(h));
+  }
   $('trainer').style.display='none';$('done').style.display='';
   renderSummary();
 }
@@ -694,6 +749,7 @@ function exportAll(){
     .then(()=>alert('已复制全部历史+当前进度'));
 }
 function backToSetup(){
+  if(DRILL){location.href='./';return;}
   $('trainer').style.display='none';$('done').style.display='none';
   $('setup').style.display='';updateResumeInfo();
 }

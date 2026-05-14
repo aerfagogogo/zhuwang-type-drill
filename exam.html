@@ -393,8 +393,24 @@ ${userAns||'(空白/不会)'}
 - partial: 大部分对但有遗漏或个别错误
 - wrong: 大部分错或思路偏
 - dontknow: 用户答案为空或表达"不会"
-- wrong_points: 中文短句，每条 < 30 字，描述具体错处。correct 时为空数组
-- drills: 用户应该盲敲的核心正确命令字符串数组，每条一行命令文本。correct 时为空数组。dontknow/wrong 时给标准答案的核心命令`;
+
+wrong_points 格式（关键!）：必须能让用户定位到**具体哪一行错了，错在哪个 token，应该怎么改**。每条用以下三种格式之一：
+- 错误改写：用户写「<原句精确引用>」→ 应为「<正确写法>」（<一句话错因，<15字>）
+- 遗漏：缺少「<应有命令/参数>」（<场景说明>）
+- 多余：多写「<多余内容>」（<为什么不该有>）
+
+✅ 好例子：
+- 用户写「scp ks-sca01:~/Desktop/zhangsan.tar.gz ~/Desktop」→ 应为「scp nusp@ks-sca01:~/Desktop/zhangsan.tar.gz ~/Desktop/」（缺用户名 nusp@）
+- 缺少「lscpu > zhangsan.txt」前的 ssh 登录步骤
+- 多写「exit」（不需要退出远程主机）
+
+❌ 不要这样写：
+- "输出文件名不一致"（太笼统，不知哪行）
+- "scp 命令路径错误"（没说哪段路径、错在哪）
+
+correct 时 wrong_points 为空数组。
+
+drills: 用户应该盲敲的核心正确命令字符串数组，每条一行命令文本。correct 时为空数组。dontknow/wrong 时给标准答案的核心命令`;
   const res=await fetch('https://aihubmix.com/v1/chat/completions',{
     method:'POST',
     headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},

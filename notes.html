@@ -167,6 +167,7 @@ select{cursor:pointer}
       <input type="file" id="fImgPick" accept="image/*" multiple onchange="addImages(event)">
     </div>
     <div class="img-list" id="fImgList"></div>
+    <div id="quotaTip" style="font-size:11px;color:var(--muted);margin-top:6px"></div>
   </div>
 
   <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end">
@@ -249,11 +250,27 @@ function loadNotes(){
     n.desc=n.desc||'';
   }
 }
-function persist(){
+// 估算 NOTES 占用 (bytes)
+function estimateSize(notes){
+  return new Blob([JSON.stringify(notes)]).size;
+}
+// 持久化：成功返回 true；失败回滚 + 弹错
+function persist(prevSnapshot){
+  const payload=JSON.stringify(NOTES);
+  // 预检：超 4.5MB 直接拒绝（iOS Safari 配额约 5MB）
+  if(payload.length>4.5*1024*1024){
+    if(prevSnapshot!==undefined)NOTES=prevSnapshot;
+    alert('保存失败：数据量超 4.5MB（接近 iOS 5MB 上限）。\n请先导出 JSON 备份，再删一些旧速记。');
+    return false;
+  }
   try{
-    localStorage.setItem(STORE_KEY,JSON.stringify(NOTES));
+    localStorage.setItem(STORE_KEY,payload);
+    return true;
   }catch(e){
-    alert('保存失败（localStorage 可能满了）：'+e.message+'\n建议先导出 JSON 备份，再清掉一些旧速记。');
+    // 回滚到上一版
+    if(prevSnapshot!==undefined)NOTES=prevSnapshot;
+    alert('保存失败（localStorage 可能满了）：'+e.message+'\n本次修改已回滚。请先导出 JSON 备份，再删一些旧速记或图片。');
+    return false;
   }
 }
 
@@ -309,54 +326,98 @@ function saveEdit(){
   DRAFT.updated_at=Date.now();
   localStorage.setItem('lastFreeSubj',DRAFT.subject);
 
+  // 改 NOTES 前先存快照，写盘失败可回滚
+  const snapshot=JSON.parse(JSON.stringify(NOTES));
+
   if(DRAFT_IS_NEW){
     NOTES.unshift(DRAFT);
   }else{
     const i=NOTES.findIndex(x=>x.id===DRAFT.id);
     if(i>=0)NOTES[i]=DRAFT;else NOTES.unshift(DRAFT);
   }
-  persist();
+  const ok=persist(snapshot);
+  if(!ok){
+    // persist 内部已回滚 NOTES，刷新列表但**保留编辑器**让用户能再次尝试或删图
+    renderList();
+    return;
+  }
   DRAFT=null;
   $('editor').classList.remove('show');
   renderList();
 }
 
 // ---- 图片 ----
-function addImages(ev){
+// 压缩单张图片：长边 ≤ MAX_SIDE，JPEG 质量 QUALITY，返回 dataURL
+const IMG_MAX_SIDE=1600;
+const IMG_QUALITY=0.8;
+function compressImage(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        let{width:w,height:h}=img;
+        const scale=Math.min(1,IMG_MAX_SIDE/Math.max(w,h));
+        w=Math.round(w*scale);h=Math.round(h*scale);
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        // 统一输出 JPEG（兼容性最好，HEIC iPhone 浏览器解码后已是位图）
+        try{
+          const dataUrl=canvas.toDataURL('image/jpeg',IMG_QUALITY);
+          resolve({dataUrl,w,h});
+        }catch(e){reject(e);}
+      };
+      img.onerror=()=>reject(new Error('图片解码失败（可能是 HEIC 不支持？试试相机改 JPEG）'));
+      img.src=ev.target.result;
+    };
+    reader.onerror=()=>reject(new Error('文件读取失败'));
+    reader.readAsDataURL(file);
+  });
+}
+async function addImages(ev){
   if(!DRAFT){return;}
   const files=Array.from(ev.target.files||[]);
   if(!files.length)return;
-  let done=0;
   for(const f of files){
-    const reader=new FileReader();
-    reader.onload=ee=>{
+    try{
+      const{dataUrl,w,h}=await compressImage(f);
       DRAFT.images.push({
         name:f.name||('img-'+Date.now()),
-        type:f.type,size:f.size,
-        data:ee.target.result,
+        type:'image/jpeg',
+        size:f.size,                       // 原图大小（参考）
+        compressed_size:dataUrl.length,    // 压后 base64 大小
+        w,h,
+        data:dataUrl,
         added_at:Date.now(),
       });
-      done++;
-      if(done===files.length){
-        renderDraftImgs();
-        ev.target.value='';
-      }
-    };
-    reader.onerror=()=>{
-      done++;
-      if(done===files.length){renderDraftImgs();ev.target.value='';}
-    };
-    reader.readAsDataURL(f);
+    }catch(e){
+      alert('一张图处理失败：'+e.message);
+    }
   }
+  renderDraftImgs();
+  ev.target.value='';
 }
 function renderDraftImgs(){
   const box=$('fImgList');
-  if(!DRAFT||!DRAFT.images.length){box.innerHTML='';return;}
+  if(!DRAFT||!DRAFT.images.length){
+    box.innerHTML='';
+    $('quotaTip').textContent='';
+    return;
+  }
   box.innerHTML=DRAFT.images.map((img,idx)=>
     '<div class="img-thumb" onclick="viewImg('+JSON.stringify(img.data).replace(/"/g,'&quot;')+')">'
     +'<img src="'+img.data+'" alt="'+escapeHtml(img.name||'')+'">'
     +'<button class="rm" onclick="event.stopPropagation();removeDraftImg('+idx+')" title="删除">×</button></div>'
   ).join('');
+  // 容量提示
+  const totalAfter=estimateSize([...NOTES.filter(n=>n.id!==DRAFT.id),DRAFT]);
+  const mb=(totalAfter/1024/1024).toFixed(2);
+  const pct=(totalAfter/(4.5*1024*1024)*100).toFixed(0);
+  const color=pct>90?'#ff6b6b':pct>70?'#f9b234':'var(--muted)';
+  $('quotaTip').innerHTML='当前 <b style="color:'+color+'">'+mb+' MB</b> / 4.5 MB（'+pct+'%）'
+    +'　共 '+DRAFT.images.length+' 图';
 }
 function removeDraftImg(idx){
   if(!DRAFT)return;

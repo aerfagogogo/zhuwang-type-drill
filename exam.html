@@ -315,12 +315,13 @@ const $=id=>document.getElementById(id);
 const STORE='trainerState_v2';
 const HIST='trainerHistory_v2';
 
-let DATA={};      // exam_data.json 全集
-let SUBJ='';      // 当前学科
-let QS=[];        // 当前题集
-let STATE=null;   // 当前会话
-let DRILL=null;   // 薄弱项特训数据（sessionStorage 来）
-let MODE='train'; // train | explore
+let DATA={};        // exam_data.json 全集（旧格式兼容）
+let SUBJ='';        // 当前学科/考点 key
+let QS=[];          // 当前题集
+let STATE=null;     // 当前会话
+let DRILL=null;     // 薄弱项特训数据（sessionStorage 来）
+let MODE='train';   // train | explore
+let SCOPE_MODE=false; // 考点作用域模式（从 index.html 进入）
 
 // drill state
 let dTyped='',dErrors=0,dBs=0,dErrPos=[],dT0=0,dTimer=null,dComplete=false,dReps=[];
@@ -361,6 +362,39 @@ async function init(){
   const params=new URLSearchParams(location.search);
   const mode=params.get('mode');
   const subjParam=params.get('subj');
+
+  // ---- 考点作用域模式（从 index.html 选考点进入） ----
+  if(mode==='scope'){
+    const raw=sessionStorage.getItem('scopeData');
+    if(!raw){alert('作用域数据丢失，请重新选择考点');location.href='./';return;}
+    const scope=JSON.parse(raw);
+    SCOPE_MODE=true;
+    SUBJ='考点-'+scope.label;
+    QS=scope.questions||[];
+    if(!QS.length){alert('该考点暂无题目');location.href='./';return;}
+
+    // 调整起始页显示：标题换成考点名，隐藏学科/模式下拉
+    $('setupTitle').textContent='📋 '+scope.label;
+    // 隐藏学科选择行
+    let subjEl=$('subj');
+    while(subjEl&&!subjEl.classList.contains('row'))subjEl=subjEl.parentElement;
+    if(subjEl)subjEl.style.display='none';
+    // 隐藏模式选择行
+    let modeEl=$('mode');
+    while(modeEl&&!modeEl.classList.contains('row'))modeEl=modeEl.parentElement;
+    if(modeEl)modeEl.style.display='none';
+
+    // 若 API Key 已存，直接进训练
+    if($('apiKey').value.trim()){startScopeSession();return;}
+
+    // 否则显示起始页，让用户填 Key 后点开始
+    document.querySelector('button.big').onclick=()=>{
+      if(!$('apiKey').value.trim()){alert('请先填 AIHUBMIX API Key');return;}
+      localStorage.setItem('apiKey',$('apiKey').value.trim());
+      startScopeSession();
+    };
+    return;
+  }
 
   // ---- 薄弱项特训模式：从 sessionStorage 取题，不拉 exam_data.json ----
   if(mode==='drill'){
@@ -496,6 +530,26 @@ function startDrillSession(){
     };
   }
   STATE=st;
+  saveState();
+  $('setup').style.display='none';$('done').style.display='none';
+  $('trainer').style.display='';
+  renderQ();
+}
+
+// ---- 考点作用域会话 ----
+function startScopeSession(){
+  const all=loadState();
+  let st=all[SUBJ];
+  // 若 QS 长度变了就重建（题集更新了）
+  if(!st||!st.entries||st.entries.length!==QS.length){
+    st={
+      subject:SUBJ,mode:'train',started_at:new Date().toISOString(),idx:0,
+      entries:QS.map(q=>({id:q.id,mark:'',phase:'answering',user_answer:'',
+        verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[],notes:'',images:[]})),
+    };
+  }
+  STATE=st;
+  MODE='train';
   saveState();
   $('setup').style.display='none';$('done').style.display='none';
   $('trainer').style.display='';
@@ -975,11 +1029,11 @@ function gotoNext(){
 }
 
 function exitSession(){
-  const msg=DRILL?'退出特训？特训进度不会保存。':'退出本次训练？进度已自动保存。';
+  const msg=(DRILL||SCOPE_MODE)?'退出？':'退出本次训练？进度已自动保存。';
   if(!confirm(msg))return;
   if(dTimer)clearInterval(dTimer);
   saveState();
-  if(DRILL){location.href='./';return;}
+  if(DRILL||SCOPE_MODE){location.href='./';return;}
   backToSetup();
 }
 
@@ -1033,7 +1087,7 @@ function exportAll(){
     .then(()=>alert('已复制全部历史+当前进度'));
 }
 function backToSetup(){
-  if(DRILL){location.href='./';return;}
+  if(DRILL||SCOPE_MODE){location.href='./';return;}
   $('trainer').style.display='none';$('done').style.display='none';
   $('setup').style.display='';updateResumeInfo();
 }

@@ -44,6 +44,7 @@ button.s{background:var(--gray)}button.s:hover:not(:disabled){background:var(--g
 button.warn{background:var(--warn)}button.warn:hover:not(:disabled){background:var(--warn-hov)}
 button.red{background:var(--red)}button.red:hover:not(:disabled){background:var(--red-hov)}
 button.purp{background:var(--purp)}button.purp:hover:not(:disabled){background:var(--purp-hov)}
+button.blue{background:var(--blue)}button.blue:hover:not(:disabled){background:#1565c0}
 
 input,select,textarea{width:100%;padding:9px 12px;background:var(--input-bg);color:var(--text);border:1px solid var(--border-strong);border-radius:6px;font-family:inherit;font-size:13px;transition:border 0.15s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green)}
@@ -111,6 +112,19 @@ details.adv .body{padding:0 14px 14px;border-top:1px solid var(--border)}
     <select id="examSubj"></select>
     <div class="gap"></div>
     <button onclick="gotoExam()">→ 进入试卷训练</button>
+  </div>
+</div>
+
+<!-- ============ 速记本入口 ============ -->
+<div class="section exp">
+  <h2>📷 速记本（零碎知识点 · 不绑题）</h2>
+  <div class="desc">
+    听到 / 想到 / 拍到的零碎知识点，<b>不需要绑某道题</b>。学科可选「未分类」，整理时再归档。
+    数据存在浏览器本地，<b>记得定期导出 JSON</b> 给 Claude 整理到 KP / 资料库。
+  </div>
+  <div class="row">
+    <div class="gap"></div>
+    <button class="blue" onclick="location.href='notes.html'">→ 进入速记本</button>
   </div>
 </div>
 

@@ -602,7 +602,7 @@ function renderOutlineTree() {
 
   for (const subj of DATA.subjects) {
     const block = document.createElement('div');
-    block.className = 'subj-block open';   // default open
+    block.className = 'subj-block open';
 
     // ── 学科 header ──
     const subjHeader = document.createElement('div');
@@ -611,10 +611,16 @@ function renderOutlineTree() {
       <span class="subj-dot ${escH(subj.key)}"></span>
       <span class="subj-name">${escH(subj.name)}</span>
       <span class="subj-count">${subj.q_count}题</span>
-      <button class="sm" onclick="event.stopPropagation();gotoScope('${escH(subj.name)} 全科', collectSubjQs(${JSON.stringify(subj.name)}))" ${subj.q_count === 0 ? 'disabled' : ''}>全科</button>
+      <button class="sm js-subj-btn" ${subj.q_count === 0 ? 'disabled' : ''}>全科</button>
       <span class="subj-chevron">▶</span>
     `;
     subjHeader.addEventListener('click', () => block.classList.toggle('open'));
+    // 全科按钮
+    const subjBtn = subjHeader.querySelector('.js-subj-btn');
+    subjBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      gotoScope(subj.name + ' 全科', collectSubjQs(subj.name));
+    });
     block.appendChild(subjHeader);
 
     // ── 章节 body ──
@@ -623,21 +629,25 @@ function renderOutlineTree() {
 
     for (const sec of subj.sections) {
       const secBlock = document.createElement('div');
-      secBlock.className = 'sec-block open';   // default open
+      secBlock.className = 'sec-block open';
 
-      // Section header
       const secHeader = document.createElement('div');
       secHeader.className = 'sec-header';
-      // Strip "X.X " prefix from name (sec-id shows it)
       const secNameDisplay = sec.name.replace(/^\d+\.\d+\s+/, '');
       secHeader.innerHTML = `
         <span class="sec-id">${escH(sec.id)}</span>
         <span class="sec-name">${escH(secNameDisplay)}</span>
         <span class="sec-count">${sec.q_count}题</span>
-        <button class="sm" onclick="event.stopPropagation();gotoScope('${escH(sec.name)}', collectSecQs(${JSON.stringify(subj.name)}, ${JSON.stringify(sec.id)}))" ${sec.q_count === 0 ? 'disabled' : ''}>全节</button>
+        <button class="sm js-sec-btn" ${sec.q_count === 0 ? 'disabled' : ''}>全节</button>
         <span class="sec-chevron">▶</span>
       `;
       secHeader.addEventListener('click', () => secBlock.classList.toggle('open'));
+      // 全节按钮
+      const secBtn = secHeader.querySelector('.js-sec-btn');
+      secBtn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        gotoScope(sec.name, collectSecQs(subj.name, sec.id));
+      });
       secBlock.appendChild(secHeader);
 
       // KP rows
@@ -654,8 +664,12 @@ function renderOutlineTree() {
           <span class="kp-id">${escH(kp.id)}</span>
           <span class="kp-name">${escH(kp.name)}</span>
           <span class="kp-count ${countCls}">${kp.q_count}</span>
-          <button class="sm primary" onclick="gotoScope('${escH(kp.id)} ${escH(kp.name)}', getKpQs(${JSON.stringify(subj.name)}, ${JSON.stringify(sec.id)}, ${JSON.stringify(kp.id)}))" ${kp.q_count === 0 ? 'disabled' : ''}>进</button>
+          <button class="sm primary js-kp-btn" ${kp.q_count === 0 ? 'disabled' : ''}>进</button>
         `;
+        const kpBtn = kpRow.querySelector('.js-kp-btn');
+        kpBtn.addEventListener('click', () => {
+          gotoScope(kp.id + ' ' + kp.name, kp.questions);
+        });
         kpsDiv.appendChild(kpRow);
       }
 

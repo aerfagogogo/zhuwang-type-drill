@@ -5,421 +5,1100 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>主网自动化竞赛 · 训练中心</title>
 <style>
-:root{
-  --bg:#1a1a1a;--text:#e0e0e0;--muted:#888;
-  --card:#232323;--card-2:#1f1f1f;--border:#2a2a2a;--border-strong:#444;
-  --accent:#ffd54f;--green:#4caf50;--green-hov:#45a049;
-  --red:#c62828;--red-hov:#b71c1c;--warn:#f57c00;--warn-hov:#ef6c00;
-  --gray:#555;--gray-hov:#666;--purp:#7b1fa2;--purp-hov:#6a1b9a;
-  --blue:#1976d2;
-  --input-bg:#2a2a2a;--code-bg:#333;
-  --shadow:0 2px 6px rgba(0,0,0,0.4);
+/* ===== 色系定义 ===== */
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card-hover: #334155;
+  --border: #1e293b;
+  --border-light: #334155;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --subj-os: #10b981;
+  --subj-os-dark: #047857;
+  --subj-platform: #0ea5e9;
+  --subj-platform-dark: #0369a1;
+  --subj-db: #8b5cf6;
+  --subj-db-dark: #6d28d9;
+  --subj-net: #f97316;
+  --subj-net-dark: #c2410c;
+  --subj-stable: #eab308;
+  --subj-stable-dark: #ca8a04;
+  --subj-alert: #ef4444;
+  --subj-alert-dark: #b91c1c;
+  --success: #10b981;
+  --warning: #f97316;
+  --danger: #ef4444;
+  --info: #0ea5e9;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.16);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
 }
-body.light{
-  --bg:#f5f5f5;--text:#2a2a2a;--muted:#666;
-  --card:#ffffff;--card-2:#fafafa;--border:#e0e0e0;--border-strong:#bbb;
-  --accent:#e65100;--green:#2e7d32;--green-hov:#1b5e20;
-  --red:#c62828;--red-hov:#a31515;--warn:#ef6c00;--warn-hov:#e65100;
-  --gray:#9e9e9e;--gray-hov:#757575;--purp:#6a1b9a;--purp-hov:#4a148c;
-  --blue:#1565c0;
-  --input-bg:#ffffff;--code-bg:#eee;
-  --shadow:0 2px 6px rgba(0,0,0,0.1);
+
+body.light {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --card-hover: #f1f5f9;
+  --border: #e2e8f0;
+  --border-light: #cbd5e1;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'SF Mono',Consolas,Menlo,monospace;padding:30px 20px;min-height:100vh;transition:background 0.2s,color 0.2s}
-.container{max-width:920px;margin:0 auto}
-h1{font-size:24px;margin-bottom:8px}
-h2{font-size:16px;color:var(--accent);margin:18px 0 10px}
-h3{font-size:14px;color:var(--muted);margin:14px 0 8px}
-p{margin-bottom:8px;color:var(--muted);font-size:13px;line-height:1.6}
-code{background:var(--code-bg);padding:2px 6px;border-radius:3px;color:var(--accent);font-size:12px}
-a{color:var(--green);text-decoration:none}
-a:hover{text-decoration:underline}
 
-button{padding:9px 18px;background:var(--green);color:#fff;border:none;border-radius:7px;font-size:13px;cursor:pointer;margin:3px 5px 3px 0;font-family:inherit;transition:all 0.15s;font-weight:500;letter-spacing:0.2px}
-button:hover:not(:disabled){background:var(--green-hov);transform:translateY(-1px);box-shadow:var(--shadow)}
-button:active:not(:disabled){transform:translateY(0)}
-button:disabled{background:var(--border-strong);cursor:not-allowed;opacity:0.55}
-button.s{background:var(--gray)}button.s:hover:not(:disabled){background:var(--gray-hov)}
-button.warn{background:var(--warn)}button.warn:hover:not(:disabled){background:var(--warn-hov)}
-button.red{background:var(--red)}button.red:hover:not(:disabled){background:var(--red-hov)}
-button.purp{background:var(--purp)}button.purp:hover:not(:disabled){background:var(--purp-hov)}
-button.blue{background:var(--blue)}button.blue:hover:not(:disabled){background:#1565c0}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-input,select,textarea{width:100%;padding:9px 12px;background:var(--input-bg);color:var(--text);border:1px solid var(--border-strong);border-radius:6px;font-family:inherit;font-size:13px;transition:border 0.15s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green)}
-textarea{min-height:120px;resize:vertical;line-height:1.6}
-select{cursor:pointer}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  padding: 24px 16px;
+  min-height: 100vh;
+  transition: background 0.2s, color 0.2s;
+}
 
-.theme-toggle{position:fixed;top:14px;right:14px;width:34px;height:34px;border-radius:50%;padding:0;font-size:16px;background:var(--card);color:var(--text);border:1px solid var(--border-strong);cursor:pointer;z-index:50;transition:all 0.15s}
-.theme-toggle:hover{transform:scale(1.08);box-shadow:var(--shadow)}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
 
-.section{background:var(--card);border-radius:8px;padding:16px 20px;margin:14px 0;border-left:3px solid var(--green);box-shadow:var(--shadow)}
-.section.purp{border-left-color:var(--purp)}
-.section.exp{border-left-color:var(--blue)}
-.section .desc{color:var(--muted);font-size:12px;margin-bottom:10px;line-height:1.65}
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
 
-.row{display:flex;gap:10px;align-items:center;margin:8px 0}
-.row label{min-width:120px;color:var(--muted);font-size:13px}
-.row .gap{flex:1}
+h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
 
-/* 错题列表 */
-.weak-list{margin-top:8px}
-.weak-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card-2);border-radius:6px;margin:6px 0;border:1px solid var(--border)}
-.weak-row .name{font-weight:bold;color:var(--text);min-width:120px}
-.weak-row .count{color:#ef9a9a;font-size:12px;flex:1}
-.weak-row .count b{color:#ff8a80;font-size:14px}
-body.light .weak-row .count{color:#c62828}
-body.light .weak-row .count b{color:#b71c1c}
-.weak-row button{margin:0}
-.weak-empty{padding:12px;color:var(--gray-hov);font-size:12px;text-align:center;font-style:italic}
+p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
 
-/* 设置区 */
-.setting-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;align-items:center}
-.setting-grid label{color:var(--muted);font-size:12px}
+button {
+  padding: 8px 14px;
+  background: var(--success);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: inherit;
+  letter-spacing: 0.3px;
+}
 
-/* 加载弹层 */
-#loadingOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:100;padding:30px}
-#loadingOverlay.show{display:flex}
-#loadingOverlay .box{background:var(--card-2);padding:28px 32px;border-radius:10px;min-width:320px;max-width:540px;text-align:center;border:1px solid var(--border-strong)}
-#loadingOverlay h3{color:var(--purp);font-size:16px;margin:0 0 12px}
-.spinner-big{display:inline-block;width:24px;height:24px;border:3px solid var(--border-strong);border-top-color:var(--purp);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:12px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:12px 0 8px}
-.prog-fill{height:100%;background:var(--purp);transition:width 0.3s}
-#loadingDetail{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6;max-height:200px;overflow-y:auto;text-align:left;padding:8px 12px;background:var(--bg);border-radius:4px}
-.muted{color:var(--muted);font-size:12px}
+button:hover:not(:disabled) {
+  background: var(--subj-os-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
 
-/* 折叠 */
-details.adv{background:var(--card-2);border-radius:6px;margin-top:14px}
-details.adv summary{padding:10px 14px;cursor:pointer;color:var(--muted);font-size:13px;user-select:none;list-style:none}
-details.adv summary::-webkit-details-marker{display:none}
-details.adv .body{padding:0 14px 14px;border-top:1px solid var(--border)}
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.s {
+  background: var(--text-dim);
+}
+
+button.s:hover:not(:disabled) {
+  background: var(--text-muted);
+}
+
+button.warn {
+  background: var(--warning);
+}
+
+button.warn:hover:not(:disabled) {
+  background: var(--subj-net-dark);
+}
+
+button.red {
+  background: var(--danger);
+}
+
+button.red:hover:not(:disabled) {
+  background: var(--subj-alert-dark);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--border);
+  color: var(--text);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: border 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--success);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 16px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  z-index: 50;
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.topbar-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.topbar-label {
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.topbar-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.topbar-sub {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.subject-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.subject-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--subj-color);
+  transition: width 0.3s ease-out;
+}
+
+.subject-card:hover {
+  border-color: var(--subj-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  background: var(--card-hover);
+}
+
+.subject-card:hover::before {
+  width: 8px;
+}
+
+.subject-card.os { --subj-color: var(--subj-os); }
+.subject-card.platform { --subj-color: var(--subj-platform); }
+.subject-card.db { --subj-color: var(--subj-db); }
+.subject-card.net { --subj-color: var(--subj-net); }
+.subject-card.stable { --subj-color: var(--subj-stable); }
+.subject-card.alert { --subj-color: var(--subj-alert); }
+
+.subject-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.subject-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--subj-color);
+  flex-shrink: 0;
+}
+
+.subject-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.subject-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.subject-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.meta-num {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.error-num {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 5px;
+  background: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--subj-color);
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.progress-pct {
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.recent-item {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 0;
+  border-top: 1px solid var(--border-light);
+  margin-bottom: 10px;
+}
+
+.recent-label {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+  display: block;
+  font-weight: 500;
+}
+
+.recent-time {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.subject-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.subject-actions button {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: var(--border-light);
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.subject-actions button:hover:not(:disabled) {
+  background: var(--subj-color);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.subject-actions button.primary {
+  background: var(--subj-color);
+  color: white;
+  font-weight: 600;
+}
+
+.subject-actions button.primary:hover:not(:disabled) {
+  background: var(--text);
+  filter: brightness(0.9);
+}
+
+.footer-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.footer-actions button {
+  padding: 10px 16px;
+  background: var(--border-light);
+  color: var(--text);
+}
+
+.footer-actions button:hover:not(:disabled) {
+  background: var(--text-muted);
+  color: white;
+}
+
+.settings-panel {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.settings-toggle {
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.settings-toggle:hover {
+  background: var(--card-hover);
+}
+
+.settings-toggle .toggle-icon {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.settings-toggle.open .toggle-icon {
+  transform: rotate(90deg);
+}
+
+.settings-content {
+  padding: 16px;
+  display: none;
+}
+
+.settings-content.open {
+  display: block;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.setting-row {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.setting-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+#loadingOverlay.show {
+  display: flex;
+}
+
+#loadingOverlay .box {
+  background: var(--card);
+  padding: 32px;
+  border-radius: 12px;
+  min-width: 340px;
+  max-width: 540px;
+  border: 1px solid var(--border-light);
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#loadingOverlay h3 {
+  color: var(--success);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.spinner {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--success);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.progress-bar-large {
+  width: 100%;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 12px 0 8px;
+}
+
+.progress-fill-large {
+  height: 100%;
+  background: var(--success);
+  transition: width 0.3s;
+}
+
+#loadingDetail {
+  font-size: 12px;
+  color: var(--text-muted);
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 12px;
+  padding: 8px;
+  background: var(--bg);
+  border-radius: 6px;
+  line-height: 1.6;
+}
+
+#loadingDetail div {
+  margin: 4px 0;
+}
+
+footer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding-top: 24px;
+  margin-top: 32px;
+  border-top: 1px solid var(--border-light);
+}
+
+footer a {
+  color: var(--success);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .subjects-grid {
+    grid-template-columns: 1fr;
+  }
+  .topbar {
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  h1 {
+    font-size: 22px;
+  }
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
 </style>
 </head>
-<body><button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="切换主题">🌙</button>
+<body>
+<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="切换主题">🌙</button>
+
 <div class="container">
-
-<h1>🎯 主网自动化竞赛 · 训练中心</h1>
-<p>三种训练模式入口。详细工作流见项目 README。</p>
-
-<!-- ============ 试卷训练入口 ============ -->
-<div class="section">
-  <h2>📋 试卷训练</h2>
-  <div class="desc">按学科答题 → API 批卷 → 错点提示 → 内嵌盲敲。完整一站式闭环。</div>
-  <div class="row">
-    <label>学科</label>
-    <select id="examSubj"></select>
-    <div class="gap"></div>
-    <button onclick="gotoExam()">→ 进入试卷训练</button>
+  <div style="margin-bottom: 24px;">
+    <h1>📚 主网竞赛 · 训练中心</h1>
+    <p>按学科答题 → API 批卷 → 错点提示 → 内嵌盲敲。完整一站式闭环。</p>
   </div>
+
+  <div class="topbar">
+    <div class="topbar-item">
+      <span class="topbar-label">✅ 今日</span>
+      <span class="topbar-value" id="todayStats">--</span>
+      <span class="topbar-sub">题完成</span>
+    </div>
+    <div style="width: 1px; background: var(--border-light); height: 24px;"></div>
+    <div class="topbar-item">
+      <span class="topbar-label">❌ 累计错题</span>
+      <span class="topbar-value" id="totalErrors">0</span>
+      <span class="topbar-sub">道</span>
+    </div>
+    <div style="width: 1px; background: var(--border-light); height: 24px;"></div>
+    <div class="topbar-item">
+      <span class="topbar-label">🔥 连击</span>
+      <span class="topbar-value" id="streak">0</span>
+      <span class="topbar-sub">天</span>
+    </div>
+  </div>
+
+  <div class="subjects-grid" id="subjectsGrid">
+  </div>
+
+  <div class="footer-actions">
+    <button onclick="location.href='notes.html'" class="s">📷 速记本</button>
+    <button onclick="toggleSettings()" class="s">⚙️ 设置</button>
+  </div>
+
+  <div class="settings-panel">
+    <button class="settings-toggle" onclick="toggleSettingsPanel(this)">
+      <span class="toggle-icon">▶</span>
+      <span>🔧 高级设置</span>
+    </button>
+    <div class="settings-content">
+      <div class="setting-row">
+        <label class="setting-label">AIHUBMIX API Key</label>
+        <input type="password" id="apiKey" placeholder="sk-...">
+      </div>
+
+      <div class="setting-row">
+        <label class="setting-label">变式题数量</label>
+        <select id="drillN">
+          <option value="5">5 道 (快测)</option>
+          <option value="10" selected>10 道 (推荐)</option>
+          <option value="20">20 道 (集中刷)</option>
+          <option value="-1">全部错题 (慎用，可能费 token)</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <label class="setting-label">批卷模型</label>
+        <select id="model">
+          <option value="gpt-4o-mini" selected>gpt-4o-mini (默认 · 快/便宜)</option>
+          <option value="gpt-4o">gpt-4o (更准)</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <label class="setting-label">手动加载 JSON</label>
+        <textarea id="jsonInput" placeholder='{"subject":"操作系统","questions":[...]}'></textarea>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <button class="s" onclick="loadDemoJSON()" style="flex: 1;">示例</button>
+          <button onclick="startFromCustomJSON()" style="flex: 1;">开始盲敲</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    GitHub: <a href="https://github.com/aerfagogogo/zhuwang-type-drill">aerfagogogo/zhuwang-type-drill</a>
+    · UI v2.0 Vibe Island
+  </footer>
 </div>
 
-<!-- ============ 速记本入口 ============ -->
-<div class="section exp">
-  <h2>📷 速记本（零碎知识点 · 不绑题）</h2>
-  <div class="desc">
-    听到 / 想到 / 拍到的零碎知识点，<b>不需要绑某道题</b>。学科可选「未分类」，整理时再归档。
-    数据存在浏览器本地，<b>记得定期导出 JSON</b> 给 Claude 整理到 KP / 资料库。
-  </div>
-  <div class="row">
-    <div class="gap"></div>
-    <button class="blue" onclick="location.href='notes.html'">→ 进入速记本</button>
-  </div>
-</div>
-
-<!-- ============ 薄弱项特训 ============ -->
-<div class="section purp">
-  <h2>💪 薄弱项特训 (变式生成)</h2>
-  <div class="desc">
-    自动汇总你试卷训练时答错的题，调用 API 生成"换条件"的变式题，做完同样进入答题+评分+盲敲。
-    每道变式题 ≈ ¥0.005 (gpt-4o-mini)。<br>
-    <span class="muted">数据来源：浏览器 localStorage 里你做过的试卷训练记录</span>
-  </div>
-  <div id="weakList" class="weak-list"></div>
-</div>
-
-<!-- ============ 设置 ============ -->
-<div class="section exp">
-  <h2>🔧 设置</h2>
-  <div class="setting-grid">
-    <label>AIHUBMIX Key</label>
-    <input type="password" id="apiKey" placeholder="sk-... (与试卷训练共用)">
-    <label>变式题数量</label>
-    <select id="drillN">
-      <option value="5">5 道 (快测)</option>
-      <option value="10" selected>10 道 (推荐)</option>
-      <option value="20">20 道 (集中刷)</option>
-      <option value="-1">全部错题 (慎用，可能费 token)</option>
-    </select>
-    <label>批卷模型</label>
-    <select id="model">
-      <option value="gpt-4o-mini" selected>gpt-4o-mini (默认 · 快/便宜)</option>
-      <option value="gpt-4o">gpt-4o (更准)</option>
-    </select>
-  </div>
-</div>
-
-<!-- ============ 高级：手动 JSON 入口 ============ -->
-<details class="adv">
-  <summary>🗂 高级：从 JSON 手动加载盲敲清单 (旧入口)</summary>
-  <div class="body">
-    <p>从 URL <code>?q=BASE64</code> 自动加载，或粘贴 JSON：</p>
-    <textarea id="jsonInput" placeholder='{"subject":"操作系统","questions":[{"id":"...","题面":"...","drills":["cmd1","cmd2"]}]}'></textarea>
-    <button class="s" onclick="loadDemoJSON()">载入示例</button>
-    <button onclick="startFromCustomJSON()">开始盲敲</button>
-  </div>
-</details>
-
-<p style="margin-top:24px;color:#666;font-size:11px;text-align:center">
-  GitHub: <a href="https://github.com/aerfagogogo/zhuwang-type-drill">aerfagogogo/zhuwang-type-drill</a>
-</p>
-
-</div>
-
-<!-- ============ 加载弹层 ============ -->
 <div id="loadingOverlay">
   <div class="box">
-    <div class="spinner-big"></div>
-    <h3 id="loadingTitle">正在生成变式题...</h3>
-    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-    <div class="muted" id="loadingSub">0 / 0</div>
+    <div style="text-align: center;">
+      <div class="spinner"></div>
+      <h3 id="loadingTitle">正在生成变式题…</h3>
+    </div>
+    <div class="progress-bar-large"><div class="progress-fill-large" id="progFill" style="width: 0%"></div></div>
+    <div style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" id="loadingSub">0 / 0</div>
     <div id="loadingDetail"></div>
-    <button class="red" style="margin-top:14px" onclick="abortDrill()">中止</button>
+    <button class="red" style="width: 100%; margin-top: 16px;" onclick="abortDrill()">中止</button>
   </div>
 </div>
 
 <script>
-const $=id=>document.getElementById(id);
-const STATE_KEY='trainerState_v2';
-const HIST_KEY='trainerHistory_v2';
+const $ = id => document.getElementById(id);
+const STATE_KEY = 'trainerState_v2';
+const HIST_KEY = 'trainerHistory_v2';
 
-let DATA={};
-let abortFlag=false;
+let DATA = {};
+let abortFlag = false;
 
-// ---- 启动 ----
-async function init(){
-  // API key & model 与 exam.html 共用
-  $('apiKey').value=localStorage.getItem('apiKey')||'';
-  $('model').value=localStorage.getItem('model')||'gpt-4o-mini';
-  $('apiKey').addEventListener('change',()=>localStorage.setItem('apiKey',$('apiKey').value.trim()));
-  $('model').addEventListener('change',()=>localStorage.setItem('model',$('model').value));
+const SUBJ_COLORS = {
+  '操作系统': 'os',
+  '系统平台': 'platform',
+  '数据库': 'db',
+  '网络分析': 'net',
+  '稳态监控': 'stable',
+  '综合智能告警': 'alert',
+};
 
-  // 拉题库（仅用于补题面/标答）
-  try{
-    const r=await fetch('exam_data.json?_t='+Date.now());
-    DATA=await r.json();
-  }catch(e){console.error('题库加载失败',e);}
+async function init() {
+  $('apiKey').value = localStorage.getItem('apiKey') || '';
+  $('model').value = localStorage.getItem('model') || 'gpt-4o-mini';
 
-  // 填学科下拉
-  const sel=$('examSubj');
-  for(const s of Object.keys(DATA)){
-    const o=document.createElement('option');
-    o.value=s;o.textContent=s+' ('+DATA[s].length+'题)';
-    sel.appendChild(o);
+  $('apiKey').addEventListener('change', () => localStorage.setItem('apiKey', $('apiKey').value.trim()));
+  $('model').addEventListener('change', () => localStorage.setItem('model', $('model').value));
+
+  try {
+    const r = await fetch('exam_data.json?_t=' + Date.now());
+    DATA = await r.json();
+  } catch (e) {
+    console.error('题库加载失败', e);
   }
-  if(localStorage.getItem('lastSubj')&&DATA[localStorage.getItem('lastSubj')])
-    sel.value=localStorage.getItem('lastSubj');
 
-  // 渲染错题列表
-  renderWeakList();
+  renderSubjects();
+  updateKPI();
 
-  // URL ?q= 自动加载（兼容旧链接）
-  const enc=new URLSearchParams(location.search).get('q');
-  if(enc){try{
-    const j=decodeURIComponent(escape(atob(enc)));
-    $('jsonInput').value=j;
-    if(!confirm('检测到 ?q= 旧链接，要载入吗？\n(确认进盲敲；取消留在主页)'))return;
-    startFromCustomJSON();
-  }catch(e){alert('URL 参数错: '+e.message);}}
+  const enc = new URLSearchParams(location.search).get('q');
+  if (enc) {
+    try {
+      const j = decodeURIComponent(escape(atob(enc)));
+      $('jsonInput').value = j;
+      if (!confirm('检测到 ?q= 旧链接，要载入吗？')) return;
+      startFromCustomJSON();
+    } catch (e) {
+      alert('URL 参数错: ' + e.message);
+    }
+  }
 }
 
-function gotoExam(){
-  const s=$('examSubj').value;
-  if(!s){alert('请选学科');return;}
-  localStorage.setItem('lastSubj',s);
-  location.href='exam.html?subj='+encodeURIComponent(s);
+function renderSubjects() {
+  const grid = $('subjectsGrid');
+  grid.innerHTML = '';
+
+  for (const [subj, questions] of Object.entries(DATA)) {
+    const wrongs = collectWrongs()[subj] || [];
+    const wrongCount = wrongs.length;
+    const colorClass = SUBJ_COLORS[subj] || 'os';
+
+    const correctCount = questions.length - wrongCount;
+    const correctRate = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
+
+    const lastWrong = wrongs.length > 0 ? wrongs[wrongs.length - 1] : null;
+    const lastQid = lastWrong ? lastWrong.id : null;
+    const lastTime = lastWrong && lastWrong.ts ? formatTime(lastWrong.ts) : '未做过';
+
+    const card = document.createElement('div');
+    card.className = `subject-card ${colorClass}`;
+    card.innerHTML = `
+      <div class="subject-header">
+        <div class="subject-dot"></div>
+        <div class="subject-name">${escapeHtml(subj)}</div>
+      </div>
+
+      <div class="subject-meta">
+        <div class="subject-meta-item">
+          <span>总题</span>
+          <span class="meta-num">${questions.length}</span>
+        </div>
+        <div class="subject-meta-item">
+          <span>错题</span>
+          <span class="error-num">${wrongCount}</span>
+        </div>
+        <div class="subject-meta-item">
+          <span>熟练度</span>
+          <span class="meta-num">${correctRate}%</span>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: ${correctRate}%"></div>
+      </div>
+
+      <div class="progress-label">
+        <span>进度</span>
+        <span class="progress-pct">${correctCount} / ${questions.length}</span>
+      </div>
+
+      <div class="recent-item">
+        <span class="recent-label">最近</span>
+        <div>${escapeHtml(lastQid || '未做过')}</div>
+        <span class="recent-time">${lastTime}</span>
+      </div>
+
+      <div class="subject-actions">
+        <button class="primary" onclick="gotoExam('${escapeHtml(subj).replace(/'/g, "\\'")}')">→ 进试卷</button>
+        <button onclick="startDrill('${escapeHtml(subj).replace(/'/g, "\\'")}')">✦ 特训</button>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  }
 }
 
-// ---- 读 localStorage，统计每学科错题 ----
-function collectWrongs(){
-  const result={};
-  let state={};try{state=JSON.parse(localStorage.getItem(STATE_KEY))||{};}catch(e){}
-  let hist=[];try{hist=JSON.parse(localStorage.getItem(HIST_KEY))||[];}catch(e){}
-
-  // 合并 state（当前会话）+ hist（历史会话）
-  const allSessions=[];
-  for(const subj in state){
-    if(state[subj]&&state[subj].entries)allSessions.push({subject:subj,entries:state[subj].entries});
+function updateKPI() {
+  const wrongs = collectWrongs();
+  let totalErrors = 0;
+  for (const subj in wrongs) {
+    totalErrors += wrongs[subj].length;
   }
-  for(const h of hist){
-    if(h&&h.subject&&h.entries)allSessions.push({subject:h.subject,entries:h.entries});
-  }
+  $('totalErrors').textContent = totalErrors;
+  $('todayStats').textContent = '--';
+  $('streak').textContent = '0';
+}
 
-  // 按学科 + 题 id 去重，最新一条为准
-  const map={};
-  for(const sess of allSessions){
-    if(!map[sess.subject])map[sess.subject]={};
-    for(const e of sess.entries){
-      const isWrong=
-        (e.verdict==='wrong'||e.verdict==='partial'||e.verdict==='dontknow')
-        ||e.mark==='dontknow';
-      if(!isWrong)continue;
-      // 用 ts 比较新旧（如有）
-      const prev=map[sess.subject][e.id];
-      if(!prev||(e.ts||0)>=(prev.ts||0))map[sess.subject][e.id]=e;
+function formatTime(ts) {
+  if (!ts) return '未知';
+  const now = Date.now();
+  const diff = now - ts;
+  const mins = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (mins < 60) return mins + 'm ago';
+  if (hours < 24) return hours + 'h ago';
+  if (days < 7) return days + 'd ago';
+
+  const d = new Date(ts);
+  return (d.getMonth() + 1) + '-' + d.getDate();
+}
+
+function gotoExam(subj) {
+  if (!subj) {
+    alert('请选学科');
+    return;
+  }
+  localStorage.setItem('lastSubj', subj);
+  location.href = 'exam.html?subj=' + encodeURIComponent(subj);
+}
+
+function collectWrongs() {
+  const result = {};
+  let state = {};
+  try {
+    state = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
+  } catch (e) {}
+  let hist = [];
+  try {
+    hist = JSON.parse(localStorage.getItem(HIST_KEY)) || [];
+  } catch (e) {}
+
+  const allSessions = [];
+  for (const subj in state) {
+    if (state[subj] && state[subj].entries) {
+      allSessions.push({ subject: subj, entries: state[subj].entries });
+    }
+  }
+  for (const h of hist) {
+    if (h && h.subject && h.entries) {
+      allSessions.push({ subject: h.subject, entries: h.entries });
     }
   }
 
-  for(const subj in map){
-    result[subj]=Object.values(map[subj]);
+  const map = {};
+  for (const sess of allSessions) {
+    if (!map[sess.subject]) map[sess.subject] = {};
+    for (const e of sess.entries) {
+      const isWrong =
+        (e.verdict === 'wrong' || e.verdict === 'partial' || e.verdict === 'dontknow') ||
+        e.mark === 'dontknow';
+      if (!isWrong) continue;
+      const prev = map[sess.subject][e.id];
+      if (!prev || (e.ts || 0) >= (prev.ts || 0)) map[sess.subject][e.id] = e;
+    }
+  }
+
+  for (const subj in map) {
+    result[subj] = Object.values(map[subj]);
   }
   return result;
 }
 
-function renderWeakList(){
-  const wrongs=collectWrongs();
-  const subs=Object.keys(wrongs);
-  const box=$('weakList');
-  if(!subs.length){
-    box.innerHTML='<div class="weak-empty">还没有错题记录。先去试卷训练做几题，错的会自动汇总到这里。</div>';
+function escapeHtml(c) {
+  return String(c).replace(/[<>&"']/g, ch => ({
+    '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+async function startDrill(subject) {
+  const key = $('apiKey').value.trim();
+  if (!key) {
+    alert('请先填 AIHUBMIX Key');
     return;
   }
-  box.innerHTML=subs.map(s=>{
-    const n=wrongs[s].length;
-    return '<div class="weak-row"><span class="name">'+escapeHtml(s)+'</span>'
-      +'<span class="count">累计 <b>'+n+'</b> 道错题</span>'
-      +'<button class="purp" onclick="startDrill('+JSON.stringify(s).replace(/"/g,'&quot;')+')">✦ 特训这个学科</button></div>';
-  }).join('');
-}
+  if (!DATA[subject]) {
+    alert('该学科题库未加载');
+    return;
+  }
 
-function escapeHtml(c){return String(c).replace(/[<>&"']/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[ch]));}
+  const allWrongs = collectWrongs()[subject] || [];
+  if (!allWrongs.length) {
+    alert('该学科还没有错题');
+    return;
+  }
 
-// ---- 薄弱项特训：调 API 生成变式题 → 跳 exam.html?mode=drill ----
-async function startDrill(subject){
-  const key=$('apiKey').value.trim();
-  if(!key){alert('请先填 AIHUBMIX Key');return;}
-  if(!DATA[subject]){alert('该学科题库未加载');return;}
+  let n = parseInt($('drillN').value, 10);
+  if (n === -1 || n > allWrongs.length) n = allWrongs.length;
+  const samples = allWrongs.slice(-n);
 
-  const allWrongs=collectWrongs()[subject]||[];
-  if(!allWrongs.length){alert('该学科还没有错题');return;}
-
-  let n=parseInt($('drillN').value,10);
-  if(n===-1||n>allWrongs.length)n=allWrongs.length;
-  const samples=allWrongs.slice(-n); // 取最近 n 道（数组末尾是最新）
-
-  // 给每道错题查原题面/标答
-  const idMap={};for(const q of DATA[subject])idMap[q.id]=q;
-  const tasks=samples.filter(e=>idMap[e.id]).map(e=>({
-    src:idMap[e.id],wrong:e
+  const idMap = {};
+  for (const q of DATA[subject]) idMap[q.id] = q;
+  const tasks = samples.filter(e => idMap[e.id]).map(e => ({
+    src: idMap[e.id],
+    wrong: e
   }));
-  if(!tasks.length){alert('错题的原题在题库里找不到（可能题库改了 id）');return;}
 
-  abortFlag=false;
+  if (!tasks.length) {
+    alert('错题的原题在题库里找不到（可能题库改了 id）');
+    return;
+  }
+
+  abortFlag = false;
   $('loadingOverlay').classList.add('show');
-  $('loadingTitle').textContent='正在生成变式题…';
-  $('loadingDetail').textContent='';
-  $('progFill').style.width='0%';
-  $('loadingSub').textContent='0 / '+tasks.length;
+  $('loadingTitle').textContent = '正在生成变式题…';
+  $('loadingDetail').textContent = '';
+  $('progFill').style.width = '0%';
+  $('loadingSub').textContent = '0 / ' + tasks.length;
 
-  const generated=[];
-  const model=$('model').value;
-  for(let i=0;i<tasks.length;i++){
-    if(abortFlag){$('loadingOverlay').classList.remove('show');return;}
-    const t=tasks[i];
-    $('loadingSub').textContent=(i+1)+' / '+tasks.length+' （'+t.src.id+'）';
-    try{
-      const v=await genVariant(key,model,t.src,t.wrong);
-      generated.push({
-        id:'变式-'+t.src.id+'-'+Date.now().toString(36),
-        title:'变式 · '+t.src.title,
-        题面:v.题面,
-        标答:v.标答,
-        题源:'变式题（原：'+t.src.id+'）',
-        _origin_id:t.src.id,
-      });
-      $('loadingDetail').innerHTML+='<div>✅ '+escapeHtml(t.src.id)+' → '+escapeHtml((v.题面||'').slice(0,40))+'…</div>';
-    }catch(err){
-      $('loadingDetail').innerHTML+='<div style="color:#ef9a9a">❌ '+escapeHtml(t.src.id)+': '+escapeHtml(err.message.slice(0,80))+'</div>';
+  const generated = [];
+  const model = $('model').value;
+  for (let i = 0; i < tasks.length; i++) {
+    if (abortFlag) {
+      $('loadingOverlay').classList.remove('show');
+      return;
     }
-    $('progFill').style.width=((i+1)/tasks.length*100)+'%';
-    $('loadingDetail').scrollTop=$('loadingDetail').scrollHeight;
+    const t = tasks[i];
+    $('loadingSub').textContent = (i + 1) + ' / ' + tasks.length + ' （' + t.src.id + '）';
+    try {
+      const v = await genVariant(key, model, t.src, t.wrong);
+      generated.push({
+        id: '变式-' + t.src.id + '-' + Date.now().toString(36),
+        title: '变式 · ' + t.src.title,
+        题面: v.题面,
+        标答: v.标答,
+        题源: '变式题（原：' + t.src.id + '）',
+        _origin_id: t.src.id,
+      });
+      $('loadingDetail').innerHTML += '<div>✅ ' + escapeHtml(t.src.id) + ' → ' + escapeHtml((v.题面 || '').slice(0, 40)) + '…</div>';
+    } catch (err) {
+      $('loadingDetail').innerHTML += '<div style="color: #ef4444">❌ ' + escapeHtml(t.src.id) + ': ' + escapeHtml(err.message.slice(0, 80)) + '</div>';
+    }
+    $('progFill').style.width = ((i + 1) / tasks.length * 100) + '%';
+    $('loadingDetail').scrollTop = $('loadingDetail').scrollHeight;
   }
 
-  if(!generated.length){
+  if (!generated.length) {
     alert('一道变式题都没生成成功，可能 API 故障。\n请检查 Key 是否正确。');
-    $('loadingOverlay').classList.remove('show');return;
+    $('loadingOverlay').classList.remove('show');
+    return;
   }
 
-  // 存进 sessionStorage 给 exam.html 读
-  sessionStorage.setItem('drillData',JSON.stringify({
-    subject:subject,
-    drillMode:true,
-    ts:Date.now(),
-    questions:generated,
+  sessionStorage.setItem('drillData', JSON.stringify({
+    subject: subject,
+    drillMode: true,
+    ts: Date.now(),
+    questions: generated,
   }));
 
-  $('loadingTitle').textContent='✅ 生成完成，进入特训…';
-  setTimeout(()=>{location.href='exam.html?mode=drill';},600);
+  $('loadingTitle').textContent = '✅ 生成完成，进入特训…';
+  setTimeout(() => {
+    location.href = 'exam.html?mode=drill';
+  }, 600);
 }
 
-function abortDrill(){abortFlag=true;}
+function abortDrill() {
+  abortFlag = true;
+}
 
-async function genVariant(key,model,src,wrong){
-  const wp=(wrong.wrong_points||[]).slice(0,5).join('\n- ');
-  const prompt='你是 Linux/凝思系统实操题命题人。基于下面这道用户曾做错的原题，生成一道"测试同一知识点但换条件"的变式题。\n\n'
-    +'原题：\n'+(src.题面||'').slice(0,500)+'\n\n'
-    +'原标答：\n'+(src.标答||'').slice(0,800)+'\n\n'
-    +(wp?'用户当时的错处：\n- '+wp+'\n\n':'')
-    +'变式要求：\n'
-    +'1. 测试同一个核心知识点 / 同一类命令\n'
-    +'2. 至少换 2-3 处条件（文件名、路径、数字、用户名、时间等）\n'
-    +'3. 难度与原题相当\n'
-    +'4. 给出完整的题面（中文）+ 完整的标答（含命令 / 注释）\n'
-    +'5. 标答格式参考原标答，保留代码块\n\n'
-    +'严格返回 JSON，无 markdown 包装：\n'
-    +'{"题面":"...","标答":"..."}';
-  const res=await fetch('https://aihubmix.com/v1/chat/completions',{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
-    body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],temperature:0.7,max_tokens:1200}),
+async function genVariant(key, model, src, wrong) {
+  const wp = (wrong.wrong_points || []).slice(0, 5).join('\n- ');
+  const prompt = '你是 Linux/凝思系统实操题命题人。基于下面这道用户曾做错的原题，生成一道"测试同一知识点但换条件"的变式题。\n\n' +
+    '原题：\n' + (src.题面 || '').slice(0, 500) + '\n\n' +
+    '原标答：\n' + (src.标答 || '').slice(0, 800) + '\n\n' +
+    (wp ? '用户当时的错处：\n- ' + wp + '\n\n' : '') +
+    '变式要求：\n1. 测试同一个核心知识点 / 同一类命令\n2. 至少换 2-3 处条件\n3. 难度与原题相当\n4. 给出完整的题面和标答\n5. 标答保留代码块\n\n严格返回 JSON，无 markdown：\n{"题面":"...","标答":"..."}';
+
+  const res = await fetch('https://aihubmix.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + key,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+      max_tokens: 1200
+    }),
   });
-  if(!res.ok)throw new Error('API '+res.status);
-  const data=await res.json();
-  let c=data.choices[0].message.content.trim();
-  c=c.replace(/^```(?:json)?\s*/,'').replace(/```\s*$/,'').trim();
+  if (!res.ok) throw new Error('API ' + res.status);
+  const data = await res.json();
+  let c = data.choices[0].message.content.trim();
+  c = c.replace(/^```(?:json)?\s*/, '').replace(/```\s*$/, '').trim();
   return JSON.parse(c);
 }
 
-// ---- 高级：手动 JSON 加载 → 跳到旧版盲敲页（保留作备用） ----
-function loadDemoJSON(){
-  $('jsonInput').value=JSON.stringify({
-    subject:'示例',
-    questions:[{id:'示例-001',题面:'每分钟记录内存到文件',drills:['crontab -e','* * * * * free >> /home/d5000/zhejiang/Desktop/zhangsan.txt']}]
-  },null,2);
-}
-function startFromCustomJSON(){
-  try{
-    const d=JSON.parse($('jsonInput').value);
-    if(!d.questions||!d.questions.length){alert('JSON 里没题');return;}
-    sessionStorage.setItem('drillData',JSON.stringify({subject:d.subject||'自定义',drillMode:true,questions:d.questions.map(q=>({
-      id:q.id,title:q.id,题面:q.题面||'',标答:(q.drills||[]).join('\n'),题源:'自定义 JSON',
-    }))}));
-    location.href='exam.html?mode=drill';
-  }catch(e){alert('JSON 解析失败: '+e.message);}
+function loadDemoJSON() {
+  $('jsonInput').value = JSON.stringify({
+    subject: '示例',
+    questions: [{
+      id: '示例-001',
+      题面: '每分钟记录内存到文件',
+      drills: ['crontab -e', '* * * * * free >> /home/d5000/zhejiang/Desktop/zhangsan.txt']
+    }]
+  }, null, 2);
 }
 
-
-function applyTheme(t){
-  if(t==='light'){document.body.classList.add('light');$('themeBtn').textContent='☀️';}
-  else{document.body.classList.remove('light');$('themeBtn').textContent='🌙';}
+function startFromCustomJSON() {
+  try {
+    const d = JSON.parse($('jsonInput').value);
+    if (!d.questions || !d.questions.length) {
+      alert('JSON 里没题');
+      return;
+    }
+    sessionStorage.setItem('drillData', JSON.stringify({
+      subject: d.subject || '自定义',
+      drillMode: true,
+      questions: d.questions.map(q => ({
+        id: q.id,
+        title: q.id,
+        题面: q.题面 || '',
+        标答: (q.drills || []).join('\n'),
+        题源: '自定义 JSON',
+      }))
+    }));
+    location.href = 'exam.html?mode=drill';
+  } catch (e) {
+    alert('JSON 解析失败: ' + e.message);
+  }
 }
-function toggleTheme(){
-  const next=document.body.classList.contains('light')?'dark':'light';
+
+function toggleSettingsPanel(btn) {
+  btn.classList.toggle('open');
+  const content = btn.nextElementSibling;
+  content.classList.toggle('open');
+}
+
+function toggleSettings() {
+  const toggle = document.querySelector('.settings-toggle');
+  if (toggle) {
+    toggleSettingsPanel(toggle);
+  }
+}
+
+function applyTheme(t) {
+  if (t === 'light') {
+    document.body.classList.add('light');
+    $('themeBtn').textContent = '☀️';
+  } else {
+    document.body.classList.remove('light');
+    $('themeBtn').textContent = '🌙';
+  }
+}
+
+function toggleTheme() {
+  const next = document.body.classList.contains('light') ? 'dark' : 'light';
   applyTheme(next);
-  localStorage.setItem('theme',next);
+  localStorage.setItem('theme', next);
 }
-applyTheme(localStorage.getItem('theme')||'dark');
+
+applyTheme(localStorage.getItem('theme') || 'dark');
 
 init();
 </script>

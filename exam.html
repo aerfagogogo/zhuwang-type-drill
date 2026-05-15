@@ -613,11 +613,16 @@ drills 必须包含两类内容（不要漏!）：
 ❌ 不要只给 \`vi /etc/pam.d/login\` 就不管里面写啥——里面的内容才是真正要背的核心。
 ❌ 不要写中文说明（如"在 vi 里写入配置行"），drills 里只能是要敲的字符串本身。
 
-correct 时为空数组。dontknow/wrong 时给标准答案的核心命令 + 配置行。`;
+correct 时为空数组。dontknow/wrong 时给标准答案的核心命令 + 配置行。
+
+⚠️ 输出长度限制（必须遵守，否则会被截断解析失败）：
+- wrong_points 最多 5 条，每条 ≤60 字；只挑最关键的错点，相似错合并
+- drills 最多 6 条；只列最该背的核心命令/配置行，不要把所有变种都列上
+- 不要输出 JSON 之外的任何文字`;
   const res=await fetch('https://aihubmix.com/v1/chat/completions',{
     method:'POST',
     headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
-    body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],temperature:0.1}),
+    body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:8192}),
   });
   if(!res.ok){throw new Error('API '+res.status+': '+(await res.text()).slice(0,200));}
   const data=await res.json();
@@ -625,7 +630,33 @@ correct 时为空数组。dontknow/wrong 时给标准答案的核心命令 + 配
   // 兼容某些模型给的 ```json ... ``` 包装
   content=content.replace(/^```(?:json)?\s*/,'').replace(/```\s*$/,'').trim();
   try{return JSON.parse(content);}
-  catch(e){throw new Error('JSON 解析失败 (模型可能不支持)：'+content.slice(0,200));}
+  catch(e){
+    // 防御性兜底：万一仍被截断,尝试修复后再 parse
+    const repaired=repairTruncatedJson(content);
+    if(repaired)return repaired;
+    throw new Error('JSON 解析失败 (模型可能不支持)：'+content.slice(0,200));
+  }
+}
+
+// 防御性 JSON 修复:用于极少数仍被截断的情况(已设 max_tokens=8192,理论不会触发)
+function repairTruncatedJson(s){
+  if(!s)return null;
+  s=s.trim();
+  // 移除末尾的逗号后跟非闭合内容
+  // 平衡引号:奇数个引号说明 string 没闭
+  const quotes=(s.match(/"/g)||[]).length;
+  if(quotes%2!==0)s+='"';
+  // 平衡方括号
+  const openBr=(s.match(/\[/g)||[]).length;
+  const closeBr=(s.match(/\]/g)||[]).length;
+  for(let i=0;i<openBr-closeBr;i++)s+=']';
+  // 平衡大括号
+  const openBc=(s.match(/\{/g)||[]).length;
+  const closeBc=(s.match(/\}/g)||[]).length;
+  for(let i=0;i<openBc-closeBc;i++)s+='}';
+  // 移除非法的尾部逗号
+  s=s.replace(/,(\s*[}\]])/g,'$1');
+  try{return JSON.parse(s);}catch(e){return null;}
 }
 
 // ---- 顺便问一下 ----

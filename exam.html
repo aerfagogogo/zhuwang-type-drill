@@ -25,7 +25,7 @@ body.light{
   --shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'SF Mono',Consolas,Menlo,monospace;padding:24px 18px;min-height:100vh;transition:background 0.2s,color 0.2s}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono',Consolas,Menlo,monospace;padding:24px 18px;min-height:100vh;transition:background 0.2s,color 0.2s;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 .container{max-width:920px;margin:0 auto}
 h1{font-size:22px;margin-bottom:14px}
 h2{font-size:15px;margin:14px 0 8px;color:var(--accent)}
@@ -34,7 +34,7 @@ code{background:var(--code-bg);padding:2px 6px;border-radius:3px;color:var(--acc
 a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline}
 
-button{padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:7px;font-size:13px;cursor:pointer;margin:3px 5px 3px 0;font-family:inherit;transition:all 0.15s;font-weight:500;letter-spacing:0.2px}
+button{padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:7px;font-size:13px;cursor:pointer;margin:3px 5px 3px 0;font-family:inherit;transition:all 0.15s;font-weight:500;letter-spacing:0.2px;-webkit-user-select:none;user-select:none}
 button:hover:not(:disabled){background:var(--green-hov);transform:translateY(-1px);box-shadow:var(--shadow)}
 button:active:not(:disabled){transform:translateY(0)}
 button:disabled{background:var(--border-strong);cursor:not-allowed;opacity:0.55}
@@ -208,7 +208,7 @@ body.light .cursor{background:#fbc02d}
     <summary>💬 顺便问一下 (gpt-4o-mini · 答 1-2 句省 token)</summary>
     <div class="body">
       <div id="qaList"></div>
-      <textarea id="askInput" placeholder="比如「chage -m 是什么意思？」⌘+Enter 提交"></textarea>
+      <textarea id="askInput" placeholder="比如「chage -m 是什么意思？」⌘+Enter 提交" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="controls" style="border:0;padding:0;margin-top:6px">
         <button class="s" onclick="submitQuestion()">提问</button>
         <span class="muted" style="margin-left:8px">提的问题会记进导出 JSON</span>
@@ -219,7 +219,7 @@ body.light .cursor{background:#fbc02d}
   <!-- 阶段 1: 答题 -->
   <div class="stage" id="stage1">
     <h2>1. 答题 <span class="stage-status" id="s1status">进行中</span></h2>
-    <textarea id="ans" placeholder="在此输入你的答案（多行 OK）。⌘+Enter 提交。"></textarea>
+    <textarea id="ans" placeholder="在此输入你的答案（多行 OK）。⌘+Enter 提交。" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off"></textarea>
 
     <!-- 探索模式专属：笔记 + 图片上传 -->
     <div id="exploreExtras" style="display:none;margin-top:10px">
@@ -481,7 +481,8 @@ function renderQ(){
   renderQuestions();
   $('askInput').value='';
 
-  $('ans').focus();
+  // 仅桌面端自动聚焦; 触屏设备避免弹出软键盘
+  if(!matchMedia('(hover: none)').matches)$('ans').focus();
 }
 
 function renderVerdict(e){

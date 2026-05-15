@@ -290,6 +290,35 @@ input:focus, select:focus, textarea:focus {
   color: var(--text);
 }
 
+.subject-big {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin: 16px 0 14px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+}
+
+.big-num {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--subj-color);
+  line-height: 1;
+}
+
+.big-sep {
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+.big-total {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
 .subject-meta {
   display: flex;
   gap: 12px;
@@ -634,26 +663,6 @@ footer a:hover {
     <p>按学科答题 → API 批卷 → 错点提示 → 内嵌盲敲。完整一站式闭环。</p>
   </div>
 
-  <div class="topbar">
-    <div class="topbar-item">
-      <span class="topbar-label">✅ 今日</span>
-      <span class="topbar-value" id="todayStats">--</span>
-      <span class="topbar-sub">题完成</span>
-    </div>
-    <div style="width: 1px; background: var(--border-light); height: 24px;"></div>
-    <div class="topbar-item">
-      <span class="topbar-label">❌ 累计错题</span>
-      <span class="topbar-value" id="totalErrors">0</span>
-      <span class="topbar-sub">道</span>
-    </div>
-    <div style="width: 1px; background: var(--border-light); height: 24px;"></div>
-    <div class="topbar-item">
-      <span class="topbar-label">🔥 连击</span>
-      <span class="topbar-value" id="streak">0</span>
-      <span class="topbar-sub">天</span>
-    </div>
-  </div>
-
   <div class="subjects-grid" id="subjectsGrid">
   </div>
 
@@ -753,7 +762,6 @@ async function init() {
   }
 
   renderSubjects();
-  updateKPI();
 
   const enc = new URLSearchParams(location.search).get('q');
   if (enc) {
@@ -773,16 +781,10 @@ function renderSubjects() {
   grid.innerHTML = '';
 
   for (const [subj, questions] of Object.entries(DATA)) {
-    const wrongs = collectWrongs()[subj] || [];
-    const wrongCount = wrongs.length;
+    const total = questions.length;
+    const practiced = countPracticed(subj);
+    const pct = total > 0 ? Math.round((practiced / total) * 100) : 0;
     const colorClass = SUBJ_COLORS[subj] || 'os';
-
-    const correctCount = questions.length - wrongCount;
-    const correctRate = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
-
-    const lastWrong = wrongs.length > 0 ? wrongs[wrongs.length - 1] : null;
-    const lastQid = lastWrong ? lastWrong.id : null;
-    const lastTime = lastWrong && lastWrong.ts ? formatTime(lastWrong.ts) : '未做过';
 
     const card = document.createElement('div');
     card.className = `subject-card ${colorClass}`;
@@ -792,34 +794,14 @@ function renderSubjects() {
         <div class="subject-name">${escapeHtml(subj)}</div>
       </div>
 
-      <div class="subject-meta">
-        <div class="subject-meta-item">
-          <span>总题</span>
-          <span class="meta-num">${questions.length}</span>
-        </div>
-        <div class="subject-meta-item">
-          <span>错题</span>
-          <span class="error-num">${wrongCount}</span>
-        </div>
-        <div class="subject-meta-item">
-          <span>熟练度</span>
-          <span class="meta-num">${correctRate}%</span>
-        </div>
+      <div class="subject-big">
+        <span class="big-num">${practiced}</span>
+        <span class="big-sep">/</span>
+        <span class="big-total">${total}</span>
       </div>
 
       <div class="progress-bar">
-        <div class="progress-fill" style="width: ${correctRate}%"></div>
-      </div>
-
-      <div class="progress-label">
-        <span>进度</span>
-        <span class="progress-pct">${correctCount} / ${questions.length}</span>
-      </div>
-
-      <div class="recent-item">
-        <span class="recent-label">最近</span>
-        <div>${escapeHtml(lastQid || '未做过')}</div>
-        <span class="recent-time">${lastTime}</span>
+        <div class="progress-fill" style="width: ${pct}%"></div>
       </div>
 
       <div class="subject-actions">
@@ -832,31 +814,26 @@ function renderSubjects() {
   }
 }
 
-function updateKPI() {
-  const wrongs = collectWrongs();
-  let totalErrors = 0;
-  for (const subj in wrongs) {
-    totalErrors += wrongs[subj].length;
+function countPracticed(subj) {
+  const ids = new Set();
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(STATE_KEY)) || {}; } catch (e) {}
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem(HIST_KEY)) || []; } catch (e) {}
+
+  if (state[subj] && state[subj].entries) {
+    for (const e of state[subj].entries) {
+      if (e && e.phase === 'completed' && e.id) ids.add(e.id);
+    }
   }
-  $('totalErrors').textContent = totalErrors;
-  $('todayStats').textContent = '--';
-  $('streak').textContent = '0';
-}
-
-function formatTime(ts) {
-  if (!ts) return '未知';
-  const now = Date.now();
-  const diff = now - ts;
-  const mins = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (mins < 60) return mins + 'm ago';
-  if (hours < 24) return hours + 'h ago';
-  if (days < 7) return days + 'd ago';
-
-  const d = new Date(ts);
-  return (d.getMonth() + 1) + '-' + d.getDate();
+  for (const h of hist) {
+    if (h && h.subject === subj && h.entries) {
+      for (const e of h.entries) {
+        if (e && e.phase === 'completed' && e.id) ids.add(e.id);
+      }
+    }
+  }
+  return ids.size;
 }
 
 function gotoExam(subj) {

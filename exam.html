@@ -57,6 +57,9 @@ select{padding:8px 10px;cursor:pointer}
 
 /* 顶部进度条 */
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:12px;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--border)}
+.model-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;color:var(--muted);flex-wrap:wrap}
+.model-row select{width:auto;flex:0 1 auto;padding:3px 6px;font-size:11px;min-width:140px}
+.model-row span{white-space:nowrap}
 .progress{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;background:var(--green);transition:width 0.3s}
 .topbar .qp{color:var(--accent);font-weight:bold;font-size:13px}
@@ -173,6 +176,15 @@ body.light .cursor{background:#fbc02d}
     </select>
   </div>
   <div class="row">
+    <label>问答模型:</label>
+    <select id="askModel">
+      <option value="gpt-4o-mini">gpt-4o-mini (默认 · 快/便宜)</option>
+      <option value="claude-3-5-haiku-latest">claude-3-5-haiku</option>
+      <option value="claude-sonnet-4-5">claude-sonnet-4-5 (准但贵)</option>
+      <option value="gpt-4o">gpt-4o</option>
+    </select>
+  </div>
+  <div class="row">
     <label>学科:</label>
     <select id="subj"></select>
   </div>
@@ -200,12 +212,29 @@ body.light .cursor{background:#fbc02d}
     <button class="s" style="padding:5px 10px;font-size:12px;margin:0" onclick="exitSession()">退出</button>
   </div>
 
+  <div class="model-row">
+    <span>📋 批卷</span>
+    <select id="tModel">
+      <option value="gpt-4o-mini">gpt-4o-mini</option>
+      <option value="claude-3-5-haiku-latest">claude-3-5-haiku</option>
+      <option value="claude-sonnet-4-5">claude-sonnet-4-5</option>
+      <option value="gpt-4o">gpt-4o</option>
+    </select>
+    <span>💬 问答</span>
+    <select id="tAskModel">
+      <option value="gpt-4o-mini">gpt-4o-mini</option>
+      <option value="claude-3-5-haiku-latest">claude-3-5-haiku</option>
+      <option value="claude-sonnet-4-5">claude-sonnet-4-5</option>
+      <option value="gpt-4o">gpt-4o</option>
+    </select>
+  </div>
+
   <div id="qmeta"></div>
   <div id="qti"></div>
 
   <!-- 顺便问一下 (随时可用) -->
   <details class="ask-box" id="askBox">
-    <summary>💬 顺便问一下 (gpt-4o-mini · 答 1-2 句省 token)</summary>
+    <summary id="askSummary">💬 顺便问一下 (gpt-4o-mini · 答 1-2 句省 token)</summary>
     <div class="body">
       <div id="qaList"></div>
       <textarea id="askInput" placeholder="比如「chage -m 是什么意思？」⌘+Enter 提交" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
@@ -306,15 +335,27 @@ function loadHist(){try{return JSON.parse(localStorage.getItem(HIST))||[];}catch
 
 // ---- 初始化 ----
 async function init(){
-  // 恢复 API key
+  // 恢复 API key + 模型设置（4 个 selector 双向同步，setup 与 trainer 互通）
   $('apiKey').value=localStorage.getItem('apiKey')||'';
-  $('model').value=localStorage.getItem('model')||'gpt-4o-mini';
+  const savedModel=localStorage.getItem('model')||'gpt-4o-mini';
+  const savedAskModel=localStorage.getItem('askModel')||'gpt-4o-mini';
+  $('model').value=savedModel;$('tModel').value=savedModel;
+  $('askModel').value=savedAskModel;$('tAskModel').value=savedAskModel;
   $('mode').value=localStorage.getItem('examMode')||'train';
   $('apiKey').addEventListener('change',()=>localStorage.setItem('apiKey',$('apiKey').value.trim()));
-  $('model').addEventListener('change',()=>localStorage.setItem('model',$('model').value));
+  function syncModel(v){$('model').value=v;$('tModel').value=v;localStorage.setItem('model',v);}
+  function syncAskModel(v){$('askModel').value=v;$('tAskModel').value=v;localStorage.setItem('askModel',v);updateAskSummary();}
+  $('model').addEventListener('change',()=>syncModel($('model').value));
+  $('tModel').addEventListener('change',()=>syncModel($('tModel').value));
+  $('askModel').addEventListener('change',()=>syncAskModel($('askModel').value));
+  $('tAskModel').addEventListener('change',()=>syncAskModel($('tAskModel').value));
   $('mode').addEventListener('change',()=>localStorage.setItem('examMode',$('mode').value));
+  updateAskSummary();
   // 图片上传监听
   $('imgUpload').addEventListener('change',handleImageUpload);
+
+  // Tab 补全（drill 模式也要装上）
+  attachTabComplete();
 
   // 检测 URL 参数
   const params=new URLSearchParams(location.search);
@@ -347,6 +388,93 @@ async function init(){
   if(subjParam&&DATA[subjParam])sel.value=subjParam;
   sel.onchange=updateResumeInfo;
   updateResumeInfo();
+}
+
+// ---- Tab 补全（Linux 命令/路径/凝思常用词） ----
+const COMPLETIONS=[
+  // 文件/目录操作
+  'ls','ls -l','ls -la','ls -lh','cd','pwd','mkdir','mkdir -p','rmdir','rm','rm -rf','rm -r','cp','cp -r','mv','touch','ln','ln -s','file','stat','find','locate','which','whereis','tree',
+  // 文本/查看
+  'cat','tac','less','more','head','tail','tail -f','grep','grep -r','grep -i','grep -v','grep -E','egrep','sed','awk','cut','sort','uniq','wc','wc -l','diff','tr','tee','xargs',
+  // 权限/属主
+  'chmod','chmod +x','chmod 644','chmod 755','chmod 600','chmod 700','chown','chown -R','chgrp','umask','getfacl','setfacl','lsattr','chattr','chattr +i','chattr -i',
+  // 用户/组
+  'useradd','useradd -m','userdel','userdel -r','usermod','usermod -aG','usermod -L','usermod -U','groupadd','groupdel','groupmod','passwd','passwd -l','passwd -u','passwd -d','passwd -e','chage','chage -l','chage -M','chage -m','chage -W','chage -E','id','whoami','who','w','last','lastlog','finger','su','su -','sudo','sudo -i','sudo -u','visudo',
+  // 进程/服务
+  'ps','ps aux','ps -ef','ps -elf','top','htop','kill','kill -9','killall','pkill','pgrep','nice','renice','nohup','jobs','fg','bg','&','systemctl','systemctl start','systemctl stop','systemctl restart','systemctl status','systemctl enable','systemctl disable','systemctl reload','systemctl daemon-reload','systemctl list-units','service',
+  // 网络
+  'ip','ip a','ip addr','ip addr show','ip link','ip link set','ip route','ip route add','ip route del','ip route show','ifconfig','ifup','ifdown','route','route -n','netstat','netstat -an','netstat -tunlp','netstat -rn','ss','ss -tunlp','ping','ping -c','traceroute','nslookup','dig','host','arp','arp -a','curl','curl -s','curl -O','wget','telnet','ssh','ssh -p','scp','scp -r','rsync','rsync -av','ftp','sftp','nc','nmap','tcpdump','iptables','iptables -L','iptables -F','iptables -A','iptables -D','iptables -nvL','firewall-cmd',
+  // 磁盘/文件系统
+  'df','df -h','df -Th','du','du -sh','du -h','mount','mount -a','umount','fdisk','fdisk -l','parted','lsblk','blkid','mkfs','mkfs.ext4','mkfs.xfs','fsck','tune2fs','dumpe2fs','e2fsck','swapon','swapoff','mkswap','dd','sync','lvdisplay','vgdisplay','pvdisplay','lvcreate','vgcreate','pvcreate',
+  // 包管理
+  'apt','apt update','apt install','apt remove','apt-get','apt-get install','dpkg','dpkg -i','dpkg -l','dpkg -L','rpm','rpm -ivh','rpm -qa','rpm -ql','yum','yum install','yum update','yum remove','dnf','dnf install',
+  // 压缩
+  'tar','tar -czvf','tar -xzvf','tar -tvf','tar -xjvf','tar -xf','gzip','gunzip','bzip2','zip','unzip',
+  // 系统信息
+  'uname','uname -a','uname -r','hostname','hostnamectl','date','date -s','cal','uptime','dmesg','dmesg -T','free','free -h','vmstat','iostat','sar','lscpu','lsmod','modprobe','rmmod','insmod','sysctl','sysctl -a','sysctl -p','env','printenv','export','history','alias','source','exit','logout','reboot','shutdown','shutdown -h now','poweroff','halt',
+  // 日志
+  'journalctl','journalctl -u','journalctl -f','journalctl -xe','tail /var/log/messages','tail /var/log/syslog','tail /var/log/secure',
+  // crontab/at
+  'crontab','crontab -l','crontab -e','crontab -r','crontab -u','at','atq','atrm',
+  // vi/vim
+  ':w',':q',':wq',':q!',':wq!','dd','yy','p','u',':set nu',':set nonu','/','?','n','N','i','a','o','O','x','dw','d$','d^','gg','G',':%s/old/new/g',':s/old/new/g',
+  // 凝思常用路径/词
+  '/etc/login.defs','/etc/pam.d/login','/etc/pam.d/system-auth','/etc/pam.d/sshd','/etc/security/limits.conf','/etc/security/pwquality.conf','/etc/securetty','/etc/shadow','/etc/passwd','/etc/group','/etc/gshadow','/etc/sudoers','/etc/sudoers.d/','/etc/profile','/etc/bash.bashrc','/etc/hosts','/etc/hostname','/etc/resolv.conf','/etc/fstab','/etc/crontab','/etc/cron.daily/','/etc/cron.hourly/','/etc/rsyslog.conf','/etc/audit/auditd.conf','/etc/audit/audit.rules','/etc/network/interfaces','/etc/sysconfig/network','/etc/ssh/sshd_config','/etc/ssh/ssh_config','/etc/selinux/config','/var/log/messages','/var/log/syslog','/var/log/secure','/var/log/audit/audit.log','/var/log/btmp','/var/log/wtmp','/var/log/lastlog','/root','/home','/tmp','/var','/usr','/usr/local','/usr/bin','/usr/sbin','/sbin','/bin','/proc','/sys','/dev','/boot','/opt','/srv','/mnt','/media',
+  // 凝思三权/角色
+  'sysadm','audadm','secadm','nusp@','nusp:',
+  // auditd
+  'auditctl','auditctl -l','auditctl -e 1','auditctl -e 0','auditctl -w','auditctl -a','auditctl -D','ausearch','aureport','aureport -au','aureport -l',
+  // 常见操作短语
+  'source /etc/profile','PASS_MAX_DAYS','PASS_MIN_DAYS','PASS_WARN_AGE','PASS_MIN_LEN','LOGIN_RETRIES','LOGIN_TIMEOUT','UMASK','minlen','dcredit','ucredit','lcredit','ocredit','difok','retry','remember','deny','unlock_time','PermitRootLogin','PasswordAuthentication','PermitEmptyPasswords','Port','ListenAddress','MaxAuthTries','ClientAliveInterval','ClientAliveCountMax',
+];
+
+let tabState=null;
+
+function attachTabComplete(){
+  const ta=$('ans');if(!ta)return;
+  ta.addEventListener('keydown',e=>{
+    if(e.key==='Tab'){
+      e.preventDefault();
+      handleTabComplete(ta,e.shiftKey);
+      return;
+    }
+    tabState=null;
+  });
+  ta.addEventListener('input',()=>{tabState=null;});
+  ta.addEventListener('click',()=>{tabState=null;});
+}
+
+function handleTabComplete(ta,shift){
+  const val=ta.value;
+  const cur=ta.selectionStart;
+  // 复用上一次循环（如果光标在已补全段尾且 prefix 未变）
+  if(tabState&&tabState.endPos===cur){
+    const step=shift?-1:1;
+    tabState.idx=(tabState.idx+step+tabState.matches.length)%tabState.matches.length;
+    applyCompletion(ta);
+    return;
+  }
+  // 取光标前一个 "词"（按空白切）
+  let start=cur;
+  while(start>0&&!/\s/.test(val[start-1]))start--;
+  const prefix=val.slice(start,cur);
+  if(!prefix){return;}
+  const lower=prefix.toLowerCase();
+  const matches=COMPLETIONS.filter(c=>c.toLowerCase().startsWith(lower));
+  if(!matches.length)return;
+  tabState={prefix,matches,idx:shift?matches.length-1:0,startPos:start,endPos:cur};
+  applyCompletion(ta);
+}
+
+function applyCompletion(ta){
+  const s=tabState;
+  const m=s.matches[s.idx];
+  const before=ta.value.slice(0,s.startPos);
+  const after=ta.value.slice(s.endPos);
+  ta.value=before+m+after;
+  const newEnd=s.startPos+m.length;
+  ta.selectionStart=ta.selectionEnd=newEnd;
+  s.endPos=newEnd;
 }
 
 // ---- 启动薄弱项特训会话 ----
@@ -684,14 +812,21 @@ async function submitQuestion(){
   }
 }
 
+function updateAskSummary(){
+  const el=$('askSummary');if(!el)return;
+  const m=$('askModel')?.value||'gpt-4o-mini';
+  el.textContent='💬 顺便问一下 ('+m+' · 答 1-2 句省 token)';
+}
+
 async function callAsker(qTitle,question){
-  // 固定 gpt-4o-mini 省 token，限 max_tokens=120
+  // 模型由 askModel 决定（setup/trainer 两处可切换），限 max_tokens=120
   const key=$('apiKey').value.trim();
+  const model=$('askModel').value||'gpt-4o-mini';
   const prompt=`你是 Linux/凝思实操辅导员。1-2 句中文回答（<60字），只说核心不展开。\n题目背景：${qTitle.slice(0,120)}\n问题：${question}`;
   const res=await fetch('https://aihubmix.com/v1/chat/completions',{
     method:'POST',
     headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
-    body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:prompt}],temperature:0.2,max_tokens:120}),
+    body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],temperature:0.2,max_tokens:120}),
   });
   if(!res.ok)throw new Error('API '+res.status+': '+(await res.text()).slice(0,120));
   const data=await res.json();

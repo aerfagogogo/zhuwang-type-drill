@@ -1,28 +1,94 @@
-# 1. 入库
+# 主网自动化竞赛 · 训练系统
 
-## 1.1 资料库索引 · `build_index.py`
+> 一个为浙江主网自动化竞赛设计的网页刷题系统。  
+> 基于 Obsidian vault 题集 + Python 脚本 + GitHub Pages。
 
-扫 `03资料库/` → 写 `资料库索引.json` + `.extracted-text/<镜像>.txt`
+🌐 **训练入口**：https://aerfagogogo.github.io/zhuwang-type-drill/
 
-```bash
-python3 build_index.py          # 增量
-python3 build_index.py --force  # 重抽
+---
+
+## 🌊 工作流
+
+```mermaid
+flowchart LR
+    A([📝 录题<br/>到 vault]) --> B([🔄 刷新题库<br/>一键脚本])
+    B --> C([💻 进网页<br/>训练中心])
+    C --> D([❌ 错题<br/>自动汇总])
+    D --> E([✦ 特训<br/>AI 变式题])
+    E --> C
+
+    style A fill:#fff7ed,stroke:#fb923c,stroke-width:2px
+    style B fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
+    style C fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+    style D fill:#fee2e2,stroke:#ef4444,stroke-width:2px
+    style E fill:#ede9fe,stroke:#8b5cf6,stroke-width:2px
 ```
 
-- 支持格式：MD / PDF / TXT / DOC / DOCX / XLSX / XLS / PPTX / PPT
-- 顶层文件 `subject=""`（跨学科），学科子目录下 `subject=<学科名>`
-- AI 查：`jq` 搜 JSON 找候选 → 读对应 `.txt` 抽段落
+每天的训练就是这条线：录题 → 刷新 → 训练 → 错题 → 特训。
 
-**重要参考资料**（生成答案时一定要查）：
-- `03资料库/竞赛笔记.pdf` — 同事手记，步骤细节最实战，**最高优先级**
-- `03资料库/D60基础平台/`（D6.0）全套手册，80+ PDF
-- `03资料库/操作系统/北京凝思软件培训-6.0.99系统.pdf` — 凝思 OS 官方培训
+---
 
-## 1.2 录入题集
+## 🏗️ 数据流
 
-把题源（doc/PDF/手抄）整理进 `04实操题集/<学科>/`，一题一文件。
+```mermaid
+flowchart TD
+    Q[("📁 04 题集<br/>vault MD")]
+    KP[("📁 03 资料库<br/>PDF / KP")]
 
-**文件名**：`NNN-题面前 15 字内.md`，NNN = 该学科下当前最大编号 +1。
+    Q --> BE["build_exam_data.py"]
+    BE --> EJ["exam_data.json"]
+    EJ --> WEB["🌐 GitHub Pages<br/>(训练中心 + 试卷)"]
+    WEB --> U["👤 浏览器训练"]
+
+    U -.错题存 localStorage.-> U
+    U -.卡了喊 Claude.-> CL["🤖 Claude"]
+    CL -.查.-> KP
+    CL -.写答案.-> Q
+
+    style Q fill:#fef3c7,stroke:#f59e0b
+    style KP fill:#fef3c7,stroke:#f59e0b
+    style BE fill:#e0e7ff,stroke:#6366f1
+    style EJ fill:#dcfce7,stroke:#16a34a
+    style WEB fill:#dbeafe,stroke:#3b82f6
+    style U fill:#fce7f3,stroke:#be185d
+    style CL fill:#fae8ff,stroke:#a855f7
+```
+
+- **本地 (vault)**：题集和资料库都在 Obsidian 里。
+- **脚本**：`build_exam_data.py` 把 MD 题集 → JSON。
+- **网页**：纯静态站，所有训练状态用 `localStorage` 存浏览器。
+- **Claude**：碰到不会的题让我查 KP / 资料库回答。
+
+---
+
+## 🎯 口令字典（你说 → 我做）
+
+| 你说 | 我做 |
+|---|---|
+| **「刷新题库」** | 跑 `bash refresh_exam.sh`（build + commit + push） |
+| **「为 <学科> 批量生成答案」** | 读资料库 → 给每题写草稿答案 |
+| **「修 <学科>-NNN 答案：<问题>」** | 改 MD → 刷新题库 → 推 |
+| **「出 <学科> 惩罚清单」** | `punishment.py gen <学科> 3` |
+| **「惩罚检查 <学科>」** | `punishment.py check <学科>` |
+| 粘训练 JSON | 找 `flagged` 修答案；找 `wrong/dontknow` 更薄弱点 |
+
+---
+
+## 📦 入库
+
+题集放在 `04实操题集/<学科>/`，**一题一文件**：
+
+```
+04实操题集/
+├── 操作系统/      57 题
+├── 系统平台/      76 题
+├── 数据库/        34 题
+├── 基础平台/      54 题
+├── 网络分析/      14 题
+├── 稳态监控/      28 题
+├── 综合智能告警/   7 题
+└── 调度数据网/     2 题
+```
 
 **frontmatter 模板**：
 ```yaml
@@ -31,345 +97,67 @@ id: <学科>-NNN
 学科: <学科>
 题源: <来源 第X题>
 关联KP: "[[KP1]], [[KP2]]"
-tags: [命令名, 业务词, 表名]
-创建: YYYY-MM-DD
+tags: [命令名, 业务词]
 ---
 ```
 
 **正文骨架**：`## 题面` → `## 答案`。仅此两段。
 
-**Tag 规则**：只能用字母 / 数字 / `_` / `-` / 中文 / `/`。含空格或 `>` 等符号会被 Obsidian 截断。
-
-### 1.2.1 操作系统（shell 命令型）
-
-**答案格式**：bash 代码块 + `#` 注解（参考 [[操作系统/055-ifconfig 临时 IP + route 加路由 + 重定向.md|055 题]]）
-
-```bash
-# 第一步：xx做啥
-#   (子注释解释参数)
-命令1
-
-# 第二步：xx做啥
-命令2
-```
-
-**每个 md 怎么处理**：
-1. 白天由用户根据实操环境摸索并填入正确答案。原题中有正确答案就不用了。
-2. 我负责整理成标准格式
-3. 如果用户不知道答案求助我，我依据 03 资料库告诉他，且经过他确认正确后，把答案写入答案处。
-4. 当用户说生成答案时，我优先检索资料库（利用好 json 索引文件），结合我自己的知识，给每一题写答案。
-
-**完成度**：57 题 ✅（用户实测中校正）
-
-### 1.2.2 系统平台（GUI 交互型）⚠️ 答案方式不同
-
-**和操作系统的区别**：
-- 操作系统 = 终端敲命令 → 答案是 shell 代码
-- 系统平台 = 在 D6.0 平台 UI 上点点点 → 答案是**步骤 + 内嵌图示**
-
-**答案格式**（步骤标题加粗 + 代码块包文字 + 图片紧跟）：
-
-````markdown
-## 答案
-
-**第一步：识别故障**
-
-```
-现象描述放代码块里，视觉上有边界。
-```
-
-![[99-资源/attachments/D6.0/IMG_xxxx.JPG]]
-
-**第二步：xx**
-
-```bash
-具体 shell 命令
-```
-
-```
-若有补充说明也用代码块。
-```
-
-**第三步：xx**
-
-...
+各学科答案格式细则见 vault 顶层 README。
 
 ---
 
-**注意事项**
+## 🚀 训练
 
-```
-（留空让用户上机后填）
-```
-
----
-
-**参考**
-- 首选 KP：[[KP名]]（可点跳转）
-- 关联 KP：[[KP2]] · [[KP3]]
-- 相关 PDF：[[03资料库/D60基础平台/xxx.pdf]]（可点打开）
-- 索引：`资料库索引.json` 搜 "xx" 命中 N 条
-- [[03资料库/竞赛笔记.pdf]] 第 NN 行
-````
-
-**关键约定**：
-- `## 答案` 是文件唯一的内容段，**没有** `## 涉及的知识点` / `## 讲解笔记` / `## 变式` / `## 训练日志`（信息全收进 答案 + 参考）
-- 图片用**全路径** `![[99-资源/attachments/D6.0/IMG_xxxx.JPG]]`（避免 Obsidian 索引问题）
-- PDF 引用用 wikilink `[[03资料库/.../xxx.pdf]]` → Obsidian 里可点直接打开
-- 注意事项**留空**，等用户上机验证后自己填
-
-**🚨 三条铁律**（**违反 = 必返工**，2026-05-14 教训）：
-
-**铁律 1 · 代码块里不能塞 wikilink**
-
-代码块（``` 或 ```bash 等）**不渲染** Markdown 语法 → `[[KP]]` 显示为纯文本，不可点。所有 `[[KP]]` 必须放在**普通段落 / 列表项**里，不能塞进代码块。
-
-✅ 对：
-````markdown
-按 [[Designer列表怎么建]] "数据刷新慢" 段补函数语句。
-
-```bash
-sample_tool
-```
-````
-
-❌ 错：
-````markdown
-```
-按 [[Designer列表怎么建]] 数据刷新慢段补函数语句  ← wikilink 不渲染
-```
-````
-
-**铁律 2 · 系统平台每一步必须展开，不准"参考 KP 自己看"**
-
-系统平台是 GUI 操作题，**每一步做不到就卡住**——比如 076 题里"配数据源"一笔带过 = 用户看了照样不会操作。
-
-✅ 对：把 KP 里的 12 步全列出来（可精简措辞但**不能省关键节点**）：
-```
-1. 表格上「添加数据源」→ 选「默认」
-2. 点数据源 → 「打开数据源编辑器」
-3. 数据源编辑器配置：固定应用 / Real Time / 选 1...
-4. 打开「源 JSON 编辑器」配 5 项...
-...
-```
-
-❌ 错：
-```
-数据源照 [[Designer列表怎么建]] 配（12 步）  ← 等于没答
-```
-
-**铁律 3 · KP 里说什么照搬什么，不准凭"AI 知识"自创**
-
-凝思 / D6.0 是私有系统，AI 通用知识容易写错。必须按 KP 原文 + 资料库索引命中条目里的内容来写。AI 自创内容只能用在「补连接句」「易错点提示」这种通用部分。
-
----
-
-**🔍 跑完每题自检（4 项必查）**：
-
-1. **wikilink 都在代码块外** — `awk '/^```/{in_code=!in_code} in_code && /\[\[/{print NR}' file.md` 应该输出空
-2. **KP 里的关键节点全展开**（对照 KP 数一下步骤数，不能少于 70%）
-3. **图片路径用全路径** `99-资源/attachments/D6.0/`
-4. **没有遗留** `## 涉及的知识点 / 讲解笔记 / 变式 / 训练日志`
-
-**生成答案 SOP**（从高到低）：
-1. **`jq` 搜 `资料库索引.json`** 找候选 KP/PDF（按 keywords / desc 匹配）
-   ```bash
-   jq -r --arg q "云桌面" '.[] | select((.keywords // []) | tostring | contains($q)) | .file' 资料库索引.json
-   ```
-2. 读题目 frontmatter `关联KP` 链接的 KP 文件（首选 答案源）
-3. 读《竞赛笔记》对应行号
-4. 读相关 D60 PDF 章节
-5. AI 知识补缺
-
-**完成度**：76 题题面 ✅ / 76 题答案 ✅（2026-05-14 完成，含 076 重写）
-
-### 1.2.3 数据库（达梦 SQL 型）
-
-**答案格式**：单 SQL 代码块 + `-- 第N步` 注释 + 注意事项留空 + 参考段（参考 [[操作系统/055-ifconfig 临时 IP + route 加路由 + 重定向.md|055 题]]）
-
-```sql
--- 第一步：xx 做啥
-CREATE TABLE ...
-
--- 第二步：xx
-SELECT ...
-```
-
-**铁律同 1.2.2**：wikilink 在代码块外、按 KP 照搬、不省略关键步骤。
-
-**完成度**：34 题题面 ✅ / 34 题答案 ✅（2026-05-14 完成）
-
-**完成度**：题面 ✅ / 答案 ⚠️ 待生成
-
-### 1.2.4 其他学科（稳态监控、综合智能告警、网络分析、调度数据网）
-
-GUI 交互型，同 1.2.2 系统平台处理逻辑。
-
-## 1.3 题库 JSON · `build_exam_data.py`
-
-`vault MD` → `web/exam_data.json`（试卷网页拉取）
-
-```bash
-cd 99-工作流 && python3 build_exam_data.py
-cd web && git add exam_data.json && git commit -m "data: refresh" && git push
-```
-
-抽取规则：`## 题面` / `## 题目` + `## 答案` 两段。GUI 题答案含图示也能抽（保留 markdown 原文，包括 `![[xxx]]`）。
-
----
-
-# 2. 训练
-
-## 2.1 试卷训练 · 网页版 v2（一站式闭环）
-
-URL：**https://aerfagogogo.github.io/zhuwang-type-drill/exam.html**
-
-**单页全流程**：答题 → AIHUBMIX API 批卷 → 错点 → 内嵌盲敲 → 下一题
-
-**5 个标记按钮**：
-| 按钮 | 含义 | 进薄弱点 | 下次可重答 |
-|---|---|---|---|
-| ← 上一题 | 回上一题（可改）| — | — |
-| ⏭ 跳过 | 暂时不练 | ❌ | ✅ |
-| ❌ 不会 | 完全不会，要练 | ✅ drill 全套 | — |
-| ⚠️ 答案有误 | 标答有问题 | ❌ | ✅（我修完答案后）|
-| 提交并批卷 → | 正常提交 | 取决于判定结果 | — |
-
-**首次设置**：填 AIHUBMIX Key + 选学科。Key 存浏览器 localStorage，不外传。
-
-**操作系统 vs 系统平台 用法差异**：
-- 操作系统：API 能准判（shell 命令字符匹配）
-- 系统平台：API 判图模题不准。**建议**：你写文字步骤描述，API 主要看关键步骤是否覆盖，准确率约 70-80%。或者标 ⚠️ 答案有误 跳过，后续手动复盘。
-
-## 2.2 惩罚清单 · 网页版（盲敲）
-
-URL：**https://aerfagogogo.github.io/zhuwang-type-drill/**
-
-试卷训练后用 `?q=BASE64(JSON)` 参数预填，或粘 JSON 启动。**题目导向**：每题展示题面 + 多行命令，敲一遍可选「再来 / 下一题 / 结束」。
-
-## 2.3 操作系统训练
-
-走 **2.1 试卷模式**。API 可准判，错点自动入薄弱点，盲敲页面自动加载 drill。
-
-## 2.4 系统平台训练
-
-GUI 交互型，机器判错准确率有限。**推荐流程**：
-1. 走试卷模式答题，写文字步骤（不必照搬命令）
-2. API 给初判 → 你自己复核（重点看是否漏关键步骤）
-3. 漏掉的步骤标记为薄弱点，drill 改成"敲关键术语 / 配置项名"
-
-## 2.5 惩罚 / 薄弱点机制
-
-| 工具 | 用途 |
+| 入口 | 用途 |
 |---|---|
-| `punishment.py gen <学科> <次数>` | 生成本地 MD 版惩罚清单（Obsidian 勾 checkbox） |
-| `punishment.py check <学科>` | 检查完成 → 归档 + weak_count -1 |
-| `gen_drill_url.py <学科>` | 生成网页惩罚清单预填 URL |
+| **训练中心** https://aerfagogogo.github.io/zhuwang-type-drill/ | 主页 · 学科卡片仪表盘 |
+| **试卷训练** `.../exam.html` | 答题 + API 批卷 + 内嵌盲敲 |
+| **速记本** `.../notes.html` | 零碎知识点（不绑题） |
 
-`correct_streak >= 3` 视为过关，不再进惩罚清单。
+**批卷**：用 AIHUBMIX gpt-4o-mini，每题 ≈ ¥0.001。  
+**首次设置**：在「🔧 高级设置」里填 API Key，本地存 localStorage。
+
+**试卷标记按钮**：
+
+| 按钮 | 含义 |
+|---|---|
+| ← 上一题 / ⏭ 跳过 | 导航 |
+| ❌ 不会 | 进薄弱点 |
+| ⚠️ 答案有误 | 标记反馈 |
+| 提交批卷 | API 评分 |
+
+`correct_streak >= 3` 视为过关。
 
 ---
 
-# 附录
+## 🛠️ 脚本一览
 
-## A. 口令字典（你说 → 我做）
+```
+99-工作流/
+├── refresh_exam.sh         一键：build + commit + push
+├── build_exam_data.py      MD 题集 → exam_data.json
+├── build_index.py          资料库索引（PDF/DOC 全文抽取）
+├── punishment.py           盲敲惩罚清单生成/检查
+├── gen_drill_url.py        生成盲敲 URL
+└── fix_tags.py             修复 tag 格式
+```
 
-| 你说 | 我做 |
-|---|---|
-| 「**重建资料库索引**」 | `build_index.py` |
-| 「**重建题库 JSON**」 | `build_exam_data.py` + 推 web |
-| 「**为 <学科> 批量生成答案**」 | 读资料库（**优先 竞赛笔记 + D60 手册**）→ 给每题写草稿答案 |
-| 「**出 <学科> 惩罚清单**」 | `punishment.py gen <学科> 3` |
-| 「**惩罚检查 <学科>**」 | `punishment.py check <学科>` |
-| 「**惩罚 URL <学科>**」 | `gen_drill_url.py <学科>` |
-| 「**修 <学科>-NNN 答案：<问题>**」 | 改 MD + 重建题库 JSON + 推 |
-| 粘训练 JSON | 找 `flagged` 修答案；找 `wrong/dontknow` 更薄弱点；regen 惩罚清单 |
+---
 
-## B. Git 版本管理
+## 📌 版本
 
-Web 仓库每个里程碑打 tag：
-
-| Tag | 时间 | 状态 |
+| Tag | 日期 | 内容 |
 |---|---|---|
-| `v0.1` | 5/13 | 打字训练初版 |
-| `v0.2` | 5/13 | localStorage 持久化 |
-| `v0.3` | 5/13 | 试卷训练 v1（手贴 JSON） |
-| `v0.4` | 5/14 | 一站式（API 批卷 + 内嵌盲敲）|
-| `v0.5` | 5/15 | 训练中心 + 探索/训练/特训三模式 + 主题切换 |
-| `v0.6` | 5/15 | **当前** · 加「📷 速记本」(notes.html · 不绑题零碎知识点 · 移动端拍照 · 导出 JSON) + 训练页顶栏 📤 随时导出（中途也能导，不必等做完）|
+| v1.0 | 2026-05-15 | **当前** · UI 改造：Vibe Island 风格学科卡片仪表盘 |
+| v0.6 | 5/14 | 速记本 + 训练页导出 |
+| v0.5 | 5/14 | 一站式（API 批卷 + 内嵌盲敲） |
+| v0.3 | 5/13 | 试卷训练 v1 |
+| v0.1 | 5/13 | 打字训练初版 |
 
-## v0.5 一晚改造说明
-
-**P1 · 题库扩充**：1 学科 57 题 → 8 学科 272 题（操作系统/基础平台/数据库/系统平台/稳态监控/综合智能告警/网络分析/调度数据网）
-
-**P2 · 探索模式（在 exam.html 内）**：
-- 答题界面新增「📓 探索模式」选择
-- 探索模式下不调 API，多出 **笔记区** + **图片上传**（多张 · base64 进 JSON）
-- 适合白天嘈杂环境，先记真实操作要点 + 截图
-- 用「保存并下一题」推进，导出 JSON 后交 Claude 整理标答 → 升级到训练模式
-
-**P3 · 薄弱项特训（替换 index.html → 「训练中心」）**：
-- 自动读 localStorage 历史 → 按学科列累计错题数
-- 选学科 → API 生成 N 道「换条件」变式题（基于真实错题派生）
-- 走 exam.html drill mode，跟正常训练一样：答题 → 批卷 → 盲敲
-- 每道变式题 ≈ ¥0.005 (gpt-4o-mini)，10 道 ≈ ¥0.05
-
-**P4 · UI 主题切换 + 按钮美化**：
-- 🌙/☀️ 右上角切换深色/浅色，存 localStorage
-- CSS 变量化所有颜色（一处改全局生效）
-- 按钮加 hover-lift（轻微上抬）+ 阴影 + 圆角增大
-- 输入框 focus 变绿色边框
-
-**辅助改进**：
-- 答题页加「💬 顺便问一下」入口（gpt-4o-mini 答 1-2 句，省 token）— 问的问题自动入 JSON
-- 批卷 prompt 改进：wrong_points 必须引用用户原句+给出改正；drills 必须含编辑器内配置行（vi 改的配置/crontab 等）
-- 阶段 3 重复的「详细答案」块已删除
-- 8 学科自动 build_exam_data.py 加学科列表
-
-回滚：
+**回滚**：
 ```bash
-cd web && git checkout v0.3 && git push -f origin main
+cd web && git checkout v0.6 && git push -f origin main
 ```
 
-## v0.6 速记本（不绑题）
-
-**为什么加**：原有「探索模式」是绑题的（必须挑一道题进去再记笔记）。但用户还有另一类需求——
-听别人说的零碎知识点 / 一时没归类的图文 / 想拍下来留着以后整理的——这些**没有题作锚点**。
-塞进探索模式会让"试卷训练"的语境变拧巴，所以拆独立入口。
-
-**实现**：`notes.html` 独立页面，训练中心加 📷 入口卡。
-- 字段：`{id, ts, updated_at, subject, title, desc, images[]}`
-- 学科：复用 exam_data.json 的 8 个学科 + 「未分类」（默认）
-- 图片：`<input accept="image/*" capture="environment">` 触发手机相机；另一个不带 capture 选相册
-- 存储：localStorage key `freeNotes_v1`，**独立于试卷训练数据**互不污染
-- 列表：按 updated_at 倒序 + 学科过滤 + 标题/描述搜索
-- 导出：`📤 导出 JSON` 下载 `freeNotes_<时间戳>.json`（含全部图片 base64）→ 交 Claude 归档
-- 移动端：响应式布局，按钮缩小，缩略图缩小，竖屏可用
-
-**整理流程（约定）**：
-1. 用户随手记 → 攒一周
-2. 在训练中心或速记本点「📤 导出 JSON」下载文件
-3. 把 JSON 丢给 Claude，由 Claude 决定归档到 KP / 03资料库 / 04题集（每条单独决策）
-4. 归档后用户自行清掉浏览器里的旧记录（暂未做"导出后清空"按钮，避免数据丢失）
-
-**数据安全**：清浏览器数据会丢，提示用户每周末导出一次。
-
-GitHub: https://github.com/aerfagogogo/zhuwang-type-drill
-
-## C. 已知问题 / TODO
-
-- [ ] AIHUBMIX 不同模型 JSON 兼容性（gpt-4o-mini ✅，其他待测）
-- [ ] 试卷页无「未答清单」入口，跳过的题靠「← 上一题」
-- [ ] 系统平台、数据库、其他 GUI 学科答案 v1 未生成
-- [ ] 系统平台 imgs/ 图片资源待录入
-- [ ] iPad 端键盘输入未测
-- [ ] 试卷批卷完自动跳惩罚清单（用户原始需求，待集成）
-
-## D. 紧急救援
-
-| 出问题 | 怎么办 |
-|---|---|
-| Web 页面挂了 / 错版本 | `cd web && git checkout <tag> && git push -f origin main` |
-| 资料库索引坏了 | 删 `03资料库/资料库索引.json`，重跑 `build_index.py` |
-| 薄弱点被污染 | 顶层 JSON 备份恢复，学科 JSON 在 `04实操题集/<学科>/薄弱点.json` |
-| GitHub 推不动 | `gh auth status` 查 token |
+**项目地址**：https://github.com/aerfagogogo/zhuwang-type-drill

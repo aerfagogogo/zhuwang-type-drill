@@ -658,7 +658,10 @@ async function submitAnswer(opts){
     renderQ();
     // 若 correct 自动跳到阶段 3 但显示"通过"，让用户决定
   }catch(err){
-    $('verdictBox').innerHTML='<div class="verdict v-wrong"><b>批卷失败</b><div style="margin-top:6px;font-size:12px">'+escapeHtml(err.message)+'</div><button class="s" style="margin-top:8px" onclick="submitAnswer()">重试</button></div>';
+    const full=err.fullContent||'';
+    const expandBtn=full?'<button class="s" style="margin-top:8px;margin-left:6px" onclick="document.getElementById(\'rawResp\').style.display=\'block\';this.style.display=\'none\'">展开完整响应</button>'
+      +'<pre id="rawResp" style="display:none;margin-top:8px;padding:8px;background:#f5f5f5;border:1px solid #ccc;border-radius:4px;max-height:300px;overflow:auto;white-space:pre-wrap;word-break:break-all;font-size:11px">'+escapeHtml(full)+'</pre>':'';
+    $('verdictBox').innerHTML='<div class="verdict v-wrong"><b>批卷失败</b><div style="margin-top:6px;font-size:12px">'+escapeHtml(err.message)+'</div><button class="s" style="margin-top:8px" onclick="submitAnswer()">重试</button>'+expandBtn+'</div>';
   }
 }
 
@@ -758,12 +761,21 @@ correct 时为空数组。dontknow/wrong 时给标准答案的核心命令 + 配
   let content=data.choices[0].message.content.trim();
   // 兼容某些模型给的 ```json ... ``` 包装
   content=content.replace(/^```(?:json)?\s*/,'').replace(/```\s*$/,'').trim();
-  try{return JSON.parse(content);}
-  catch(e){
-    // 防御性兜底：万一仍被截断,尝试修复后再 parse
-    const repaired=repairTruncatedJson(content);
+  // 兼容前后散文：截取首 { 到末 } 之间
+  const firstBrace=content.indexOf('{');
+  const lastBrace=content.lastIndexOf('}');
+  let jsonPart=(firstBrace>=0&&lastBrace>firstBrace)?content.slice(firstBrace,lastBrace+1):content;
+  try{return JSON.parse(jsonPart);}
+  catch(e1){
+    // 防御性兜底：尝试修复截断后再 parse
+    const repaired=repairTruncatedJson(jsonPart);
     if(repaired)return repaired;
-    throw new Error('JSON 解析失败 (模型可能不支持)：'+content.slice(0,200));
+    // 全文打到 console 方便 DevTools 查看
+    console.error('[callGrader] JSON parse failed. Full content:\n',content);
+    window.__lastGraderContent=content;
+    const err=new Error('JSON 解析失败 (模型可能不支持)：'+content.slice(0,200));
+    err.fullContent=content;
+    throw err;
   }
 }
 

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UI 方案预览 · 主网竞赛</title>
+<style>
+/* ===========================================================
+   两套配色 token —— 在 body 上加 .A / .B 和 .light / .dark 组合
+   =========================================================== */
+
+/* 方案 A · Claude Native（暖中性 + 赤陶橙，几乎无饱和） */
+body.A.light {
+  --bg:        #FAF9F5;
+  --surface:   #FFFFFF;
+  --surface-2: #F4F2EA;
+  --border:    #E8E6DC;
+  --border-2:  #D8D5C7;
+  --text:      #1F1E1D;
+  --text-2:    #5A5953;
+  --muted:     #87867F;
+  --accent:    #C96442;
+  --accent-2:  #B5573A;
+  --tint:      rgba(201,100,66,0.08);
+  --shadow:    0 1px 2px rgba(20,15,8,0.04);
+}
+body.A.dark {
+  --bg:        #262624;
+  --surface:   #30302E;
+  --surface-2: #3A3A37;
+  --border:    #3D3D3A;
+  --border-2:  #4E4E4A;
+  --text:      #F5F4ED;
+  --text-2:    #C9C8C0;
+  --muted:     #A8A7A0;
+  --accent:    #D97757;
+  --accent-2:  #E68866;
+  --tint:      rgba(217,119,87,0.12);
+  --shadow:    0 1px 2px rgba(0,0,0,0.25);
+}
+
+/* 方案 B · Vibe Island（暖底色 + 玻璃 + 顶部胶囊岛 + 微弱学科色） */
+body.B.light {
+  --bg:        #F5F3EE;
+  --surface:   #FFFFFFCC;        /* 半透 */
+  --surface-2: #FFFFFF;
+  --border:    #E6E2D6;
+  --border-2:  #D0CBBC;
+  --text:      #211F1B;
+  --text-2:    #57544D;
+  --muted:     #8B887E;
+  --accent:    #C96442;
+  --accent-2:  #B5573A;
+  --tint:      rgba(201,100,66,0.10);
+  --shadow:    0 8px 28px -12px rgba(60,40,20,0.18), 0 1px 2px rgba(60,40,20,0.05);
+}
+body.B.dark {
+  --bg:        #1C1B19;
+  --surface:   #2B2A28CC;        /* 半透 */
+  --surface-2: #353330;
+  --border:    #3A3835;
+  --border-2:  #4E4B47;
+  --text:      #F6F4EC;
+  --text-2:    #CFCDC4;
+  --muted:     #9C998F;
+  --accent:    #D97757;
+  --accent-2:  #E68866;
+  --tint:      rgba(217,119,87,0.16);
+  --shadow:    0 10px 40px -16px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* ===========================================================
+   通用基础
+   =========================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 24px 20px 60px;
+  min-height: 100vh;
+  transition: background .25s ease, color .25s ease;
+}
+
+.serif {
+  font-family: 'Source Serif Pro', 'Iowan Old Style', 'Apple Garamond', Georgia, ui-serif, serif;
+  font-weight: 500;
+}
+
+.container { max-width: 1080px; margin: 0 auto; }
+
+/* 顶部切换条 ——————————————————————————————————— */
+.switcher {
+  position: sticky; top: 12px; z-index: 30;
+  display: flex; gap: 10px; align-items: center;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px;
+  width: fit-content;
+  margin: 0 auto 28px;
+  box-shadow: var(--shadow);
+}
+.seg { display: flex; background: transparent; border-radius: 999px; }
+.seg button {
+  padding: 6px 14px;
+  border: none; background: transparent;
+  color: var(--text-2);
+  font: inherit; font-size: 13px; font-weight: 500;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.seg button.on {
+  background: var(--text);
+  color: var(--bg);
+}
+.seg.dim button.on {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.switcher .label {
+  font-size: 11px; color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0 6px 0 10px;
+}
+
+/* ===========================================================
+   方案 A —— Claude Native
+   极简、暖中性、克制饱和、衬线大字号
+   =========================================================== */
+body.A h1.title {
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+body.A .subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+body.A .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+body.A .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px 16px;
+  transition: border-color .18s ease, background .18s ease;
+  position: relative;
+  cursor: pointer;
+}
+body.A .card:hover {
+  border-color: var(--border-2);
+  background: var(--surface-2);
+}
+
+body.A .card .head {
+  display: flex; align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+body.A .card .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--subj);
+  flex-shrink: 0;
+}
+body.A .card .name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+body.A .card .num {
+  display: flex; align-items: baseline; gap: 4px;
+  margin-bottom: 14px;
+}
+body.A .card .num .big {
+  font-family: 'Source Serif Pro', Georgia, ui-serif, serif;
+  font-size: 34px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+body.A .card .num .sep,
+body.A .card .num .total {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 400;
+}
+body.A .card .bar {
+  height: 3px; width: 100%;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+body.A .card .fill {
+  height: 100%;
+  background: var(--text-2);
+  border-radius: 999px;
+}
+body.A .card .actions {
+  display: flex; gap: 6px;
+}
+body.A .btn {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-2);
+  background: transparent;
+  color: var(--text);
+  font: inherit; font-size: 12px;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+body.A .btn:hover { background: var(--surface-2); }
+body.A .btn.primary {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+body.A .btn.primary:hover { background: var(--text-2); border-color: var(--text-2); }
+
+/* ===========================================================
+   方案 B —— Vibe Island
+   顶部胶囊岛 + 玻璃卡片 + 微弱学科色辉光
+   =========================================================== */
+body.B { display: none; }       /* 默认不显示 B 内容 */
+body.B.show { display: block; }
+body.A.hide  { display: none; }
+
+body.B h1.title {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+body.B .subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+/* 动态岛 */
+body.B .island {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 12px 18px;
+  margin-bottom: 26px;
+  box-shadow: var(--shadow);
+}
+body.B .island .pill {
+  display: flex; align-items: baseline; gap: 6px;
+  padding-right: 16px;
+  border-right: 1px solid var(--border);
+}
+body.B .island .pill:last-child { border-right: none; }
+body.B .island .pill .k {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+body.B .island .pill .v {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+body.B .island .pill .v .small { font-size: 12px; color: var(--muted); font-weight: 400; }
+body.B .island .grow { flex: 1; }
+body.B .island .btn-mini {
+  padding: 6px 12px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font: inherit; font-size: 12px; font-weight: 500;
+  cursor: pointer;
+}
+body.B .island .btn-mini:hover { background: var(--accent-2); }
+
+/* 卡片网格 */
+body.B .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+body.B .card {
+  position: relative;
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px 16px;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+body.B .card::after {
+  /* 角落微弱辉光 */
+  content: '';
+  position: absolute;
+  top: -40%; right: -40%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, var(--subj-glow) 0%, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+body.B .card:hover {
+  border-color: var(--border-2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+body.B .card:hover::after { opacity: 0.9; }
+
+body.B .card .head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+body.B .card .head .lhs {
+  display: flex; align-items: center; gap: 8px;
+}
+body.B .card .head .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--subj);
+  box-shadow: 0 0 0 3px var(--subj-glow);
+}
+body.B .card .head .name {
+  font-size: 13px;
+  font-weight: 600;
+}
+body.B .card .head .badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  background: var(--surface-2);
+  color: var(--muted);
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+
+body.B .card .num {
+  display: flex; align-items: baseline; gap: 6px;
+  margin-bottom: 14px;
+  position: relative;
+}
+body.B .card .num .big {
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--text);
+}
+body.B .card .num .sep { color: var(--muted); font-size: 18px; }
+body.B .card .num .total { color: var(--muted); font-size: 18px; }
+
+body.B .card .bar {
+  height: 4px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+body.B .card .fill {
+  height: 100%;
+  background: var(--subj);
+  border-radius: 999px;
+  opacity: 0.85;
+}
+
+body.B .card .actions {
+  display: flex; gap: 6px;
+  position: relative; z-index: 1;
+}
+body.B .btn {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border-2);
+  background: transparent;
+  color: var(--text);
+  font: inherit; font-size: 12px;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+body.B .btn:hover { background: var(--surface-2); }
+body.B .btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+body.B .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+
+/* 学科色（两方案共用 token，但 A 只用 dot，B 用 dot + glow + bar） */
+.subj-os       { --subj: #6B8F71; --subj-glow: rgba(107,143,113,0.20); }
+.subj-platform { --subj: #4F7CA8; --subj-glow: rgba(79,124,168,0.22); }
+.subj-base     { --subj: #B97FB3; --subj-glow: rgba(185,127,179,0.22); }
+.subj-db       { --subj: #8B7AB8; --subj-glow: rgba(139,122,184,0.22); }
+.subj-net      { --subj: #C99063; --subj-glow: rgba(201,144,99,0.22); }
+.subj-stable   { --subj: #C9A857; --subj-glow: rgba(201,168,87,0.22); }
+.subj-alert    { --subj: #C96E5E; --subj-glow: rgba(201,110,94,0.22); }
+.subj-dispatch { --subj: #6BA396; --subj-glow: rgba(107,163,150,0.22); }
+
+/* 注脚 */
+.foot {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  body.A .card, body.B .card { padding: 14px 14px 12px; }
+}
+@media (max-width: 460px) {
+  .grid { grid-template-columns: 1fr !important; }
+  body.B .island { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body class="A light">
+
+<div class="switcher">
+  <span class="label">方案</span>
+  <div class="seg" id="segVariant">
+    <button data-v="A" class="on">A · Claude Native</button>
+    <button data-v="B">B · Vibe Island</button>
+  </div>
+  <span class="label">主题</span>
+  <div class="seg dim" id="segTheme">
+    <button data-t="light" class="on">浅色</button>
+    <button data-t="dark">深色</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ========== 方案 A 内容 ========== -->
+  <div id="paneA">
+    <h1 class="title serif">主网竞赛 · 训练中心</h1>
+    <div class="subtitle">按学科答题 · API 批卷 · 错点提示 · 内嵌盲敲</div>
+
+    <div class="grid" id="gridA"></div>
+  </div>
+
+  <!-- ========== 方案 B 内容 ========== -->
+  <div id="paneB" style="display:none;">
+    <h1 class="title">主网竞赛 · 训练中心</h1>
+    <div class="subtitle">按学科答题 · API 批卷 · 错点提示 · 内嵌盲敲</div>
+
+    <div class="island">
+      <div class="pill">
+        <span class="k">今日</span>
+        <span class="v">8 <span class="small">题</span></span>
+      </div>
+      <div class="pill">
+        <span class="k">累计</span>
+        <span class="v">5 <span class="small">/ 287</span></span>
+      </div>
+      <div class="pill">
+        <span class="k">薄弱点</span>
+        <span class="v">3 <span class="small">项</span></span>
+      </div>
+      <div class="grow"></div>
+      <button class="btn-mini">⚙ 设置</button>
+    </div>
+
+    <div class="grid" id="gridB"></div>
+  </div>
+
+  <div class="foot">
+    Mockup · 数据为预览占位 · 切换上方按钮看 4 种组合
+  </div>
+</div>
+
+<script>
+const SUBJECTS = [
+  { name: '操作系统',     done: 5, total: 57, cls: 'subj-os' },
+  { name: '系统平台',     done: 0, total: 76, cls: 'subj-platform' },
+  { name: '基础平台',     done: 0, total: 54, cls: 'subj-base' },
+  { name: '数据库',       done: 0, total: 37, cls: 'subj-db' },
+  { name: '网络分析',     done: 0, total: 14, cls: 'subj-net' },
+  { name: '稳态监控',     done: 0, total: 28, cls: 'subj-stable' },
+  { name: '综合智能告警', done: 0, total: 7,  cls: 'subj-alert' },
+  { name: '调度数据网',   done: 0, total: 21, cls: 'subj-dispatch' },
+];
+
+function cardA(s) {
+  const pct = s.total ? (s.done / s.total * 100) : 0;
+  return `
+  <div class="card ${s.cls}">
+    <div class="head">
+      <span class="dot"></span>
+      <span class="name">${s.name}</span>
+    </div>
+    <div class="num">
+      <span class="big">${s.done}</span>
+      <span class="sep">/</span>
+      <span class="total">${s.total}</span>
+    </div>
+    <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+    <div class="actions">
+      <button class="btn primary">进试卷</button>
+      <button class="btn">特训</button>
+    </div>
+  </div>`;
+}
+
+function cardB(s) {
+  const pct = s.total ? (s.done / s.total * 100) : 0;
+  return `
+  <div class="card ${s.cls}">
+    <div class="head">
+      <div class="lhs">
+        <span class="dot"></span>
+        <span class="name">${s.name}</span>
+      </div>
+      <span class="badge">${Math.round(pct)}%</span>
+    </div>
+    <div class="num">
+      <span class="big">${s.done}</span>
+      <span class="sep">/</span>
+      <span class="total">${s.total}</span>
+    </div>
+    <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+    <div class="actions">
+      <button class="btn primary">进试卷</button>
+      <button class="btn">特训</button>
+    </div>
+  </div>`;
+}
+
+document.getElementById('gridA').innerHTML = SUBJECTS.map(cardA).join('');
+document.getElementById('gridB').innerHTML = SUBJECTS.map(cardB).join('');
+
+const body = document.body;
+document.getElementById('segVariant').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#segVariant button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  const v = b.dataset.v;
+  body.classList.remove('A', 'B'); body.classList.add(v);
+  document.getElementById('paneA').style.display = (v === 'A') ? '' : 'none';
+  document.getElementById('paneB').style.display = (v === 'B') ? '' : 'none';
+});
+document.getElementById('segTheme').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#segTheme button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  const t = b.dataset.t;
+  body.classList.remove('light', 'dark'); body.classList.add(t);
+});
+</script>
+</body>
+</html>

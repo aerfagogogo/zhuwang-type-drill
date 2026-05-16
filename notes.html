@@ -196,7 +196,7 @@ select{cursor:pointer}
 <script>
 const $=id=>document.getElementById(id);
 const STORE_KEY='freeNotes_v1';
-const SUBJECTS_FALLBACK=['操作系统','基础平台','数据库','系统平台','稳态监控','综合智能告警','网络分析','调度数据网'];
+const SUBJECTS_FALLBACK=['Linux系统基础','达梦数据库(DM)','D6.0统一支撑平台','SCADA稳态监控','综合智能告警','网络分析','自动控制(AGC/AVC)','调度数据网（大纲外）'];
 
 // 状态
 let NOTES=[];                // 全部速记
@@ -207,10 +207,19 @@ let SUBJECTS=SUBJECTS_FALLBACK.slice();
 // ---- 启动 ----
 async function init(){
   // 尝试拉 exam_data.json 的学科列表（保持和试卷一致）
+  // 兼容两种结构：
+  //   旧：{ "操作系统": {...}, "基础平台": {...}, ... }  → Object.keys
+  //   新：{ version, generated, subjects: [{name, key, ...}, ...] }  → 取 subjects[*].name
   try{
     const r=await fetch('exam_data.json?_t='+Date.now());
     const d=await r.json();
-    const ks=Object.keys(d);
+    let ks=[];
+    if(Array.isArray(d.subjects)){
+      ks=d.subjects.map(s=>s&&(s.name||s.key)).filter(Boolean);
+    }else if(d&&typeof d==='object'){
+      // 旧结构：剔除明显的非学科 meta 字段
+      ks=Object.keys(d).filter(k=>!['version','generated','subjects','meta'].includes(k));
+    }
     if(ks.length)SUBJECTS=ks;
   }catch(e){/* 离线/未部署也能用 fallback */}
 

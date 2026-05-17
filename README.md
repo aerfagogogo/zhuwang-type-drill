@@ -153,9 +153,9 @@ tags: [命令名, 业务词]
 
 | 入口 | 用途 |
 |---|---|
-| **训练中心** https://aerfagogogo.github.io/zhuwang-type-drill/ | 主页 · 学科卡片仪表盘 |
-| **试卷训练** `.../exam.html` | 答题 + API 批卷 + 内嵌盲敲 |
-| **速记本** `.../notes.html` | 零碎知识点（不绑题） |
+| **KP 训练中心** `training-center.html` | 106 KP 进度看板 · 单击切状态 · 双击标薄弱 · 对齐系统实操学习脑图 7 章 |
+| **试卷训练** `exam.html` | 答题 + API 批卷 + 内嵌盲敲 |
+| **盲敲惩罚** `drill.html` | 命令盲敲校对 |
 
 **批卷**：用 AIHUBMIX gpt-4o-mini，每题 ≈ ¥0.001。  
 **首次设置**：在「🔧 高级设置」里填 API Key，本地存 localStorage。

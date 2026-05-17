@@ -265,13 +265,25 @@ body.light .cursor{background:#fbc02d}
     <h2>1. 答题 <span class="stage-status" id="s1status">进行中</span></h2>
     <textarea id="ans" placeholder="在此输入你的答案（多行 OK）。⌘+Enter 提交。" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off"></textarea>
 
-    <!-- 探索模式专属：笔记 + 图片上传 -->
+    <!-- 探索模式专属：速记栈（多条时间戳累积，每条 {ts, text, images}） -->
     <div id="exploreExtras" style="display:none;margin-top:10px">
-      <h3 style="font-size:13px;color:#64b5f6;margin:8px 0 6px">📝 实操要点 / 关键点 / 注意事项</h3>
-      <textarea id="notes" placeholder="记下你白天实操时观察到的要点、坑、命令变化等。回头 Claude 会根据你的笔记和图片整理成标答。"></textarea>
-      <h3 style="font-size:13px;color:#64b5f6;margin:10px 0 6px">📷 截图 / 拍照（多张 OK · 自动 base64 入 JSON）</h3>
-      <input type="file" id="imgUpload" accept="image/*" multiple style="background:none;border:none;padding:4px 0;font-size:12px;color:#aaa">
+
+      <!-- 已有速记历史（按时间倒序，最新在上） -->
+      <div class="note-stack-head">
+        📓 我的过题速记
+        <span class="count" id="notesStackCount"></span>
+      </div>
+      <div id="notesStackList"></div>
+
+      <!-- 草稿：新一条 -->
+      <h3 style="font-size:13px;color:#64b5f6;margin:14px 0 6px">＋ 加一条速记</h3>
+      <textarea id="notes" placeholder="开头加 emoji 区分阶段：💭 预习 / 🔧 验证 / ✅ 修正 / ⚠️ 踩坑（不强制）"></textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+        <input type="file" id="imgUpload" accept="image/*" multiple style="background:none;border:none;padding:4px 0;font-size:12px;color:#aaa">
+      </div>
       <div id="imgList" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>
+      <button class="draft-add-btn" onclick="addNoteEntry()">＋ 加这条速记到本题</button>
+      <div class="muted" style="font-size:10px;margin-top:6px">「保存并下一题」会自动把当前草稿追加为一条速记。</div>
     </div>
 
     <div class="controls" style="border:0;padding:0;margin-top:8px">

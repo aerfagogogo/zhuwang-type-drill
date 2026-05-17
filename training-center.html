@@ -452,7 +452,7 @@
 <!-- Overview cards：每个 category 一张（render 时动态生成） -->
 <div class="overview" id="overview"></div>
 
-<!-- Filter bar -->
+<!-- Filter + Legend 合并一行 -->
 <div class="filter-bar">
   <span class="filter-label">筛选：</span>
   <button class="filter-btn active" data-filter="all">全部</button>
@@ -460,15 +460,13 @@
   <button class="filter-btn" data-filter="partial">进行中</button>
   <button class="filter-btn" data-filter="done">已掌握</button>
   <button class="filter-btn weak-btn" data-filter="weak">⚠ 薄弱点</button>
+  <span class="legend-inline">
+    <span class="legend-item"><span class="legend-dot done"></span>已掌握</span>
+    <span class="legend-item"><span class="legend-dot partial"></span>训练中</span>
+    <span class="legend-item"><span class="legend-dot un"></span>未训练</span>
+    <span class="legend-item"><span class="legend-dot weak"></span>薄弱点</span>
+  </span>
   <span class="tip">单击切状态 · 双击标记薄弱</span>
-</div>
-
-<!-- Legend -->
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot done"></div>已掌握</div>
-  <div class="legend-item"><div class="legend-dot partial"></div>训练中</div>
-  <div class="legend-item"><div class="legend-dot un"></div>未训练</div>
-  <div class="legend-item"><div class="legend-dot weak"></div>薄弱点</div>
 </div>
 
 <!-- Main columns -->

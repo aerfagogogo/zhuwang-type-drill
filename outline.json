@@ -1,144 +1,303 @@
 {
-  "version": "v0.1",
+  "version": "v0.2",
   "generated": "2026-05-18",
-  "comment": "D6.0 备考考点大纲 SSOT。Tag 命名规范：KP::学科::N阶段::考点名，录题时把 tag 复制到 Anki Note 的 Tags 字段（可多个）。keywords 给录入工具自动推荐用。",
+  "source": "02学习脑图/D6.0_脑图.pdf",
+  "comment": "对齐题库.json 的 归属大纲 字段（章.节.项 编号）。Anki tag = KP::<末级KP名> 单层不嵌套。",
+  "tag_prefix": "KP::",
   "categories": [
     {
       "id": "linux",
-      "name": "一、Linux 系统基础",
-      "tag_segment": "Linux",
-      "fallback_subject": "操作系统",
+      "ordinal": "一",
+      "name": "Linux 系统基础",
       "subjects": ["操作系统"],
       "sections": [
         {
-          "id": "linux_intro",
-          "name": "1.1 入门：基础命令与日常操作",
-          "tag_segment": "1入门",
+          "code": "1.1",
+          "name": "入门：基础命令与日常操作",
           "kps": [
-            { "id": "linux_intro_perm",     "name": "权限管理",        "desc": "rwx、属主属组、chmod/chown/chgrp",                  "keywords": ["chmod","chown","chgrp","rwx","属主","属组","权限"] },
-            { "id": "linux_intro_disk",     "name": "磁盘存储",        "desc": "df -h、df -i、du -sh、分区挂载卸载",                "keywords": ["df","du","mount","umount","分区","挂载","磁盘"] },
-            { "id": "linux_intro_proc",     "name": "进程服务",        "desc": "ps、top、kill、killall",                           "keywords": ["ps","top","kill","killall","进程"] },
-            { "id": "linux_intro_net",      "name": "网络时间",        "desc": "ping、telnet、netstat、ifconfig、ip addr、date",   "keywords": ["ping","telnet","netstat","ifconfig","ip addr","date","ss"] },
-            { "id": "linux_intro_cron",     "name": "crontab定时任务", "desc": "crontab、分时日月周语法",                            "keywords": ["crontab","cron","定时任务"] },
-            { "id": "linux_intro_log",     "name": "日志基础",        "desc": "/var/log、grep 过滤",                               "keywords": ["/var/log","grep","日志","journalctl"] },
-            { "id": "linux_intro_shell",    "name": "Shell基础",       "desc": "变量、参数、管道、重定向、条件组",                    "keywords": ["bash","shell","管道","重定向","变量","参数"] }
+            { "code": "1.1.1",  "name": "系统操作",  "desc": "开机、重启、关机、登录注销" },
+            { "code": "1.1.2",  "name": "网络配置",  "desc": "主机名、IP、网卡查看" },
+            { "code": "1.1.3",  "name": "文件操作",  "desc": "ls、cd、pwd、mkdir、rm、cp、mv、touch" },
+            { "code": "1.1.4",  "name": "文件查看",  "desc": "cat、more、less、tail、head" },
+            { "code": "1.1.5",  "name": "Vim编辑",   "desc": "插入、保存、退出、查找替换" },
+            { "code": "1.1.6",  "name": "权限管理",  "desc": "rwx、属主属组、chmod/chown/chgrp" },
+            { "code": "1.1.7",  "name": "磁盘存储",  "desc": "df -h、df -i、du -sh、分区挂载卸载" },
+            { "code": "1.1.8",  "name": "进程服务",  "desc": "ps、top、kill、killall" },
+            { "code": "1.1.9",  "name": "网络时间",  "desc": "ping、telnet、netstat、ifconfig、ip addr、date" },
+            { "code": "1.1.10", "name": "定时任务",  "desc": "crontab、分时日月周语法" },
+            { "code": "1.1.11", "name": "日志基础",  "desc": "/var/log、grep 过滤" }
           ]
         },
         {
-          "id": "linux_advanced",
-          "name": "1.2 进阶：Shell 脚本与系统优化",
-          "tag_segment": "2进阶",
+          "code": "1.2",
+          "name": "进阶：Shell 脚本与系统优化",
           "kps": [
-            { "id": "linux_adv_text",   "name": "高级文本sed_awk_find", "desc": "sed、awk、find",                              "keywords": ["sed","awk","find","xargs"] },
-            { "id": "linux_adv_resource","name": "资源管理",            "desc": "top、vmstat、iostat、sar、lsof",                 "keywords": ["vmstat","iostat","sar","lsof","free","mpstat"] },
-            { "id": "linux_adv_service", "name": "服务管理",            "desc": "service、systemctl、开机自启",                   "keywords": ["systemctl","service","systemd","开机自启","chkconfig"] },
-            { "id": "linux_adv_ntp",     "name": "时间同步",            "desc": "NTP 服务、ntpdate",                              "keywords": ["ntp","ntpdate","chrony","时间同步"] },
-            { "id": "linux_adv_pkg",     "name": "压缩传输",            "desc": "tar、gzip、scp、sftp、md5sum",                   "keywords": ["tar","gzip","scp","sftp","md5sum","rsync"] }
+            { "code": "1.2.1", "name": "Shell基础", "desc": "变量、参数、管道、重定向、条件循环" },
+            { "code": "1.2.2", "name": "高级文本", "desc": "sed、awk、find" },
+            { "code": "1.2.3", "name": "资源管控", "desc": "top、vmstat、iostat、sar、lsof" },
+            { "code": "1.2.4", "name": "服务管理", "desc": "service、systemctl、开机自启" },
+            { "code": "1.2.5", "name": "时间同步", "desc": "NTP 服务、ntpdate" },
+            { "code": "1.2.6", "name": "压缩传输", "desc": "tar、gzip、scp、sftp、md5sum" }
           ]
         },
         {
-          "id": "linux_ops",
-          "name": "1.3 运维：故障排查与维护",
-          "tag_segment": "3运维",
+          "code": "1.3",
+          "name": "运维：故障排查与维护",
           "kps": [
-            { "id": "linux_ops_diag",    "name": "故障定位",   "desc": "日志→权限→配置→进程",                                  "keywords": ["排查","定位","日志","dmesg"] },
-            { "id": "linux_ops_common",  "name": "常见故障",   "desc": "服务无法启动、磁盘满、CPU 高、OOM、网络不通",            "keywords": ["OOM","磁盘满","CPU","无法启动","网络不通"] },
-            { "id": "linux_ops_file",    "name": "文件异常",   "desc": "权限错误、误删恢复",                                    "keywords": ["误删","恢复","权限错误","extundelete"] },
-            { "id": "linux_ops_auto",    "name": "自动化",     "desc": "备份、巡检、日志切割",                                 "keywords": ["logrotate","备份","巡检","自动化"] }
+            { "code": "1.3.1", "name": "故障定位", "desc": "日志→权限→配置→进程" },
+            { "code": "1.3.2", "name": "常见故障", "desc": "服务无法启动、磁盘满、CPU 高、OOM、网络不通" },
+            { "code": "1.3.3", "name": "文件异常", "desc": "权限错误、误删恢复" },
+            { "code": "1.3.4", "name": "自动化",   "desc": "备份、巡检、日志切割" }
           ]
         }
       ]
     },
     {
       "id": "dm",
-      "name": "二、达梦数据库 (DM)",
-      "tag_segment": "DM",
-      "fallback_subject": "数据库",
+      "ordinal": "二",
+      "name": "达梦数据库 (DM)",
       "subjects": ["数据库"],
       "sections": [
         {
-          "id": "dm_intro",
-          "name": "2.1 入门：基础认知与常用操作",
-          "tag_segment": "1入门",
+          "code": "2.1",
+          "name": "入门：基础认知与常用操作",
           "kps": [
-            { "id": "dm_intro_arch_db",   "name": "数据库架构",   "desc": "库、表、行、列、主键外键",                            "keywords": ["主键","外键","表","行","列"] },
-            { "id": "dm_intro_arch_dm",   "name": "达梦架构",     "desc": "实例、数据库、表空间",                                "keywords": ["实例","表空间","tablespace","达梦架构"] },
-            { "id": "dm_intro_sql",       "name": "基础SQL",      "desc": "SELECT、INSERT、UPDATE、DELETE",                     "keywords": ["select","insert","update","delete","基础sql"] },
-            { "id": "dm_intro_tool",      "name": "disql工具",    "desc": "disql 登录、spool、执行脚本",                         "keywords": ["disql","spool","脚本执行"] },
-            { "id": "dm_intro_backup",    "name": "dexp_dimp备份","desc": "dexp 导出、dimp 导入",                                "keywords": ["dexp","dimp","逻辑备份","导入导出"] }
+            { "code": "2.1.1", "name": "数据库基础", "desc": "库、表、行、列、主键外键" },
+            { "code": "2.1.2", "name": "达梦架构",   "desc": "实例、数据库、表空间" },
+            { "code": "2.1.3", "name": "基础SQL",   "desc": "SELECT、INSERT、UPDATE、DELETE" },
+            { "code": "2.1.4", "name": "disql工具", "desc": "disql 登录、spool、执行脚本" },
+            { "code": "2.1.5", "name": "dexp_dimp", "desc": "dexp 导出、dimp 导入" }
           ]
         },
         {
-          "id": "dm_advanced",
-          "name": "2.2 进阶：SQL 高级、权限与约束",
-          "tag_segment": "2进阶",
+          "code": "2.2",
+          "name": "进阶：SQL 高级、权限与约束",
           "kps": [
-            { "id": "dm_adv_sql",         "name": "高级SQL",      "desc": "多表关联、子查询、GROUP BY、聚合函数",                  "keywords": ["join","子查询","group by","聚合"] },
-            { "id": "dm_adv_tx",          "name": "事务死锁",     "desc": "COMMIT、ROLLBACK、行锁、表锁、死锁、阻塞",               "keywords": ["commit","rollback","死锁","行锁","表锁","阻塞","事务"] },
-            { "id": "dm_adv_role",        "name": "权限角色",     "desc": "系统权限、对象权限、角色管理",                          "keywords": ["grant","revoke","role","角色","权限"] },
-            { "id": "dm_adv_constraint",  "name": "约束管理",     "desc": "主键、唯一、非空、外键",                                "keywords": ["主键","唯一","非空","外键","约束","constraint"] },
-            { "id": "dm_adv_obj",         "name": "数据库对象",   "desc": "视图、索引、序列、触发器、存储过程",                    "keywords": ["视图","索引","序列","触发器","存储过程","view","index","trigger"] }
+            { "code": "2.2.1", "name": "高级SQL",   "desc": "多表关联、子查询、GROUP BY、聚合函数" },
+            { "code": "2.2.2", "name": "事务锁",     "desc": "COMMIT、ROLLBACK、行锁、表锁、阻塞" },
+            { "code": "2.2.3", "name": "权限角色",   "desc": "系统权限、对象权限、角色管理" },
+            { "code": "2.2.4", "name": "约束管理",   "desc": "主键、唯一、非空、外键" },
+            { "code": "2.2.5", "name": "数据库对象", "desc": "视图、索引、序列、触发器、存储过程" }
           ]
         },
         {
-          "id": "dm_ops",
-          "name": "2.3 运维：集群、备份恢复、故障处理",
-          "tag_segment": "3运维",
+          "code": "2.3",
+          "name": "运维：集群、备份恢复、故障处理",
           "kps": [
-            { "id": "dm_ops_dts",         "name": "DTS数据迁移",   "desc": "DTS 工具",                                            "keywords": ["dts","数据迁移","migration"] },
-            { "id": "dm_ops_phy_backup",  "name": "物理备份",     "desc": "dmnman、全量/增量/归档备份",                            "keywords": ["dmnman","归档","全量","增量","物理备份"] },
-            { "id": "dm_ops_ha",          "name": "高可用",        "desc": "DataWatch 主备、DMDSC 集群、DMHS 同步",                  "keywords": ["datawatch","dmdsc","dmhs","主备","集群","高可用"] },
-            { "id": "dm_ops_trouble",     "name": "数据库故障处理","desc": "无法启动、连接失败、锁阻塞、慢 SQL",                    "keywords": ["无法启动","连接失败","锁阻塞","慢sql","数据库故障"] },
-            { "id": "dm_ops_security",    "name": "安全规范",     "desc": "密码策略、审计、权限最小化",                            "keywords": ["密码策略","审计","权限最小化","audit"] }
+            { "code": "2.3.1", "name": "数据迁移",   "desc": "DTS 工具" },
+            { "code": "2.3.2", "name": "物理备份",   "desc": "dmrman、全量/增量/归档备份" },
+            { "code": "2.3.3", "name": "高可用",     "desc": "DataWatch 主备、DMDSC 集群、DMHS 同步" },
+            { "code": "2.3.4", "name": "数据库故障", "desc": "无法启动、连接失败、锁阻塞、慢 SQL" },
+            { "code": "2.3.5", "name": "安全规范",   "desc": "密码策略、审计、权限最小化" }
           ]
         }
       ]
     },
     {
-      "id": "d6",
-      "name": "三/四、D6.0 + SCADA",
-      "tag_segment": "D6",
-      "fallback_subject": "基础平台",
-      "subjects": ["基础平台", "系统平台", "稳态监控", "综合智能告警", "网络分析", "调度数据网"],
+      "id": "d6plat",
+      "ordinal": "三",
+      "name": "D6.0 统一支撑平台",
+      "subjects": ["基础平台", "系统平台"],
       "sections": [
         {
-          "id": "d6_intro",
-          "name": "3.1 入门：架构认知与安装部署",
-          "tag_segment": "1入门",
+          "code": "3.1",
+          "name": "入门：架构认知 + 安装部署",
           "kps": [
-            { "id": "d6_intro_modules",   "name": "核心模块",    "desc": "SCADA、FES、人机、平台",                                "keywords": ["SCADA","FES","人机","平台模块","核心模块"] },
-            { "id": "d6_intro_deploy",    "name": "部署模式",    "desc": "主管、集群、分布式",                                    "keywords": ["主管","集群","分布式","部署模式"] },
-            { "id": "d6_intro_install",   "name": "安装步骤",    "desc": "平台、人机前置、FES 前置采集",                          "keywords": ["安装","人机前置","fes前置","部署步骤"] },
-            { "id": "d6_intro_config",    "name": "基础配置",    "desc": "hosts、IP 映射、时间同步",                              "keywords": ["hosts","ip映射","时间同步","基础配置"] },
-            { "id": "d6_intro_startup",   "name": "sys_ctl启停", "desc": "sys_ctl start/stop/restart",                          "keywords": ["sys_ctl","启停","start","stop","restart"] }
+            { "code": "3.1.1", "name": "核心模块",     "desc": "SCADA、FES、人机、平台" },
+            { "code": "3.1.2", "name": "部署模式",     "desc": "主备、集群、分布式" },
+            { "code": "3.1.3", "name": "安装步骤",     "desc": "平台、人机终端、FES 前置采集" },
+            { "code": "3.1.4", "name": "平台基础配置", "desc": "hosts、IP 映射、时间同步" }
           ]
         },
         {
-          "id": "d6_advanced",
-          "name": "3.2 进阶：平台功能、配置与权限",
-          "tag_segment": "2进阶",
+          "code": "3.2",
+          "name": "进阶：平台功能、配置与权限",
           "kps": [
-            { "id": "d6_adv_components",  "name": "核心组件",    "desc": "消息总线、文件服务、对象化计算",                         "keywords": ["消息总线","文件服务","对象化计算","msgbus"] },
-            { "id": "d6_adv_user",        "name": "平台权限管理","desc": "用户、用户组、遥控权限",                                "keywords": ["用户管理","用户组","遥控权限","grant"] },
-            { "id": "d6_adv_zone",        "name": "责任区",      "desc": "定义、划分、绑定设备",                                   "keywords": ["责任区","设备绑定","zone"] },
-            { "id": "d6_adv_ui",          "name": "界面配置",    "desc": "总控台、告警管理、菜单、颜色",                           "keywords": ["总控台","告警管理","菜单","颜色配置","界面"] },
-            { "id": "d6_adv_inspect",     "name": "日常巡检",    "desc": "服务、进程、端口、磁盘、CPU、内存、日志",                "keywords": ["巡检","端口","磁盘","cpu","内存","巡检脚本"] },
-            { "id": "d6_adv_cfg_fault",   "name": "配置故障",    "desc": "hosts 填误、节点名错误、权限不足",                      "keywords": ["hosts错误","节点名","权限不足","配置错误"] }
+            { "code": "3.2.1", "name": "sys_ctl启停", "desc": "sys_ctl start/stop/restart" },
+            { "code": "3.2.2", "name": "核心组件",     "desc": "消息总线、文件服务、对象化计算" },
+            { "code": "3.2.3", "name": "平台权限管理", "desc": "用户、用户组、角色、遥控权限" },
+            { "code": "3.2.4", "name": "责任区",       "desc": "定义、划分、绑定设备" },
+            { "code": "3.2.5", "name": "界面配置",     "desc": "总控台、告警窗、菜单、颜色" }
           ]
         },
         {
-          "id": "d6_ops",
-          "name": "3.3 运维：平台运检与故障处理",
-          "tag_segment": "3运维",
+          "code": "3.3",
+          "name": "运维：平台巡检与故障处理",
           "kps": [
-            { "id": "d6_ops_data",        "name": "数据故障",    "desc": "不刷新、采样异常、限值不生效",                          "keywords": ["不刷新","采样异常","限值","数据故障"] },
-            { "id": "d6_ops_alarm",       "name": "告警升级",    "desc": "无法登录、巡检失败、告警不弹窗",                        "keywords": ["告警","弹窗","无法登录","巡检失败"] },
-            { "id": "d6_ops_backup",      "name": "备份升级",    "desc": "配置备份、补丁安装、回退方案",                          "keywords": ["配置备份","补丁","回退","升级"] },
-            { "id": "d6_ops_scada",       "name": "SCADA基础",   "desc": "采集→传输→处理→展示",                                  "keywords": ["scada","采集","传输","展示","数据流"] },
-            { "id": "d6_ops_datatype",    "name": "数据类型",    "desc": "遥测、遥信、SOE、事件",                                 "keywords": ["遥测","遥信","SOE","事件","yc","yx"] },
-            { "id": "d6_ops_fes",         "name": "FES配置",     "desc": "规约配置、通道、装置、点表",                            "keywords": ["fes","规约","通道","装置","点表","104"] },
-            { "id": "d6_ops_remote",      "name": "遥控操作",    "desc": "操作票、五防、对点、执行确认",                          "keywords": ["遥控","操作票","五防","对点","执行确认"] },
-            { "id": "d6_ops_accident",    "name": "事故推图",    "desc": "智能告警、事故溯源、CIM 模型",                          "keywords": ["事故推图","智能告警","事故溯源","cim","推图"] }
+            { "code": "3.3.1", "name": "日常巡检",   "desc": "服务、进程、端口、磁盘、CPU、内存、日志" },
+            { "code": "3.3.2", "name": "配置故障",   "desc": "hosts 错误、节点名错误、权限不足" },
+            { "code": "3.3.3", "name": "界面故障",   "desc": "无法登录、启动失败、告警不弹窗" },
+            { "code": "3.3.4", "name": "平台数据故障","desc": "不刷新、采样异常、限值不生效" },
+            { "code": "3.3.5", "name": "备份升级",   "desc": "配置备份、补丁安装、回退方案" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scada",
+      "ordinal": "四",
+      "name": "SCADA 稳态监控",
+      "subjects": ["稳态监控"],
+      "sections": [
+        {
+          "code": "4.1",
+          "name": "入门：实时监视与基础操作",
+          "kps": [
+            { "code": "4.1.1", "name": "SCADA基础", "desc": "采集→传输→处理→展示" },
+            { "code": "4.1.2", "name": "数据类型",   "desc": "遥测、遥信、SOE、事件" },
+            { "code": "4.1.3", "name": "实时监视",   "desc": "画面、数据刷新、挂牌、置数" },
+            { "code": "4.1.4", "name": "告警查询",   "desc": "保存、导出、越限识别" },
+            { "code": "4.1.5", "name": "历史查询",   "desc": "SOE、变位、操作记录" }
+          ]
+        },
+        {
+          "code": "4.2",
+          "name": "进阶：控制操作",
+          "kps": [
+            { "code": "4.2.1", "name": "遥控操作", "desc": "单人/监护遥控、返校→执行→确认" },
+            { "code": "4.2.2", "name": "计算配置", "desc": "总加、档位、逻辑计算" },
+            { "code": "4.2.3", "name": "采样周期", "desc": "主动/被动采样、周期修改" },
+            { "code": "4.2.4", "name": "事故模拟", "desc": "前置模拟器、开关变位" }
+          ]
+        },
+        {
+          "code": "4.3",
+          "name": "运维：SCADA 故障与系统保障",
+          "kps": [
+            { "code": "4.3.1", "name": "采集故障",   "desc": "遥测不刷新、遥信不变位、通道断" },
+            { "code": "4.3.2", "name": "控制故障",   "desc": "遥控失败、返校失败、权限不足" },
+            { "code": "4.3.3", "name": "SCADA告警故障", "desc": "不上窗、误告警、漏告警、语音不播" },
+            { "code": "4.3.4", "name": "系统故障",   "desc": "SCADA 切换、主备切换、进程挂掉" },
+            { "code": "4.3.5", "name": "画面故障",   "desc": "显示异常、数据不更新" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "alarm",
+      "ordinal": "五",
+      "name": "综合智能告警",
+      "subjects": ["综合智能告警"],
+      "sections": [
+        {
+          "code": "5.1",
+          "name": "入门：告警基础与界面操作",
+          "kps": [
+            { "code": "5.1.1", "name": "智能告警架构", "desc": "采集→分析→推理→联动" },
+            { "code": "5.1.2", "name": "告警类型",     "desc": "事故、异常、告知告警" },
+            { "code": "5.1.3", "name": "告警基础操作", "desc": "查看、确认、消缺、导出、过滤" },
+            { "code": "5.1.4", "name": "推图语音",     "desc": "事故推画面、语音播报" }
+          ]
+        },
+        {
+          "code": "5.2",
+          "name": "进阶：规则配置与模拟联动",
+          "kps": [
+            { "code": "5.2.1", "name": "故障逻辑", "desc": "开关变位+事故总、双开关变位" },
+            { "code": "5.2.2", "name": "规则库",   "desc": "IFA 故障逻辑库、逻辑表" },
+            { "code": "5.2.3", "name": "告警控制", "desc": "电压等级、使能、复归计时" },
+            { "code": "5.2.4", "name": "高级规则", "desc": "告警抑制、关联、压缩" }
+          ]
+        },
+        {
+          "code": "5.3",
+          "name": "运维：告警故障与优化治理",
+          "kps": [
+            { "code": "5.3.1", "name": "规则故障", "desc": "不触发、规则错误、逻辑错误" },
+            { "code": "5.3.2", "name": "推图故障", "desc": "不推图、配置错误、画面未绑定" },
+            { "code": "5.3.3", "name": "误漏告警", "desc": "阈值不合理、点号错误" },
+            { "code": "5.3.4", "name": "告警服务故障", "desc": "isw_fault_client 未启动、进程崩溃" },
+            { "code": "5.3.5", "name": "联动故障", "desc": "与 SCADA 不同步、信号不匹配" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "netan",
+      "ordinal": "六",
+      "name": "网络分析",
+      "subjects": ["网络分析"],
+      "sections": [
+        {
+          "code": "6.1",
+          "name": "入门：电网建模与基础原理",
+          "kps": [
+            { "code": "6.1.1", "name": "网络基础", "desc": "拓扑、节点、厂站、电压等级、设备" },
+            { "code": "6.1.2", "name": "建模基础", "desc": "节点入库、拓扑连接" },
+            { "code": "6.1.3", "name": "图形区别", "desc": "厂站图、系统图、接线图" },
+            { "code": "6.1.4", "name": "模型应用", "desc": "验证、复制、标么值转换" }
+          ]
+        },
+        {
+          "code": "6.2",
+          "name": "进阶：状态估计与潮流计算",
+          "kps": [
+            { "code": "6.2.1", "name": "量测基础", "desc": "量测质量、伪量测、异常识别" },
+            { "code": "6.2.2", "name": "状态估计", "desc": "原理、收敛/发散、误差处理" },
+            { "code": "6.2.3", "name": "网络参数", "desc": "线路、变压器、电抗、电阻、变比" },
+            { "code": "6.2.4", "name": "潮流计算", "desc": "调度员潮流、负荷转供、供电路径" }
+          ]
+        },
+        {
+          "code": "6.3",
+          "name": "运维：模型故障与网络优化",
+          "kps": [
+            { "code": "6.3.1", "name": "网分模型故障", "desc": "连接错误、参数错误、设备错误" },
+            { "code": "6.3.2", "name": "状态估计故障", "desc": "不计算、拓扑红色、全网发散" },
+            { "code": "6.3.3", "name": "潮流计算故障", "desc": "偏差大、不收敛、数据不匹配" },
+            { "code": "6.3.4", "name": "模型维护",     "desc": "备份、版本管理、定期校验" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agcavc",
+      "ordinal": "七",
+      "name": "自动控制 (AGC/AVC)",
+      "subjects": [],
+      "sections": [
+        {
+          "code": "7.1",
+          "name": "AGC 自动发电控制",
+          "kps": [
+            { "code": "7.1.1", "name": "AGC核心作用", "desc": "有功平衡、频率稳定" },
+            { "code": "7.1.2", "name": "AGC控制目标", "desc": "50Hz、ACE 合格、联络线功率" },
+            { "code": "7.1.3", "name": "AGC控制模式", "desc": "FFC、FTC、TBC" },
+            { "code": "7.1.4", "name": "AGC核心指标", "desc": "ACE、CPS1、CPS2" },
+            { "code": "7.1.5", "name": "AGC调节策略", "desc": "按容量比例、裕度优先、负荷率优先" },
+            { "code": "7.1.6", "name": "AGC日常操作", "desc": "建模、机组切换、响应测试" },
+            { "code": "7.1.7", "name": "AGC运维",     "desc": "指标统计、异常处置、安全管控" }
+          ]
+        },
+        {
+          "code": "7.2",
+          "name": "AVC 无功电压自动控制",
+          "kps": [
+            { "code": "7.2.1", "name": "AVC核心作用", "desc": "电压合格、无功就地平衡" },
+            { "code": "7.2.2", "name": "AVC控制目标", "desc": "母线电压、关口无功、功率因数" },
+            { "code": "7.2.3", "name": "AVC控制原则", "desc": "分层分区、就地平衡、电压优先" },
+            { "code": "7.2.4", "name": "AVC控制对象", "desc": "主变分接头、容抗器、SVG、MCR" },
+            { "code": "7.2.5", "name": "AVC核心策略", "desc": "电压校正、无功校正、区域互济" },
+            { "code": "7.2.6", "name": "AVC日常操作", "desc": "建模、遥控测试、闭锁设置" },
+            { "code": "7.2.7", "name": "AVC运维",     "desc": "统计分析、省地协调、安全运维" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dnet",
+      "ordinal": "八",
+      "name": "调度数据网",
+      "subjects": ["调度数据网"],
+      "comment": "D6.0_脑图.pdf 未列；编号来自题库 8.1.* 反推。KP 名待补全。",
+      "sections": [
+        {
+          "code": "8.1",
+          "name": "交换机配置实操",
+          "kps": [
+            { "code": "8.1.1", "name": "交换机登录配置", "desc": "账户、登录、查看接口、保存" },
+            { "code": "8.1.2", "name": "交换机VLAN",     "desc": "VLAN 配置、端口分配" },
+            { "code": "8.1.3", "name": "交换机路由ACL",  "desc": "静态路由、访问控制" }
           ]
         }
       ]

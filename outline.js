@@ -9,6 +9,9 @@ window.OUTLINE_DATA = {
       "name": "一、Linux 系统基础",
       "tag_segment": "Linux",
       "fallback_subject": "操作系统",
+      "subjects": [
+        "操作系统"
+      ],
       "sections": [
         {
           "id": "linux_intro",
@@ -231,6 +234,9 @@ window.OUTLINE_DATA = {
       "name": "二、达梦数据库 (DM)",
       "tag_segment": "DM",
       "fallback_subject": "数据库",
+      "subjects": [
+        "数据库"
+      ],
       "sections": [
         {
           "id": "dm_intro",
@@ -439,6 +445,14 @@ window.OUTLINE_DATA = {
       "name": "三/四、D6.0 + SCADA",
       "tag_segment": "D6",
       "fallback_subject": "基础平台",
+      "subjects": [
+        "基础平台",
+        "系统平台",
+        "稳态监控",
+        "综合智能告警",
+        "网络分析",
+        "调度数据网"
+      ],
       "sections": [
         {
           "id": "d6_intro",

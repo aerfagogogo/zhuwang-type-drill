@@ -847,8 +847,8 @@ function updateStats() {
   } else {
     // 退回 KP 维度
     let kpTotal = 0, kpDone = 0;
-    DATA.forEach(cat => cat.sections.forEach((sec, si) => sec.items.forEach((_, ii) => {
-      const k = makeKey(cat.id, si, ii);
+    DATA.forEach(cat => cat.sections.forEach(sec => sec.kps.forEach(kp => {
+      const k = makeKey(kp);
       const st = getStatus(k);
       kpTotal++;
       if (st === 'done') kpDone++;

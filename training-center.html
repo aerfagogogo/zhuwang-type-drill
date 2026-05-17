@@ -657,37 +657,55 @@ async function loadAutoDerive() {
   }
 }
 
+// 顶部 N 张 category 卡：动态生成，跟底部列一一对应
 function updateOverviewCards() {
-  OVERVIEW_GROUPS.forEach(g => {
-    const id = g.id;
-    const agg = CAT_STATS[id] || { total: 0, attempted: 0, passed: 0, wrong: 0 };
+  const subjStat = (window.PROGRESS_DATA && window.PROGRESS_DATA.subjects) || {};
+  const container = document.getElementById('overview');
+  container.innerHTML = '';
 
-    // 该 group 覆盖的 categories 下所有 KP 状态聚合
-    const cats = DATA.filter(c => g.cats.includes(c.id));
+  DATA.forEach(cat => {
+    // 按 category 自己的 subjects 拉题级统计
+    const agg = { total: 0, attempted: 0, passed: 0, wrong: 0 };
+    (cat.subjects || []).forEach(name => {
+      const s = subjStat[name];
+      if (!s) return;
+      agg.total     += s.total || 0;
+      agg.attempted += s.attempted || 0;
+      agg.passed    += s.passed || 0;
+      agg.wrong     += s.wrong_pending || 0;
+    });
+
+    // KP 状态聚合
     let kpDone = 0, kpPartial = 0, kpWeak = 0, kpTotal = 0;
-    cats.forEach(c => c.sections.forEach(sec => sec.kps.forEach(kp => {
+    cat.sections.forEach(sec => sec.kps.forEach(kp => {
       const k = makeKey(kp);
       const st = getStatus(k);
       kpTotal++;
       if (st === 'done') kpDone++;
       else if (st === 'partial') kpPartial++;
       if (getWeak(k)) kpWeak++;
-    })));
+    }));
 
     const pct = agg.total > 0
       ? Math.round(agg.passed / agg.total * 100)
       : (kpTotal > 0 ? Math.round((kpDone + kpPartial * 0.5) / kpTotal * 100) : 0);
 
-    document.getElementById(`pct-${id}`).textContent = pct + '%';
-    document.getElementById(`cnt-${id}`).textContent =
-      agg.total > 0 ? `${agg.passed}/${agg.total} 题` : `${kpTotal} KP`;
-    document.getElementById(`bar-${id}`).style.width = pct + '%';
-
-    document.getElementById(`meta-${id}-kp`).textContent = `${kpTotal} KP`;
-    document.getElementById(`meta-${id}-att`).textContent =
-      agg.total > 0 ? `已练 ${agg.attempted}` : '—';
-    document.getElementById(`meta-${id}-weak`).textContent =
-      (agg.wrong > 0 || kpWeak > 0) ? `⚠ ${agg.wrong + kpWeak}` : '';
+    const card = document.createElement('div');
+    card.className = 'overview-card ' + cat.cls;
+    card.innerHTML = `
+      <div class="ov-title">${cat.label}</div>
+      <div class="ov-nums">
+        <span class="big">${pct}%</span>
+        <span class="total">${agg.total > 0 ? agg.passed + '/' + agg.total : kpTotal + ' KP'}</span>
+      </div>
+      <div class="ov-meta">
+        <span>${cat.q_total} 题</span>
+        <span>${kpTotal} KP</span>
+        ${(agg.wrong > 0 || kpWeak > 0) ? `<span>⚠ ${agg.wrong + kpWeak}</span>` : ''}
+      </div>
+      <div class="ov-bar-bg"><div class="ov-bar-fill" style="width:${pct}%"></div></div>
+    `;
+    container.appendChild(card);
   });
 }
 

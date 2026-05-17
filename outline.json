@@ -136,7 +136,7 @@
     {
       "id": "scada",
       "ordinal": "四",
-      "name": "SCADA 稳态监控",
+      "name": "稳态监控（SCADA 核心）",
       "subjects": ["稳态监控"],
       "sections": [
         {

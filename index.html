@@ -759,15 +759,17 @@ function renderOutlineTree() {
     // 收集学科所有题，判 CV 模式 + 算总进度
     const subjAllQs = collectSubjQs(subj.name);
     const subjProg = aggregateProgress(subjAllQs);
-    const isCV = isCVSubjFromQuestions(subjAllQs);
+    const isCV    = isCVSubjFromQuestions(subjAllQs);
+    const isAnki  = isAnkiSubjFromProgress(subj.name);
 
     // ── 学科 header ──
     const subjHeader = document.createElement('div');
     subjHeader.className = 'subj-header';
-    const cvTag = isCV ? '<span class="cv-mode-tag" title="CV 模式学科：训练请去终端 CV；网页可浏览题目和进度">CV</span>' : '';
+    const cvTag   = isCV   ? '<span class="cv-mode-tag"   title="CV 模式：终端训练，进度来自薄弱点.json">CV</span>'  : '';
+    const ankiTag = isAnki ? '<span class="anki-mode-tag" title="Anki 模式：上机用 Anki 卡片复习，进度来自 Anki">🎴</span>' : '';
     subjHeader.innerHTML = `
       <span class="subj-dot ${escH(subj.key)}"></span>
-      <span class="subj-name">${escH(subj.name)}</span>${cvTag}
+      <span class="subj-name">${escH(subj.name)}</span>${cvTag}${ankiTag}
       <span class="subj-count">${subj.q_count}题</span>
       ${progressBadgeHTML(subjProg)}
       <button class="sm js-subj-btn" ${subj.q_count === 0 ? 'disabled' : ''}>全科</button>

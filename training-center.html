@@ -644,10 +644,14 @@ async function loadAutoDerive() {
     const pj = await r.json();
     const subjStat = pj.subjects || {};
 
+    // 1. 顶部 3 大组统计（聚合各 category 的 subjects）
     CAT_STATS = {};
-    DATA.forEach(grp => {
+    OVERVIEW_GROUPS.forEach(g => {
       const agg = { total: 0, attempted: 0, passed: 0, wrong: 0 };
-      (grp.subjects || []).forEach(name => {
+      // 找该大组覆盖的所有 categories，再合并它们的 subjects
+      const cats = DATA.filter(c => g.cats.includes(c.id));
+      const subjs = [...new Set(cats.flatMap(c => c.subjects))];
+      subjs.forEach(name => {
         const s = subjStat[name];
         if (!s) return;
         agg.total     += s.total || 0;
@@ -655,20 +659,20 @@ async function loadAutoDerive() {
         agg.passed    += s.passed || 0;
         agg.wrong     += s.wrong_pending || 0;
       });
-      CAT_STATS[grp.id] = agg;
+      CAT_STATS[g.id] = agg;
     });
 
-    // KP 默认 status：组级 passed_rate；KP 有题数=0 直接 untouched
+    // 2. KP 默认 status：按 KP 所属大组的 passed_rate；KP 有题数=0 直接 untouched
     AUTO_DERIVED = {};
-    DATA.forEach(grp => {
-      const agg = CAT_STATS[grp.id];
+    DATA.forEach(cat => {
+      const agg = CAT_STATS[cat.groupId];
       let grpDefault = 'untouched';
-      if (agg.total > 0) {
+      if (agg && agg.total > 0) {
         const rate = agg.passed / agg.total;
         if (rate >= 0.8) grpDefault = 'done';
         else if (agg.attempted > 0 || agg.passed > 0) grpDefault = 'partial';
       }
-      grp.sections.forEach(sec => {
+      cat.sections.forEach(sec => {
         sec.kps.forEach(kp => {
           AUTO_DERIVED[makeKey(kp)] = kp.q_count > 0 ? grpDefault : 'untouched';
         });

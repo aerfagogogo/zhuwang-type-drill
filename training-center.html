@@ -518,20 +518,25 @@
 
 <script>
 // ============ 数据 SSOT ============
-// outline.json v0.2: 8 category × N section × N KP，每 KP 含 code/name/desc
-// 训练中心顶部按"3 大组"展示：linux / dm / d6（D6 合并多个 category）
+// 顶部统计卡：按 3 大组聚合（OVERVIEW_GROUPS）
+// 底部 KP 列：每个 category 一列（DATA，约 8 列；自适应 wrap）
 // Tag 命名：单层 `KP::<末级KP名>`（用户偏好不嵌套）
-let OUTLINE = null;       // 原始 outline 对象
-let DATA = [];             // 重组后的 3 大组：[{id,label,cls,cats,sections,subjects}]
+let OUTLINE = null;        // 原始 outline 对象
+let DATA = [];             // 8 个 category 一一对应：[{id,label,cls,sections,subjects}]
 let QIDX = null;           // window.QUESTIONS_INDEX (按 KP code 聚合)
-let CAT_STATS = {};        // 组级统计 {linux: {total,attempted,passed,wrong}}
+let CAT_STATS = {};        // 顶部 3 大组的统计
 
-const GROUPS = [
+const OVERVIEW_GROUPS = [
   { id: 'linux', label: '一、Linux 系统基础',         cls: 'linux', cats: ['linux'] },
   { id: 'dm',    label: '二、达梦数据库 (DM)',         cls: 'dm',    cats: ['dm'] },
   { id: 'd6',    label: '三~八、D6.0 平台 + SCADA + 网分 + AGC',  cls: 'd6',
                  cats: ['d6plat','scada','alarm','netan','agcavc','dnet'] }
 ];
+// category id → 顶部统计卡的 group id（用于把 cat 状态算进哪一卡）
+const CAT_TO_GROUP = {
+  linux:'linux', dm:'dm',
+  d6plat:'d6', scada:'d6', alarm:'d6', netan:'d6', agcavc:'d6', dnet:'d6'
+};
 
 function kpTag(kp) {
   const prefix = (OUTLINE && OUTLINE.tag_prefix) || 'KP::';
@@ -550,32 +555,34 @@ async function loadOutline() {
   OUTLINE = o;
   QIDX = window.QUESTIONS_INDEX || { total: 0, by_kp: {}, by_subj: {} };
 
-  // 按 GROUPS 重组 categories
-  DATA = GROUPS.map(g => {
-    const cats = o.categories.filter(c => g.cats.includes(c.id));
-    const sections = [];
-    cats.forEach(c => {
-      c.sections.forEach(sec => {
-        sections.push({
-          code: sec.code,
-          label: sec.name,
-          chapter: c.ordinal + '、' + c.name,
-          kps: sec.kps.map(kp => ({
-            code: kp.code,
-            name: kp.name,
-            desc: kp.desc,
-            tag: kpTag(kp),
-            q_count: (QIDX.by_kp[kp.code] || []).length,
-          }))
-        });
-      });
+  // 每个 category 单独一列
+  DATA = o.categories.map(c => {
+    const groupId = CAT_TO_GROUP[c.id] || 'd6';
+    const sections = c.sections.map(sec => {
+      const kps = sec.kps.map(kp => ({
+        code: kp.code,
+        name: kp.name,
+        desc: kp.desc,
+        tag: kpTag(kp),
+        q_count: (QIDX.by_kp[kp.code] || []).length,
+      }));
+      const secQTotal = kps.reduce((s,k) => s + k.q_count, 0);
+      return {
+        code: sec.code,
+        label: sec.name,
+        q_total: secQTotal,
+        kps
+      };
     });
     return {
-      id: g.id,
-      label: g.label,
-      cls: g.cls,
-      subjects: [...new Set(cats.flatMap(c => c.subjects || []))],
-      sections
+      id: c.id,
+      label: c.ordinal + '、' + c.name,
+      cls: groupId,                       // 颜色按所属大组（linux/dm/d6）
+      groupId,
+      subjects: c.subjects || [],
+      sections,
+      q_total: sections.reduce((s, sec) => s + sec.q_total, 0),
+      kp_total: sections.reduce((s, sec) => s + sec.kps.length, 0)
     };
   });
   return o;

@@ -555,46 +555,99 @@ function toggleWeak(key) {
 }
 
 // ============ 自动派生（progress_data.json）============
-// 学科粒度：根据该学科 passed/total/attempted/wrong_pending 给该学科下所有 KP 一个默认
-// passed_rate ≥ 0.8 → done
-// 0 < passed_rate < 0.8 或 attempted > 0 → partial
-// 否则 untouched
+// 一个大类（linux/dm/d6）可绑多个后台学科（outline.json category.subjects）。
+// 聚合该大类所有学科的 total/attempted/passed/wrong_pending → 卡片显示
+// KP 默认状态：按该大类聚合后的 passed_rate 算
+//   ≥ 0.8 → done · 有 attempted → partial · 都没 → untouched
+let CAT_STATS = {}; // { linux: {total, attempted, passed, wrong}, dm: {...}, d6: {...} }
+
 async function loadAutoDerive() {
   try {
     const r = await fetch('./progress_data.json', { cache: 'no-cache' });
     if (!r.ok) throw new Error('progress_data.json ' + r.status);
     const pj = await r.json();
-    const subj = pj.subjects || {};
-    const subj_status = {};
-    for (const [name, s] of Object.entries(subj)) {
-      const total = s.total || 0;
-      const passed = s.passed || 0;
-      const att = s.attempted || 0;
-      let st = 'untouched';
-      if (total > 0) {
-        const rate = passed / total;
-        if (rate >= 0.8) st = 'done';
-        else if (att > 0 || passed > 0) st = 'partial';
-      }
-      subj_status[name] = st;
-    }
-    // 注入 AUTO_DERIVED
+    const subjStat = pj.subjects || {};
+
+    // 1. 按大类聚合
+    CAT_STATS = {};
+    DATA.forEach(cat => {
+      const subjs = cat.subjects || (cat.fallback_subject ? [cat.fallback_subject] : []);
+      const agg = { total: 0, attempted: 0, passed: 0, wrong: 0 };
+      subjs.forEach(name => {
+        const s = subjStat[name];
+        if (!s) return;
+        agg.total      += s.total || 0;
+        agg.attempted  += s.attempted || 0;
+        agg.passed     += s.passed || 0;
+        agg.wrong      += s.wrong_pending || 0;
+      });
+      CAT_STATS[cat.id] = agg;
+    });
+
+    // 2. KP 默认 status：按大类 passed_rate
     AUTO_DERIVED = {};
-    DATA.forEach(col => {
-      col.sections.forEach((sec, si) => {
+    DATA.forEach(cat => {
+      const agg = CAT_STATS[cat.id];
+      let st = 'untouched';
+      if (agg.total > 0) {
+        const rate = agg.passed / agg.total;
+        if (rate >= 0.8) st = 'done';
+        else if (agg.attempted > 0 || agg.passed > 0) st = 'partial';
+      }
+      cat.sections.forEach((sec, si) => {
         sec.items.forEach((_, ii) => {
-          const key = makeKey(col.id, si, ii);
-          AUTO_DERIVED[key] = subj_status[sec.subj] || 'untouched';
+          AUTO_DERIVED[makeKey(cat.id, si, ii)] = st;
         });
       });
     });
+
     document.getElementById('src-info').textContent =
-      `数据源：localStorage + progress_data.json (${pj.generated || '未知日期'})`;
+      `数据源：localStorage + progress_data.json (${pj.generated || '?'})`;
   } catch (e) {
-    console.warn('progress_data.json 加载失败，全部默认 untouched:', e);
+    console.warn('progress_data.json 加载失败:', e);
     document.getElementById('src-info').textContent =
       `数据源：localStorage 本地（progress_data.json 未加载：${e.message}）`;
   }
+}
+
+// 把映射好的学科信息更新到顶部卡片（题数/已练/未过关）
+function updateOverviewCards() {
+  DATA.forEach(cat => {
+    const id = cat.id;
+    const agg = CAT_STATS[id] || { total: 0, attempted: 0, passed: 0, wrong: 0 };
+
+    // KP 数（手动+派生算法计 done/partial）
+    let kpDone = 0, kpPartial = 0, kpWeak = 0, kpTotal = 0;
+    cat.sections.forEach((sec, si) => {
+      sec.items.forEach((_, ii) => {
+        const k = makeKey(id, si, ii);
+        const st = getStatus(k);
+        kpTotal++;
+        if (st === 'done') kpDone++;
+        else if (st === 'partial') kpPartial++;
+        if (getWeak(k)) kpWeak++;
+      });
+    });
+
+    // 顶部大数 = 题完成率（passed / total）；total=0 时退回 KP 完成率
+    const pct = agg.total > 0
+      ? Math.round(agg.passed / agg.total * 100)
+      : (kpTotal > 0 ? Math.round((kpDone + kpPartial * 0.5) / kpTotal * 100) : 0);
+
+    document.getElementById(`pct-${id}`).textContent = pct + '%';
+    document.getElementById(`cnt-${id}`).textContent =
+      agg.total > 0 ? `${agg.passed}/${agg.total} 题` : `${kpTotal} KP`;
+    document.getElementById(`bar-${id}`).style.width = pct + '%';
+
+    // Meta 行
+    document.getElementById(`meta-${id}-kp`).textContent = `${kpTotal} KP`;
+    document.getElementById(`meta-${id}-att`).textContent =
+      agg.total > 0 ? `已练 ${agg.attempted}` : '—';
+    const weakText = (agg.wrong > 0 || kpWeak > 0)
+      ? `⚠ ${agg.wrong + kpWeak}`
+      : '';
+    document.getElementById(`meta-${id}-weak`).textContent = weakText;
+  });
 }
 
 // ============ Render ============

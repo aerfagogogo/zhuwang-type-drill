@@ -1150,11 +1150,107 @@ function toggleTheme(){
 }
 applyTheme(localStorage.getItem('theme')||'dark'); // 首次执行即应用
 
-// ============ 探索模式 ============
+// ============ 探索模式 v2 · 速记栈 ============
+
+// 老数据迁移：把单字段 notes/images 升级成速记栈（仅做一次，幂等）
+function migrateLegacyNotes(e){
+  if(!Array.isArray(e.notes_stack))e.notes_stack=[];
+  // 老的 e.notes 是已经"提交过"的笔记（不是草稿），迁进 stack 第一条；之后清空
+  if(e._migrated)return;
+  if((e.notes&&e.notes.trim().length)||(e.images&&e.images.length)){
+    // 只有当 stack 还空时才把老 notes 视为历史唯一一条
+    if(e.notes_stack.length===0){
+      e.notes_stack.push({
+        ts:e._migrated_ts||Date.now(),
+        text:(e.notes||'').trim(),
+        images:(e.images||[]).slice(),
+      });
+      // 清空草稿（避免重复展示）
+      e.notes='';
+      e.images=[];
+    }
+  }
+  e._migrated=true;
+}
+
+// 渲染速记栈（最新在上）
+function renderNotesStack(stack){
+  const box=$('notesStackList');
+  const cnt=$('notesStackCount');
+  if(!stack||!stack.length){
+    cnt.textContent='(0 条)';
+    box.innerHTML='<div class="muted" style="padding:6px 2px;font-size:11px">还没速记。下面写一条，点「加这条速记到本题」即可。</div>';
+    return;
+  }
+  cnt.textContent='('+stack.length+' 条)';
+  // 倒序，新→旧
+  box.innerHTML=stack.slice().reverse().map((item,ri)=>{
+    const idx=stack.length-1-ri;
+    let tsTxt='—';
+    if(item.ts){
+      const d=new Date(item.ts);
+      tsTxt=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    }
+    const imgsHTML=(item.images||[]).map(img=>
+      '<div class="img-thumb-mini"><img src="'+img.data+'" alt=""></div>'
+    ).join('');
+    return '<div class="note-entry">'
+      +'<div class="note-entry-head">'
+      +'<span class="note-entry-ts">'+escapeHtml(tsTxt)+'  ·  '+(stack.length-ri)+' 条之 '+(idx+1)+'</span>'
+      +'<button class="note-entry-rm" onclick="removeNoteEntry('+idx+')" title="删这条">×</button>'
+      +'</div>'
+      +'<div class="note-entry-text">'+escapeHtml(item.text||'')+'</div>'
+      +(imgsHTML?'<div class="note-entry-imgs">'+imgsHTML+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+// 把当前草稿（textarea + 图片）追加到速记栈
+function addNoteEntry(){
+  const e=STATE.entries[STATE.idx];
+  const text=($('notes').value||'').trim();
+  const imgs=e.images||[];
+  if(!text&&!imgs.length){alert('先写点文字或加图');return;}
+  e.notes_stack=e.notes_stack||[];
+  e.notes_stack.push({
+    ts:Date.now(),
+    text:text,
+    images:imgs.slice(),
+  });
+  // 清空草稿
+  e.notes='';
+  e.images=[];
+  saveState();
+  $('notes').value='';
+  renderImageList([]);
+  renderNotesStack(e.notes_stack);
+}
+
+function removeNoteEntry(idx){
+  const e=STATE.entries[STATE.idx];
+  if(!Array.isArray(e.notes_stack)||idx<0||idx>=e.notes_stack.length)return;
+  if(!confirm('删掉这条速记？'))return;
+  e.notes_stack.splice(idx,1);
+  saveState();
+  renderNotesStack(e.notes_stack);
+}
+
 function saveAndNextExplore(){
   const e=STATE.entries[STATE.idx];
   e.user_answer=$('ans').value;
-  e.notes=$('notes').value;
+  // 自动把当前草稿追加为一条速记（如果有内容）
+  const text=($('notes').value||'').trim();
+  const imgs=e.images||[];
+  if(text||imgs.length){
+    e.notes_stack=e.notes_stack||[];
+    e.notes_stack.push({
+      ts:Date.now(),
+      text:text,
+      images:imgs.slice(),
+    });
+    e.notes='';
+    e.images=[];
+  }
   e.phase='completed';
   e.mark='';
   saveState();

@@ -96,7 +96,7 @@
     {
       "id": "d6plat",
       "ordinal": "三",
-      "name": "D6.0 统一支撑平台",
+      "name": "基础平台（D6.0 统一支撑平台）",
       "subjects": ["基础平台", "系统平台"],
       "sections": [
         {

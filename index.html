@@ -625,17 +625,23 @@ function isCVSubjFromQuestions(questions) {
 }
 
 // ── 进度聚合 ──────────────────────────────────────────────────────
-// 给一组题，返回 {total, attempted, passed, wrong_pending}
+// 给一组题，返回 {total, attempted, passed, wrong_pending, source}
 function aggregateProgress(questions) {
-  const out = { total: 0, attempted: 0, passed: 0, wrong_pending: 0 };
+  const out = { total: 0, attempted: 0, passed: 0, wrong_pending: 0, source: null };
   if (!questions || !PROGRESS) return out;
   for (const q of questions) {
     out.total++;
     const p = PROGRESS.questions[q.id];
     if (!p) continue;
+    if (!out.source) out.source = p.source || 'weak_json';
     if (p.attempted) out.attempted++;
     if (p.passed) out.passed++;
-    if (p.weak_count > 0 && !p.passed) out.wrong_pending++;
+    // wrong_pending：Anki 轨用 lapses，薄弱点轨用 weak_count
+    if (p.source === 'anki') {
+      if ((p.lapses || 0) > 0 && !p.passed) out.wrong_pending++;
+    } else {
+      if ((p.weak_count || 0) > 0 && !p.passed) out.wrong_pending++;
+    }
   }
   return out;
 }

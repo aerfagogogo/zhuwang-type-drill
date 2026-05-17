@@ -145,19 +145,29 @@
   .overview-card.dm::before    { background: var(--accent-dm); }
   .overview-card.d6::before    { background: var(--accent-d6); }
   .ov-title {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 10px;
-    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
   }
   .ov-nums {
     display: flex;
     align-items: baseline;
-    gap: 4px;
-    margin-bottom: 10px;
+    gap: 6px;
+    margin-bottom: 6px;
   }
-  .ov-nums .big { font-size: 26px; font-weight: 700; line-height: 1; }
-  .ov-nums .total { font-size: 13px; color: var(--text-dim); }
+  .ov-nums .big { font-size: 28px; font-weight: 700; line-height: 1; }
+  .ov-nums .total { font-size: 13px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+  .ov-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    gap: 10px;
+  }
+  .ov-meta span { white-space: nowrap; }
   .ov-bar-bg {
     height: 4px;
     background: var(--border);

@@ -400,19 +400,21 @@ async function init(){
     QS=scope.questions||[];
     if(!QS.length){alert('该考点暂无题目');location.href='./';return;}
 
-    // 调整起始页显示：标题换成考点名，隐藏学科/模式下拉
+    // 调整起始页显示：标题换成考点名，隐藏学科下拉；模式下拉保留（让用户选 考试 / 探索）
     $('setupTitle').textContent='📋 '+scope.label;
-    // 隐藏学科选择行
+    // 隐藏学科选择行（scope 已指定题集）
     let subjEl=$('subj');
     while(subjEl&&!subjEl.classList.contains('row'))subjEl=subjEl.parentElement;
     if(subjEl)subjEl.style.display='none';
-    // 隐藏模式选择行
-    let modeEl=$('mode');
-    while(modeEl&&!modeEl.classList.contains('row'))modeEl=modeEl.parentElement;
-    if(modeEl)modeEl.style.display='none';
 
-    // 若 API Key 已存，直接进训练
-    if($('apiKey').value.trim()){startScopeSession();return;}
+    // 智能默认模式：若多数题没标答 → 默认探索
+    const withAnswer=QS.filter(q=>(q.标答||'').trim().length>=10).length;
+    if(withAnswer<QS.length*0.3){
+      $('mode').value='explore';
+    }
+
+    // 若 API Key 已存（或探索模式不需要 key），直接进 session
+    if($('apiKey').value.trim()||$('mode').value==='explore'){startScopeSession();return;}
 
     // 否则显示起始页，让用户填 Key 后点开始
     document.querySelector('button.big').onclick=()=>{

@@ -611,6 +611,7 @@ async function loadAutoDerive() {
     const r = await fetch('./progress_data.json', { cache: 'no-cache' });
     if (!r.ok) throw new Error('progress_data.json ' + r.status);
     const pj = await r.json();
+    window.PROGRESS_DATA = pj;  // 给 updateOverviewCards 用
     const subjStat = pj.subjects || {};
 
     // 1. 顶部 3 大组统计（聚合各 category 的 subjects）

@@ -724,7 +724,17 @@ function render() {
     header.innerHTML = `<div class="col-dot"></div><div class="col-title">${col.label}</div>`;
     colDiv.appendChild(header);
 
+    let lastChapter = null;
     col.sections.forEach(sec => {
+      // 当章节切换时插入分隔（D6 组有多 category，需要区分）
+      if (sec.chapter !== lastChapter && col.id === 'd6') {
+        const cd = document.createElement('div');
+        cd.className = 'chapter-divider';
+        cd.textContent = sec.chapter;
+        colDiv.appendChild(cd);
+        lastChapter = sec.chapter;
+      }
+
       const secDiv = document.createElement('div');
       secDiv.className = 'section';
 

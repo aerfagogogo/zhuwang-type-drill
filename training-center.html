@@ -452,9 +452,16 @@ let DATA = [];
 const CLS_MAP = { linux: 'linux', dm: 'dm', d6: 'd6' };
 
 async function loadOutline() {
-  const r = await fetch('./outline.json', { cache: 'no-cache' });
-  if (!r.ok) throw new Error('outline.json ' + r.status);
-  const o = await r.json();
+  // 优先：<script src="outline.js"> 已注入 window.OUTLINE_DATA（绕 CORS）
+  // 兜底：fetch outline.json（线上 / http server 时用）
+  let o;
+  if (window.OUTLINE_DATA) {
+    o = window.OUTLINE_DATA;
+  } else {
+    const r = await fetch('./outline.json', { cache: 'no-cache' });
+    if (!r.ok) throw new Error('outline.json ' + r.status);
+    o = await r.json();
+  }
   DATA = o.categories.map(cat => ({
     id: cat.id,
     label: cat.name,

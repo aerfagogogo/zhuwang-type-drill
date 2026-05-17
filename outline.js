@@ -1,15 +1,15 @@
 // 自动生成自 outline.json by build_outline_md.py — 勿手改
 window.OUTLINE_DATA = {
-  "version": "v0.2",
+  "version": "v0.3",
   "generated": "2026-05-18",
-  "source": "02学习脑图/D6.0_脑图.pdf",
-  "comment": "对齐题库.json 的 归属大纲 字段（章.节.项 编号）。Anki tag = KP::<末级KP名> 单层不嵌套。",
+  "source": "02学习脑图/系统实操学习脑图.pdf + D6.0_脑图.pdf",
+  "comment": "章节名称对齐系统实操学习脑图（7章），编号 1-7 对齐题库.json 归属大纲字段（章.节.项）。第8章为题库额外扩展（调度数据网）。Anki tag = KP::<末级KP名> 单层不嵌套。",
   "tag_prefix": "KP::",
   "categories": [
     {
       "id": "linux",
       "ordinal": "一",
-      "name": "Linux 系统基础",
+      "name": "操作系统",
       "subjects": [
         "操作系统"
       ],
@@ -142,7 +142,7 @@ window.OUTLINE_DATA = {
     {
       "id": "dm",
       "ordinal": "二",
-      "name": "达梦数据库 (DM)",
+      "name": "商用数据库",
       "subjects": [
         "数据库"
       ],
@@ -245,7 +245,7 @@ window.OUTLINE_DATA = {
     {
       "id": "d6plat",
       "ordinal": "三",
-      "name": "D6.0 统一支撑平台",
+      "name": "基础平台（D6.0 统一支撑平台）",
       "subjects": [
         "基础平台",
         "系统平台"
@@ -344,7 +344,7 @@ window.OUTLINE_DATA = {
     {
       "id": "scada",
       "ordinal": "四",
-      "name": "SCADA 稳态监控",
+      "name": "稳态监控（SCADA 核心）",
       "subjects": [
         "稳态监控"
       ],
@@ -623,7 +623,7 @@ window.OUTLINE_DATA = {
     {
       "id": "agcavc",
       "ordinal": "七",
-      "name": "自动控制 (AGC/AVC)",
+      "name": "自动控制（AGC、AVC）",
       "subjects": [],
       "sections": [
         {

@@ -407,26 +407,14 @@ async function init(){
     while(subjEl&&!subjEl.classList.contains('row'))subjEl=subjEl.parentElement;
     if(subjEl)subjEl.style.display='none';
 
-    // 智能默认模式：若多数题没标答 → 默认探索；否则默认考试
-    const withAnswer=QS.filter(q=>(q.标答||'').trim().length>=10).length;
-    if(withAnswer<QS.length*0.3){
-      $('mode').value='explore';
-    }
+    // 探索模式已废弃 2026-05-18，不再智能切换；scope 模式永远走训练模式
 
-    // ⚠️ scope 模式下**永远显示设置页**，让用户能手动选模式（不再因 API Key 已存就跳过）
-    // 按钮文本动态：探索模式不需 Key，提示文字不一样
-    function updateScopeStartBtn(){
-      const m=$('mode').value;
-      const btn=document.querySelector('button.big');
-      btn.textContent=m==='explore'?'📓 开始探索（写速记 + 拍照）':'📝 开始考试（AI 批卷）';
-    }
-    updateScopeStartBtn();
-    $('mode').addEventListener('change',updateScopeStartBtn);
+    // ⚠️ scope 模式下**永远显示设置页**，让用户能确认 API Key
+    document.querySelector('button.big').textContent='📝 开始考试（AI 批卷）';
 
     document.querySelector('button.big').onclick=()=>{
-      const m=$('mode').value;
-      if(m==='train'&&!$('apiKey').value.trim()){alert('考试模式需要 AIHUBMIX API Key（探索模式不用）');return;}
-      if($('apiKey').value.trim())localStorage.setItem('apiKey',$('apiKey').value.trim());
+      if(!$('apiKey').value.trim()){alert('考试模式需要 AIHUBMIX API Key');return;}
+      localStorage.setItem('apiKey',$('apiKey').value.trim());
       startScopeSession();
     };
     return;

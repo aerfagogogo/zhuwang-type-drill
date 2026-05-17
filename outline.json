@@ -99,6 +99,7 @@
       "name": "三/四、D6.0 + SCADA",
       "tag_segment": "D6",
       "fallback_subject": "基础平台",
+      "subjects": ["基础平台", "系统平台", "稳态监控", "综合智能告警", "网络分析", "调度数据网"],
       "sections": [
         {
           "id": "d6_intro",

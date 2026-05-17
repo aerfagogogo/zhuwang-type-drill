@@ -8,7 +8,7 @@
     {
       "id": "linux",
       "ordinal": "一",
-      "name": "Linux 系统基础",
+      "name": "操作系统",
       "subjects": ["操作系统"],
       "sections": [
         {

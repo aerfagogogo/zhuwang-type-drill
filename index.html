@@ -678,6 +678,15 @@ async function init() {
     return;
   }
 
+  // 进度数据非必需，失败不阻塞
+  try {
+    const rp = await fetch('progress_data.json?_t=' + Date.now());
+    PROGRESS = await rp.json();
+  } catch (e) {
+    console.warn('progress_data.json 加载失败，跳过进度显示', e);
+    PROGRESS = { subjects: {}, questions: {} };
+  }
+
   renderStats();
   renderOutlineTree();
 

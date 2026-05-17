@@ -290,11 +290,23 @@
     font-size: 10px;
     font-family: 'DM Mono', monospace;
     color: var(--text-muted);
-    text-transform: uppercase;
     letter-spacing: 1.5px;
     padding: 0 0 6px;
     margin-bottom: 4px;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .sec-q-sum {
+    font-size: 10px;
+    color: var(--accent-dm);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  html[data-theme="dark"] .sec-q-sum {
+    color: var(--accent-dm);
   }
 
   /* ── Item row ── */

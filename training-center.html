@@ -307,12 +307,13 @@
     color: var(--accent-dm);
   }
 
-  /* ── Item row ── */
+  /* ── Item row（grid 布局保证 q 数列上下对齐）── */
   .item {
-    display: flex;
+    display: grid;
+    grid-template-columns: 8px 38px 1fr 28px 14px 18px;
+    gap: 6px;
     align-items: center;
-    gap: 8px;
-    padding: 7px 8px;
+    padding: 6px 8px;
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.15s;

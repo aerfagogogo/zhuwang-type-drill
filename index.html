@@ -298,6 +298,66 @@ button.sm {
 }
 .kp-count.zero { color: var(--border-2); }
 
+/* ===== 进度徽章（v4.1 · 2026-05-17 加入进度展示） ===== */
+.progress-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.progress-badge.zero {
+  color: var(--muted);
+  opacity: 0.5;
+}
+.progress-badge.partial {
+  background: rgba(201, 144, 90, 0.12);
+  color: var(--warn);
+  border-color: rgba(201, 144, 90, 0.3);
+}
+.progress-badge.complete {
+  background: rgba(107, 143, 113, 0.14);
+  color: var(--success);
+  border-color: rgba(107, 143, 113, 0.35);
+}
+.progress-badge.wrong {
+  background: rgba(201, 88, 62, 0.12);
+  color: var(--danger);
+  border-color: rgba(201, 88, 62, 0.3);
+}
+.progress-mini {
+  width: 40px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.progress-mini-fill {
+  height: 100%;
+  background: var(--success);
+  transition: width 0.3s ease;
+}
+.cv-mode-tag {
+  display: inline-block;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  background: rgba(201, 100, 66, 0.12);
+  color: var(--accent);
+  margin-left: 4px;
+  border: 1px solid rgba(201, 100, 66, 0.3);
+  letter-spacing: 0.3px;
+}
+
 /* ===== 统计栏 ===== */
 .stats-bar {
   display: flex;

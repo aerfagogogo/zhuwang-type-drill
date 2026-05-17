@@ -1,0 +1,2399 @@
+{
+  "version": "v0.1",
+  "generated": "2026-05-17",
+  "subjects": {
+    "基础平台": {
+      "total": 54,
+      "attempted": 0,
+      "passed": 0,
+      "wrong_pending": 0,
+      "last_attempt_at": null
+    },
+    "操作系统": {
+      "total": 58,
+      "attempted": 6,
+      "passed": 0,
+      "wrong_pending": 6,
+      "last_attempt_at": "2026-05-14"
+    },
+    "数据库": {
+      "total": 37,
+      "attempted": 0,
+      "passed": 0,
+      "wrong_pending": 0,
+      "last_attempt_at": null
+    },
+    "稳态监控": {
+      "total": 28,
+      "attempted": 0,
+      "passed": 0,
+      "wrong_pending": 0,
+      "last_attempt_at": null
+    },
+    "竞赛环境": {
+      "total": 15,
+      "attempted": 14,
+      "passed": 0,
+      "wrong_pending": 2,
+      "last_attempt_at": "2026-05-17"
+    },
+    "系统平台": {
+      "total": 76,
+      "attempted": 0,
+      "passed": 0,
+      "wrong_pending": 0,
+      "last_attempt_at": null
+    },
+    "综合智能告警": {
+      "total": 7,
+      "attempted": 0,
+      "passed": 0,
+      "wrong_pending": 0,
+      "last_attempt_at": null
+    },
+    "网络分析": {
+      "total": 14,
+      "attempted": 0,
+      "passed": 0,
+      "wrong_pending": 0,
+      "last_attempt_at": null
+    },
+    "调度数据网": {
+      "total": 2,
+      "attempted": 0,
+      "passed": 0,
+      "wrong_pending": 0,
+      "last_attempt_at": null
+    }
+  },
+  "questions": {
+    "基础平台-001": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-002": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-003": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-004": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-005": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-006": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-007": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-008": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-009": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-010": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-011": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-012": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-013": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-014": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-015": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-016": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-017": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-018": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-019": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-020": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-021": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-022": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-023": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-024": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-025": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-026": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-027": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-028": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-029": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-030": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-031": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-032": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-033": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-034": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-035": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-036": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-037": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-038": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-039": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-040": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-041": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-042": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-043": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-044": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-045": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-046": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-047": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-048": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-049": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-050": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-051": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-052": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-053": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "基础平台-054": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-001": {
+      "last_verdict": "❌",
+      "weak_count": 1,
+      "correct_streak": 0,
+      "last_attempt_at": "2026-05-14",
+      "attempted": true,
+      "passed": false
+    },
+    "操作系统-002": {
+      "last_verdict": "❌",
+      "weak_count": 1,
+      "correct_streak": 0,
+      "last_attempt_at": "2026-05-14",
+      "attempted": true,
+      "passed": false
+    },
+    "操作系统-003": {
+      "last_verdict": "❌",
+      "weak_count": 1,
+      "correct_streak": 0,
+      "last_attempt_at": "2026-05-14",
+      "attempted": true,
+      "passed": false
+    },
+    "操作系统-004": {
+      "last_verdict": "❌",
+      "weak_count": 1,
+      "correct_streak": 0,
+      "last_attempt_at": "2026-05-14",
+      "attempted": true,
+      "passed": false
+    },
+    "操作系统-005": {
+      "last_verdict": "❌",
+      "weak_count": 1,
+      "correct_streak": 0,
+      "last_attempt_at": "2026-05-14",
+      "attempted": true,
+      "passed": false
+    },
+    "操作系统-006": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-007": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-008": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-009": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-010": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-011": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-012": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-013": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-014": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-015": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-016": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-017": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-018": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-019": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-020": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-021": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-022": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-023": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-024": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-025": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-026": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-027": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-028": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-029": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-030": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-031": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-032": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-033": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-034": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-035": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-036": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-037": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-038": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-039": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-040": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-041": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-042": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-043": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-044": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-045": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-046": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-047": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-048": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-049": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-050": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-051": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-052": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-053": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-054": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-055": {
+      "last_verdict": "✅",
+      "weak_count": 1,
+      "correct_streak": 2,
+      "last_attempt_at": "2026-05-13",
+      "attempted": true,
+      "passed": false
+    },
+    "操作系统-056": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-057": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "操作系统-058": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-001": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-002": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-003": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-004": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-005": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-006": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-007": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-008": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-009": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-010": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-011": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-012": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-013": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-014": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-015": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-016": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-017": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-018": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-019": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-020": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-021": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-022": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-023": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-024": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-025": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-026": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-027": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-028": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-029": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-030": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-031": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-032": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-033": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-034": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-035": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-036": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "数据库-037": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-001": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-002": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-003": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-004": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-005": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-006": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-007": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-008": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-009": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-010": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-011": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-012": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-013": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-014": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-015": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-016": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-017": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-018": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-019": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-020": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-021": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-022": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-023": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-024": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-025": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-026": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-027": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "稳态监控-028": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "竞赛环境-001": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-002": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-003": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-004": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-005": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-006": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-007": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-008": {
+      "last_verdict": "⚠️",
+      "weak_count": 1,
+      "correct_streak": 0,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-009": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "竞赛环境-010": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-011": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-012": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-013": {
+      "last_verdict": "⚠️",
+      "weak_count": 1,
+      "correct_streak": 0,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-014": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "竞赛环境-015": {
+      "last_verdict": "✅",
+      "weak_count": 0,
+      "correct_streak": 1,
+      "last_attempt_at": "2026-05-17",
+      "attempted": true,
+      "passed": false
+    },
+    "系统平台-001": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-002": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-003": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-004": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-005": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-006": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-007": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-008": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-009": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-010": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-011": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-012": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-013": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-014": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-015": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-016": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-017": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-018": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-019": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-020": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-021": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-022": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-023": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-024": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-025": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-026": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-027": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-028": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-029": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-030": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-031": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-032": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-033": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-034": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-035": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-036": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-037": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-038": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-039": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-040": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-041": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-042": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-043": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-044": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-045": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-046": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-047": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-048": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-049": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-050": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-051": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-052": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-053": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-054": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-055": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-056": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-057": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-058": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-059": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-060": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-061": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-062": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-063": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-064": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-065": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-066": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-067": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-068": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-069": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-070": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-071": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-072": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-073": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-074": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-075": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "系统平台-076": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "综合智能告警-001": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "综合智能告警-002": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "综合智能告警-003": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "综合智能告警-004": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "综合智能告警-005": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "综合智能告警-006": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "综合智能告警-007": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-001": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-002": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-003": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-004": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-005": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-006": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-007": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-008": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-009": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-010": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-011": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-012": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-013": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "网络分析-014": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "调度数据网-001": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    },
+    "调度数据网-002": {
+      "last_verdict": null,
+      "weak_count": 0,
+      "correct_streak": 0,
+      "last_attempt_at": null,
+      "attempted": false,
+      "passed": false
+    }
+  }
+}

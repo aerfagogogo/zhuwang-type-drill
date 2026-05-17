@@ -1,8 +1,8 @@
 {
-  "version": "v0.2",
+  "version": "v0.3",
   "generated": "2026-05-18",
-  "source": "02学习脑图/D6.0_脑图.pdf",
-  "comment": "对齐题库.json 的 归属大纲 字段（章.节.项 编号）。Anki tag = KP::<末级KP名> 单层不嵌套。",
+  "source": "02学习脑图/系统实操学习脑图.pdf + D6.0_脑图.pdf",
+  "comment": "章节名称对齐系统实操学习脑图（7章），编号 1-7 对齐题库.json 归属大纲字段（章.节.项）。第8章为题库额外扩展（调度数据网）。Anki tag = KP::<末级KP名> 单层不嵌套。",
   "tag_prefix": "KP::",
   "categories": [
     {

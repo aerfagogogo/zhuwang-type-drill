@@ -713,7 +713,22 @@ function renderStats() {
   $('statSubj').textContent = DATA.subjects.length;
   $('statKP').textContent   = kps;
   $('statQ').textContent    = qs;
-  $('statGen').textContent  = '生成于 ' + (DATA.generated || '');
+
+  // 总进度：把全部 PROGRESS.subjects 聚合
+  let pAttempted = 0, pPassed = 0, pTotal = 0, pPending = 0;
+  if (PROGRESS && PROGRESS.subjects) {
+    for (const name in PROGRESS.subjects) {
+      const s = PROGRESS.subjects[name];
+      pTotal     += s.total || 0;
+      pAttempted += s.attempted || 0;
+      pPassed    += s.passed || 0;
+      pPending   += s.wrong_pending || 0;
+    }
+  }
+  const progText = pTotal > 0
+    ? `进度 ${pAttempted}/${pTotal} · 过关 ${pPassed} · 待消化 ${pPending}`
+    : '';
+  $('statGen').textContent = progText + (progText ? ' · ' : '') + '生成于 ' + (DATA.generated || '');
   $('statsBar').style.display = '';
 }
 

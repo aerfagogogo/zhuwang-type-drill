@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D6.0 备考训练中心</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Light (默认 / PDF 风格) ── */
+  :root {
+    --bg: #ffffff;
+    --surface: #fafafa;
+    --border: #e5e5ea;
+    --border-light: #d4d4d8;
+    --text: #18181b;
+    --text-dim: #71717a;
+    --text-muted: #a1a1aa;
+    --accent-linux: #16a34a;
+    --accent-dm: #2563eb;
+    --accent-d6: #d97706;
+    --weak: #dc2626;
+    --done: #16a34a;
+    --partial: #eab308;
+    --untouched: #d4d4d8;
+    --tag-weak-bg: rgba(220,38,38,0.10);
+    --tag-weak-border: rgba(220,38,38,0.35);
+    --shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  /* ── Dark (切换) ── */
+  html[data-theme="dark"] {
+    --bg: #0f0f11;
+    --surface: #16161a;
+    --border: #242429;
+    --border-light: #2e2e35;
+    --text: #e8e8f0;
+    --text-dim: #6b6b80;
+    --text-muted: #3a3a45;
+    --accent-linux: #4ade80;
+    --accent-dm: #60a5fa;
+    --accent-d6: #f59e0b;
+    --weak: #f87171;
+    --done: #4ade80;
+    --partial: #facc15;
+    --untouched: #3a3a45;
+    --tag-weak-bg: rgba(248,113,113,0.12);
+    --tag-weak-border: rgba(248,113,113,0.3);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+    min-height: 100vh;
+    padding: 32px 24px 64px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .header-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .header-left p {
+    margin-top: 4px;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .total-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: right;
+  }
+  .total-badge span {
+    display: block;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .icon-btn:hover {
+    border-color: var(--border-light);
+    color: var(--text);
+  }
+
+  /* ── Overview cards ── */
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .overview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .overview-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .overview-card.linux::before { background: var(--accent-linux); }
+  .overview-card.dm::before    { background: var(--accent-dm); }
+  .overview-card.d6::before    { background: var(--accent-d6); }
+  .ov-title {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+  }
+  .ov-nums {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .ov-nums .big { font-size: 26px; font-weight: 700; line-height: 1; }
+  .ov-nums .total { font-size: 13px; color: var(--text-dim); }
+  .ov-bar-bg {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .ov-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .linux .ov-bar-fill { background: var(--accent-linux); }
+  .dm    .ov-bar-fill { background: var(--accent-dm); }
+  .d6    .ov-bar-fill { background: var(--accent-d6); }
+  .linux .big { color: var(--accent-linux); }
+  .dm    .big { color: var(--accent-dm); }
+  .d6    .big { color: var(--accent-d6); }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--border-light); color: var(--text); }
+  .filter-btn.active {
+    background: var(--border);
+    color: var(--text);
+    border-color: var(--border-light);
+  }
+  .filter-btn.weak-btn.active {
+    background: var(--tag-weak-bg);
+    color: var(--weak);
+    border-color: var(--tag-weak-border);
+  }
+  .filter-label, .tip {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .tip { margin-left: auto; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 20px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: fit-content;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .legend-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+  }
+  .legend-dot.done    { background: var(--done); }
+  .legend-dot.partial { background: var(--partial); }
+  .legend-dot.un      { background: var(--untouched); box-shadow: 0 0 0 1.5px var(--border-light) inset; }
+  .legend-dot.weak    { background: var(--weak); }
+
+  /* ── Columns ── */
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 0 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .col-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .linux .col-dot { background: var(--accent-linux); }
+  .dm    .col-dot { background: var(--accent-dm); }
+  .d6    .col-dot { background: var(--accent-d6); }
+  .col-title {
+    font-size: 13px;
+    font-weight: 700;
+    flex: 1;
+  }
+  .col-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* ── Section ── */
+  .section { margin-bottom: 16px; }
+  .section-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0 0 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Item row ── */
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+    position: relative;
+  }
+  .item:hover { background: var(--border); }
+  .item-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .item[data-status="done"]      .item-dot { background: var(--done); }
+  .item[data-status="partial"]   .item-dot { background: var(--partial); }
+  .item[data-status="untouched"] .item-dot { background: var(--untouched); box-shadow: 0 0 0 1.5px var(--border-light) inset; }
+  .item-text {
+    flex: 1;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .item[data-status="done"] .item-text { color: var(--text-dim); }
+  .item[data-status="untouched"] .item-text { color: var(--text-dim); }
+  .item-weak {
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    color: var(--weak);
+    background: var(--tag-weak-bg);
+    border: 1px solid var(--tag-weak-border);
+    padding: 1px 5px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .item[data-weak="true"] .item-weak { opacity: 1; }
+  .item-src {
+    font-size: 8px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+  .item:hover .item-src { opacity: 1; }
+
+  /* ── Footer bar ── */
+  .footer-bar {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .footer-bar a {
+    color: var(--text-dim);
+    text-decoration: none;
+    margin-left: 12px;
+  }
+  .footer-bar a:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .columns, .overview { grid-template-columns: 1fr; }
+    .header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>D6.0 备考训练中心</h1>
+    <p>单击切状态 · 双击标记薄弱 · 顶部按状态筛选</p>
+  </div>
+  <div class="header-right">
+    <div class="total-badge">
+      <span id="total-pct">—</span>
+      总完成率
+    </div>
+    <button class="icon-btn" id="theme-toggle" title="切换深色/浅色">◐</button>
+  </div>
+</div>
+
+<!-- Overview cards -->
+<div class="overview">
+  <div class="overview-card linux">
+    <div class="ov-title">一、Linux 系统基础</div>
+    <div class="ov-nums">
+      <span class="big" id="pct-linux">0%</span>
+      <span class="total" id="cnt-linux">0/0</span>
+    </div>
+    <div class="ov-bar-bg"><div class="ov-bar-fill" id="bar-linux" style="width:0%"></div></div>
+  </div>
+  <div class="overview-card dm">
+    <div class="ov-title">二、达梦数据库 (DM)</div>
+    <div class="ov-nums">
+      <span class="big" id="pct-dm">0%</span>
+      <span class="total" id="cnt-dm">0/0</span>
+    </div>
+    <div class="ov-bar-bg"><div class="ov-bar-fill" id="bar-dm" style="width:0%"></div></div>
+  </div>
+  <div class="overview-card d6">
+    <div class="ov-title">三/四、D6.0 平台 + SCADA</div>
+    <div class="ov-nums">
+      <span class="big" id="pct-d6">0%</span>
+      <span class="total" id="cnt-d6">0/0</span>
+    </div>
+    <div class="ov-bar-bg"><div class="ov-bar-fill" id="bar-d6" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <span class="filter-label">筛选：</span>
+  <button class="filter-btn active" data-filter="all">全部</button>
+  <button class="filter-btn" data-filter="untouched">未训练</button>
+  <button class="filter-btn" data-filter="partial">进行中</button>
+  <button class="filter-btn" data-filter="done">已掌握</button>
+  <button class="filter-btn weak-btn" data-filter="weak">⚠ 薄弱点</button>
+  <span class="tip">单击切状态 · 双击标记薄弱</span>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot done"></div>已掌握</div>
+  <div class="legend-item"><div class="legend-dot partial"></div>训练中</div>
+  <div class="legend-item"><div class="legend-dot un"></div>未训练</div>
+  <div class="legend-item"><div class="legend-dot weak"></div>薄弱点</div>
+</div>
+
+<!-- Main columns -->
+<div class="columns" id="main-cols"></div>
+
+<div class="footer-bar">
+  <span id="src-info">数据源：localStorage（本地）+ progress_data.json 派生</span>
+  <span>
+    <a href="./">首页</a>
+    <a href="./exam.html">网页训练</a>
+    <a href="./drill.html">盲敲惩罚</a>
+    <a href="#" id="reset-link">重置本地</a>
+  </span>
+</div>
+
+<script>
+// ============ KP 数据 ============
+// subj 字段标识该 KP 所属学科（用于 progress_data.json 自动派生默认状态）
+const DATA = [
+  {
+    id: 'linux', label: '一、Linux 系统基础', cls: 'linux',
+    sections: [
+      { label: '1.1 入门：基础命令与日常操作', subj: '操作系统', items: [
+        '权限管理：rwx、属主属组、chmod/chown/chgrp',
+        '磁盘存储：df -h、df -i、du -sh、分区挂载卸载',
+        '进程服务:ps、top、kill、killall',
+        '网络时间:ping、telnet、netstat、ifconfig、ip addr、date',
+        '定时任务:crontab、分时日月周语法',
+        '日志基础:/var/log、grep 过滤',
+        'Shell 基础:变量、参数、管道、重定向、条件组',
+      ]},
+      { label: '1.2 进阶：Shell 脚本与系统优化', subj: '操作系统', items: [
+        '高级文本:sed、awk、find',
+        '资源管理:top、vmstat、iostat、sar、lsof',
+        '服务管理:service、systemctl、开机自启',
+        '时间同步:NTP 服务、ntpdate',
+        '压缩传输:tar、gzip、scp、sftp、md5sum',
+      ]},
+      { label: '1.3 运维：故障排查与维护', subj: '操作系统', items: [
+        '故障定位：日志→权限→配置→进程',
+        '常见故障：服务无法启动、磁盘满、CPU 高、OOM、网络不通',
+        '文件异常：权限错误、误删恢复',
+        '自动化：备份、巡检、日志切割',
+      ]},
+    ]
+  },
+  {
+    id: 'dm', label: '二、达梦数据库 (DM)', cls: 'dm',
+    sections: [
+      { label: '2.1 入门：基础认知与常用操作', subj: '数据库', items: [
+        '数据库架构：库、表、行、列、主键外键',
+        '达梦架构：实例、数据库、表空间',
+        '基础 SQL：SELECT、INSERT、UPDATE、DELETE',
+        '工具使用:disql 登录、spool、执行脚本',
+        '备份恢复:dexp 导出、dimp 导入',
+      ]},
+      { label: '2.2 进阶：SQL 高级、权限与约束', subj: '数据库', items: [
+        '高级 SQL：多表关联、子查询、GROUP BY、聚合函数',
+        '事务控制：COMMIT、ROLLBACK、行锁、表锁、死锁、阻塞',
+        '权限角色：系统权限、对象权限、角色管理',
+        '约束管理：主键、唯一、非空、外键',
+        '数据库对象：视图、索引、序列、触发器、存储过程',
+      ]},
+      { label: '2.3 运维：集群、备份恢复、故障处理', subj: '数据库', items: [
+        '数据迁移:DTS 工具',
+        '物理备份:dmnman、全量/增量/归档备份',
+        '高可用:DataWatch 主备、DMDSC 集群、DMHS 同步',
+        '故障处理：无法启动、连接失败、锁阻塞、慢 SQL',
+        '安全规范：密码策略、审计、权限最小化',
+      ]},
+    ]
+  },
+  {
+    id: 'd6', label: '三/四、D6.0 + SCADA', cls: 'd6',
+    sections: [
+      { label: '3.1 入门：架构认知与安装部署', subj: '基础平台', items: [
+        '核心模块：SCADA、FES、人机、平台',
+        '部署模式：主管、集群、分布式',
+        '安装步骤：平台、人机前置、FES 前置采集',
+        '基础配置:hosts、IP 映射、时间同步',
+        '启停命令:sys_ctl start/stop/restart',
+      ]},
+      { label: '3.2 进阶：平台功能、配置与权限', subj: '系统平台', items: [
+        '核心组件：消息总线、文件服务、对象化计算',
+        '权限管理：用户、用户组、遥控权限',
+        '责任区：定义、划分、绑定设备',
+        '界面配置：总控台、告警管理、菜单、颜色',
+        '日常巡检：服务、进程、端口、磁盘、CPU、内存、日志',
+        '配置故障:hosts 填误、节点名错误、权限不足',
+      ]},
+      { label: '3.3 运维：平台运检与故障处理', subj: '稳态监控', items: [
+        '数据故障：不刷新、采样异常、限值不生效',
+        '告警升级：无法登录、巡检失败、告警不弹窗',
+        '备份升级：配置备份、补丁安装、回退方案',
+        'SCADA 基础：采集→传输→处理→展示',
+        '数据类型：遥测、遥信、SOE、事件',
+        'FES 配置：规约配置、通道、装置、点表',
+        '遥控操作：操作票、五防、对点、执行确认',
+        '事故推图：智能告警、事故溯源、CIM 模型',
+      ]},
+    ]
+  }
+];
+
+const STATUSES = ['untouched', 'partial', 'done'];
+const STORAGE_KEY = 'd6_training_v1';
+const THEME_KEY = 'd6_training_theme';
+let CURRENT_FILTER = 'all';
+let AUTO_DERIVED = {};   // 从 progress_data.json 派生的默认状态（key → status）
+
+// ============ State 持久化 ============
+function getState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveState(s) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+}
+function makeKey(colId, secIdx, itemIdx) {
+  return `${colId}_${secIdx}_${itemIdx}`;
+}
+
+// 单 KP 当前状态：手动覆盖 > 自动派生 > untouched
+function getStatus(key) {
+  const s = getState();
+  if (s[key]?.status_manual) return s[key].status_manual;
+  return AUTO_DERIVED[key] || 'untouched';
+}
+function getWeak(key) {
+  const s = getState();
+  return !!s[key]?.weak;
+}
+
+function cycleStatus(key) {
+  const cur = getStatus(key);
+  const next = STATUSES[(STATUSES.indexOf(cur) + 1) % STATUSES.length];
+  const s = getState();
+  s[key] = { ...(s[key] || {}), status_manual: next };
+  saveState(s);
+  return next;
+}
+function toggleWeak(key) {
+  const s = getState();
+  s[key] = { ...(s[key] || {}), weak: !(s[key]?.weak) };
+  saveState(s);
+  return s[key].weak;
+}
+
+// ============ 自动派生（progress_data.json）============
+// 学科粒度：根据该学科 passed/total/attempted/wrong_pending 给该学科下所有 KP 一个默认
+// passed_rate ≥ 0.8 → done
+// 0 < passed_rate < 0.8 或 attempted > 0 → partial
+// 否则 untouched
+async function loadAutoDerive() {
+  try {
+    const r = await fetch('./progress_data.json', { cache: 'no-cache' });
+    if (!r.ok) throw new Error('progress_data.json ' + r.status);
+    const pj = await r.json();
+    const subj = pj.subjects || {};
+    const subj_status = {};
+    for (const [name, s] of Object.entries(subj)) {
+      const total = s.total || 0;
+      const passed = s.passed || 0;
+      const att = s.attempted || 0;
+      let st = 'untouched';
+      if (total > 0) {
+        const rate = passed / total;
+        if (rate >= 0.8) st = 'done';
+        else if (att > 0 || passed > 0) st = 'partial';
+      }
+      subj_status[name] = st;
+    }
+    // 注入 AUTO_DERIVED
+    AUTO_DERIVED = {};
+    DATA.forEach(col => {
+      col.sections.forEach((sec, si) => {
+        sec.items.forEach((_, ii) => {
+          const key = makeKey(col.id, si, ii);
+          AUTO_DERIVED[key] = subj_status[sec.subj] || 'untouched';
+        });
+      });
+    });
+    document.getElementById('src-info').textContent =
+      `数据源：localStorage + progress_data.json (${pj.generated || '未知日期'})`;
+  } catch (e) {
+    console.warn('progress_data.json 加载失败，全部默认 untouched:', e);
+    document.getElementById('src-info').textContent =
+      `数据源：localStorage 本地（progress_data.json 未加载：${e.message}）`;
+  }
+}
+
+// ============ Render ============
+function render() {
+  const container = document.getElementById('main-cols');
+  container.innerHTML = '';
+
+  DATA.forEach(col => {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'col ' + col.cls;
+
+    const header = document.createElement('div');
+    header.className = 'col-header';
+    header.innerHTML = `<div class="col-dot"></div><div class="col-title">${col.label}</div>`;
+    colDiv.appendChild(header);
+
+    col.sections.forEach((sec, si) => {
+      const secDiv = document.createElement('div');
+      secDiv.className = 'section';
+
+      const secLabel = document.createElement('div');
+      secLabel.className = 'section-label';
+      secLabel.textContent = sec.label;
+      secDiv.appendChild(secLabel);
+
+      let visible = 0;
+      sec.items.forEach((text, ii) => {
+        const key = makeKey(col.id, si, ii);
+        const status = getStatus(key);
+        const weak = getWeak(key);
+        const isManual = !!(getState()[key]?.status_manual);
+
+        // 筛选
+        if (CURRENT_FILTER === 'untouched' && status !== 'untouched') return;
+        if (CURRENT_FILTER === 'partial'   && status !== 'partial')   return;
+        if (CURRENT_FILTER === 'done'      && status !== 'done')      return;
+        if (CURRENT_FILTER === 'weak'      && !weak) return;
+
+        visible++;
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.dataset.status = status;
+        item.dataset.weak = weak ? 'true' : 'false';
+        item.dataset.key = key;
+
+        // src 标记：M=手动 / A=自动
+        const srcTag = isManual ? 'M' : (AUTO_DERIVED[key] ? 'A' : '');
+        item.innerHTML = `
+          <div class="item-dot"></div>
+          <div class="item-text">${text}</div>
+          <div class="item-weak">薄弱</div>
+          <div class="item-src" title="${isManual ? '手动覆盖' : '自动派生'}">${srcTag}</div>
+        `;
+
+        // 单击：cycle status（含手动覆盖标记）
+        item.addEventListener('click', (e) => {
+          // 防止双击触发单击
+          if (item._dblTimer) { clearTimeout(item._dblTimer); item._dblTimer = null; return; }
+          item._dblTimer = setTimeout(() => {
+            item._dblTimer = null;
+            const newStatus = cycleStatus(key);
+            item.dataset.status = newStatus;
+            item.querySelector('.item-src').textContent = 'M';
+            item.querySelector('.item-src').title = '手动覆盖';
+            updateStats();
+          }, 220);
+        });
+        // 双击：toggle weak
+        item.addEventListener('dblclick', (e) => {
+          e.preventDefault();
+          if (item._dblTimer) { clearTimeout(item._dblTimer); item._dblTimer = null; }
+          const isWeak = toggleWeak(key);
+          item.dataset.weak = isWeak ? 'true' : 'false';
+          updateStats();
+        });
+
+        secDiv.appendChild(item);
+      });
+
+      // 该 section 在当前筛选下有可见 item 才显示
+      if (visible > 0) colDiv.appendChild(secDiv);
+    });
+
+    container.appendChild(colDiv);
+  });
+
+  updateStats();
+}
+
+// ============ 统计 ============
+function updateStats() {
+  let total = 0, totalDone = 0;
+  DATA.forEach(col => {
+    let colTotal = 0, colDone = 0;
+    col.sections.forEach((sec, si) => {
+      sec.items.forEach((_, ii) => {
+        const key = makeKey(col.id, si, ii);
+        const status = getStatus(key);
+        colTotal++; total++;
+        if (status === 'done')    { colDone++;  totalDone++; }
+        else if (status === 'partial') { colDone += 0.5; totalDone += 0.5; }
+      });
+    });
+    const pct = colTotal ? Math.round(colDone / colTotal * 100) : 0;
+    document.getElementById(`pct-${col.id}`).textContent = pct + '%';
+    document.getElementById(`cnt-${col.id}`).textContent = `${(+colDone.toFixed(1))}/${colTotal}`;
+    document.getElementById(`bar-${col.id}`).style.width = pct + '%';
+  });
+  const tp = total ? Math.round(totalDone / total * 100) : 0;
+  document.getElementById('total-pct').textContent = tp + '%';
+}
+
+// ============ Filter 按钮 ============
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    CURRENT_FILTER = btn.dataset.filter;
+    render();
+  });
+});
+
+// ============ 主题切换 ============
+function applyTheme(mode) {
+  if (mode === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  else document.documentElement.removeAttribute('data-theme');
+  localStorage.setItem(THEME_KEY, mode);
+  document.getElementById('theme-toggle').textContent = mode === 'dark' ? '☀' : '◐';
+}
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  const cur = localStorage.getItem(THEME_KEY) || 'light';
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+});
+applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+
+// ============ 重置 ============
+document.getElementById('reset-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  if (confirm('清空本地手动覆盖（自动派生不受影响）？')) {
+    localStorage.removeItem(STORAGE_KEY);
+    render();
+  }
+});
+
+// ============ Init ============
+(async () => {
+  await loadAutoDerive();
+  render();
+})();
+</script>
+</body>
+</html>

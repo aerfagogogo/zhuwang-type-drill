@@ -733,26 +733,23 @@ function render() {
 
     const header = document.createElement('div');
     header.className = 'col-header';
-    header.innerHTML = `<div class="col-dot"></div><div class="col-title">${col.label}</div>`;
+    header.innerHTML = `
+      <div class="col-dot"></div>
+      <div class="col-title">${col.label}</div>
+      <div class="col-count">${col.q_total} 题 · ${col.kp_total} KP</div>
+    `;
     colDiv.appendChild(header);
 
-    let lastChapter = null;
     col.sections.forEach(sec => {
-      // 当章节切换时插入分隔（D6 组有多 category，需要区分）
-      if (sec.chapter !== lastChapter && col.id === 'd6') {
-        const cd = document.createElement('div');
-        cd.className = 'chapter-divider';
-        cd.textContent = sec.chapter;
-        colDiv.appendChild(cd);
-        lastChapter = sec.chapter;
-      }
-
       const secDiv = document.createElement('div');
       secDiv.className = 'section';
 
       const secLabel = document.createElement('div');
       secLabel.className = 'section-label';
-      secLabel.textContent = `${sec.code} ${sec.label}`;
+      secLabel.innerHTML = `
+        <span>${sec.code} ${sec.label}</span>
+        <span class="sec-q-sum">${sec.q_total} 题</span>
+      `;
       secDiv.appendChild(secLabel);
 
       let visible = 0;

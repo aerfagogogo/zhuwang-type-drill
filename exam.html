@@ -567,18 +567,27 @@ function startDrillSession(){
 
 // ---- 考点作用域会话 ----
 function startScopeSession(){
+  // 读用户当前选择的模式（默认 train，探索模式智能默认前面已处理）
+  MODE=$('mode').value||'train';
+  localStorage.setItem('examMode',MODE);
+  // 探索模式 SUBJ 加前缀，跟训练模式存档分开
+  if(MODE==='explore')SUBJ='[探索]'+SUBJ;
+
   const all=loadState();
   let st=all[SUBJ];
   // 若 QS 长度变了就重建（题集更新了）
   if(!st||!st.entries||st.entries.length!==QS.length){
     st={
-      subject:SUBJ,mode:'train',started_at:new Date().toISOString(),idx:0,
+      subject:SUBJ,mode:MODE,started_at:new Date().toISOString(),idx:0,
       entries:QS.map(q=>({id:q.id,mark:'',phase:'answering',user_answer:'',
-        verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[],notes:'',images:[]})),
+        verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[],
+        notes:'',images:[],notes_stack:[]})),
     };
+  }else if(st.mode&&st.mode!==MODE){
+    // 恢复以前的会话模式（不允许中途切换）
+    MODE=st.mode;
   }
   STATE=st;
-  MODE='train';
   saveState();
   $('setup').style.display='none';$('done').style.display='none';
   $('trainer').style.display='';

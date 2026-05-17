@@ -307,11 +307,12 @@
     color: var(--accent-dm);
   }
 
-  /* ── Item row（grid 布局保证 q 数列上下对齐）── */
+  /* ── Item row（grid 布局保证 q 数列上下对齐，src 紧贴 badge）── */
   .item {
     display: grid;
-    grid-template-columns: 8px 38px 1fr 28px 14px 18px;
-    gap: 6px;
+    grid-template-columns: 8px 38px 1fr 26px 12px 14px;
+    /* dot | code | text | q-badge | src(M/A) | 弱 */
+    gap: 4px;
     align-items: center;
     padding: 6px 8px;
     border-radius: 6px;

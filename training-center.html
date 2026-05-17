@@ -223,27 +223,25 @@
   }
   .tip { margin-left: auto; }
 
-  /* ── Legend ── */
-  .legend {
-    display: flex;
-    gap: 18px;
-    margin-bottom: 20px;
-    padding: 10px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    width: fit-content;
-    flex-wrap: wrap;
+  /* ── Legend (内联在 filter-bar 里) ── */
+  .legend-inline {
+    display: inline-flex;
+    gap: 12px;
+    padding: 4px 10px;
+    margin-left: 12px;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
   }
   .legend-item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 11px;
+    gap: 5px;
+    font-size: 10px;
     color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
   }
   .legend-dot {
-    width: 7px; height: 7px; border-radius: 50%;
+    width: 6px; height: 6px; border-radius: 50%; display: inline-block;
   }
   .legend-dot.done    { background: var(--done); }
   .legend-dot.partial { background: var(--partial); }

@@ -628,7 +628,7 @@ function startOrResume(){
       subject:SUBJ,mode:MODE,started_at:new Date().toISOString(),idx:0,
       entries:QS.map(q=>({id:q.id,mark:'',phase:'answering',user_answer:'',
         verdict:null,wrong_points:[],drills:[],drill_reps:[],questions:[],
-        notes:'',images:[]})),
+        notes:'',images:[],notes_stack:[]})),
     };
     saveState();
   }else if(STATE.mode&&STATE.mode!==MODE){

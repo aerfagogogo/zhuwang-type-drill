@@ -624,6 +624,12 @@ function isCVSubjFromQuestions(questions) {
   return CV_MODE_SUBJECTS.has(folder);
 }
 
+function isAnkiSubjFromProgress(subjName) {
+  if (!PROGRESS || !PROGRESS.subjects) return false;
+  const s = PROGRESS.subjects[subjName];
+  return s && s.source === 'anki';
+}
+
 // ── 进度聚合 ──────────────────────────────────────────────────────
 // 给一组题，返回 {total, attempted, passed, wrong_pending, source}
 function aggregateProgress(questions) {

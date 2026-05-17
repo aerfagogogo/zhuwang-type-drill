@@ -713,14 +713,7 @@ function render() {
     const colDiv = document.createElement('div');
     colDiv.className = 'col ' + col.cls;
 
-    const header = document.createElement('div');
-    header.className = 'col-header';
-    header.innerHTML = `
-      <div class="col-dot"></div>
-      <div class="col-title">${col.label}</div>
-      <div class="col-count">${col.q_total}/${col.kp_total} KP</div>
-    `;
-    colDiv.appendChild(header);
+    // 不再渲染列头（顶部卡已有大类信息+数量）
 
     col.sections.forEach(sec => {
       const secDiv = document.createElement('div');

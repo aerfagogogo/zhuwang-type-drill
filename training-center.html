@@ -431,6 +431,9 @@
 <!-- Main columns -->
 <div class="columns" id="main-cols"></div>
 
+<!-- outline 数据 fallback：file:// 协议下 fetch 会被 CORS 拦，<script src> 不会 -->
+<script src="./outline.js" onerror="console.warn('outline.js 未生成，fallback 用 fetch outline.json')"></script>
+
 <div class="footer-bar">
   <span id="src-info">数据源：localStorage（本地）+ progress_data.json 派生</span>
   <span>

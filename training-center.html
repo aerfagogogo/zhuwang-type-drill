@@ -470,15 +470,28 @@
 </div>
 
 <script>
-// ============ KP 数据：fetch outline.json（SSOT）============
-// 加载完成后回填到 DATA。DATA 结构兼容原版 render 逻辑：
-//   { id, label, cls, sections: [{ label, subj, items: [text], kps: [{tag, ...}] }] }
-let DATA = [];
-const CLS_MAP = { linux: 'linux', dm: 'dm', d6: 'd6' };
+// ============ 数据 SSOT ============
+// outline.json v0.2: 8 category × N section × N KP，每 KP 含 code/name/desc
+// 训练中心顶部按"3 大组"展示：linux / dm / d6（D6 合并多个 category）
+// Tag 命名：单层 `KP::<末级KP名>`（用户偏好不嵌套）
+let OUTLINE = null;       // 原始 outline 对象
+let DATA = [];             // 重组后的 3 大组：[{id,label,cls,cats,sections,subjects}]
+let QIDX = null;           // window.QUESTIONS_INDEX (按 KP code 聚合)
+let CAT_STATS = {};        // 组级统计 {linux: {total,attempted,passed,wrong}}
+
+const GROUPS = [
+  { id: 'linux', label: '一、Linux 系统基础',         cls: 'linux', cats: ['linux'] },
+  { id: 'dm',    label: '二、达梦数据库 (DM)',         cls: 'dm',    cats: ['dm'] },
+  { id: 'd6',    label: '三~八、D6.0 平台 + SCADA + 网分 + AGC',  cls: 'd6',
+                 cats: ['d6plat','scada','alarm','netan','agcavc','dnet'] }
+];
+
+function kpTag(kp) {
+  const prefix = (OUTLINE && OUTLINE.tag_prefix) || 'KP::';
+  return `${prefix}${kp.name}`;
+}
 
 async function loadOutline() {
-  // 优先：<script src="outline.js"> 已注入 window.OUTLINE_DATA（绕 CORS）
-  // 兜底：fetch outline.json（线上 / http server 时用）
   let o;
   if (window.OUTLINE_DATA) {
     o = window.OUTLINE_DATA;
@@ -487,27 +500,38 @@ async function loadOutline() {
     if (!r.ok) throw new Error('outline.json ' + r.status);
     o = await r.json();
   }
-  DATA = o.categories.map(cat => ({
-    id: cat.id,
-    label: cat.name,
-    cls: CLS_MAP[cat.id] || cat.id,
-    tag_segment: cat.tag_segment,
-    fallback_subject: cat.fallback_subject,
-    sections: cat.sections.map(sec => ({
-      id: sec.id,
-      label: sec.name,
-      tag_segment: sec.tag_segment,
-      subj: cat.fallback_subject,
-      kps: sec.kps,
-      items: sec.kps.map(kp => `${kp.name}：${kp.desc}`)
-    }))
-  }));
-  return o;
-}
+  OUTLINE = o;
+  QIDX = window.QUESTIONS_INDEX || { total: 0, by_kp: {}, by_subj: {} };
 
-// 拼 KP 完整 tag：KP::<学科>::<阶段>::<考点名>
-function kpTag(catTag, secTag, kpName) {
-  return `KP::${catTag}::${secTag}::${kpName}`;
+  // 按 GROUPS 重组 categories
+  DATA = GROUPS.map(g => {
+    const cats = o.categories.filter(c => g.cats.includes(c.id));
+    const sections = [];
+    cats.forEach(c => {
+      c.sections.forEach(sec => {
+        sections.push({
+          code: sec.code,
+          label: sec.name,
+          chapter: c.ordinal + '、' + c.name,
+          kps: sec.kps.map(kp => ({
+            code: kp.code,
+            name: kp.name,
+            desc: kp.desc,
+            tag: kpTag(kp),
+            q_count: (QIDX.by_kp[kp.code] || []).length,
+          }))
+        });
+      });
+    });
+    return {
+      id: g.id,
+      label: g.label,
+      cls: g.cls,
+      subjects: [...new Set(cats.flatMap(c => c.subjects || []))],
+      sections
+    };
+  });
+  return o;
 }
 
 const STATUSES = ['untouched', 'partial', 'done'];

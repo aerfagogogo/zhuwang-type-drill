@@ -738,25 +738,32 @@ function render() {
 }
 
 // ============ 统计 ============
+// 顶部卡片用 updateOverviewCards 单独算（混合题级数据 + KP 级数据）
+// 总完成率：题级（passed/total）跨大类汇总；没题库数据时退回 KP 维度
 function updateStats() {
-  let total = 0, totalDone = 0;
-  DATA.forEach(col => {
-    let colTotal = 0, colDone = 0;
-    col.sections.forEach((sec, si) => {
-      sec.items.forEach((_, ii) => {
-        const key = makeKey(col.id, si, ii);
-        const status = getStatus(key);
-        colTotal++; total++;
-        if (status === 'done')    { colDone++;  totalDone++; }
-        else if (status === 'partial') { colDone += 0.5; totalDone += 0.5; }
-      });
-    });
-    const pct = colTotal ? Math.round(colDone / colTotal * 100) : 0;
-    document.getElementById(`pct-${col.id}`).textContent = pct + '%';
-    document.getElementById(`cnt-${col.id}`).textContent = `${(+colDone.toFixed(1))}/${colTotal}`;
-    document.getElementById(`bar-${col.id}`).style.width = pct + '%';
+  updateOverviewCards();
+
+  let totQ = 0, totPassed = 0;
+  Object.values(CAT_STATS || {}).forEach(a => {
+    totQ      += a.total || 0;
+    totPassed += a.passed || 0;
   });
-  const tp = total ? Math.round(totalDone / total * 100) : 0;
+
+  let tp = 0;
+  if (totQ > 0) {
+    tp = Math.round(totPassed / totQ * 100);
+  } else {
+    // 退回 KP 维度
+    let kpTotal = 0, kpDone = 0;
+    DATA.forEach(cat => cat.sections.forEach((sec, si) => sec.items.forEach((_, ii) => {
+      const k = makeKey(cat.id, si, ii);
+      const st = getStatus(k);
+      kpTotal++;
+      if (st === 'done') kpDone++;
+      else if (st === 'partial') kpDone += 0.5;
+    })));
+    tp = kpTotal ? Math.round(kpDone / kpTotal * 100) : 0;
+  }
   document.getElementById('total-pct').textContent = tp + '%';
 }
 

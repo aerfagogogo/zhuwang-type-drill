@@ -910,7 +910,7 @@ function render() {
 // 顶部卡片用 updateOverviewCards 单独算（混合题级数据 + KP 级数据）
 // 总完成率：题级（passed/total）跨大类汇总；没题库数据时退回 KP 维度
 function updateStats() {
-  // 总完成率 = 所有 category 的题级 passed 总和 / total 总和
+  updateOverviewCards();
   const subjStat = (window.PROGRESS_DATA && window.PROGRESS_DATA.subjects) || {};
   let totQ = 0, totPassed = 0;
   DATA.forEach(cat => (cat.subjects || []).forEach(name => {
@@ -919,7 +919,6 @@ function updateStats() {
     totQ      += s.total || 0;
     totPassed += s.passed || 0;
   }));
-
   let tp = 0;
   if (totQ > 0) {
     tp = Math.round(totPassed / totQ * 100);

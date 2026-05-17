@@ -752,27 +752,21 @@ function renderOutlineTree() {
     // ── 学科 header ──
     const subjHeader = document.createElement('div');
     subjHeader.className = 'subj-header';
-    const cvTag = isCV ? '<span class="cv-mode-tag" title="CV 模式学科：在终端 CV 里训练，网页只展示进度">CV</span>' : '';
-    const subjBtnHTML = isCV
-      ? `<span class="sm" style="opacity:.45;cursor:default;font-size:11px" title="CV 模式学科，请在终端 CV 里训练">仅进度</span>`
-      : `<button class="sm js-subj-btn" ${subj.q_count === 0 ? 'disabled' : ''}>全科</button>`;
+    const cvTag = isCV ? '<span class="cv-mode-tag" title="CV 模式学科：训练请去终端 CV；网页可浏览题目和进度">CV</span>' : '';
     subjHeader.innerHTML = `
       <span class="subj-dot ${escH(subj.key)}"></span>
       <span class="subj-name">${escH(subj.name)}</span>${cvTag}
       <span class="subj-count">${subj.q_count}题</span>
       ${progressBadgeHTML(subjProg)}
-      ${subjBtnHTML}
+      <button class="sm js-subj-btn" ${subj.q_count === 0 ? 'disabled' : ''}>全科</button>
       <span class="subj-chevron">▶</span>
     `;
     subjHeader.addEventListener('click', () => block.classList.toggle('open'));
-    // 全科按钮（仅非 CV 模式学科）
     const subjBtn = subjHeader.querySelector('.js-subj-btn');
-    if (subjBtn) {
-      subjBtn.addEventListener('click', (ev) => {
-        ev.stopPropagation();
-        gotoScope(subj.name + ' 全科', collectSubjQs(subj.name));
-      });
-    }
+    subjBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      gotoScope(subj.name + ' 全科', collectSubjQs(subj.name));
+    });
     block.appendChild(subjHeader);
 
     // ── 章节 body ──

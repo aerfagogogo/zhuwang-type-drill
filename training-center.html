@@ -689,21 +689,21 @@ async function loadAutoDerive() {
 }
 
 function updateOverviewCards() {
-  DATA.forEach(grp => {
-    const id = grp.id;
+  OVERVIEW_GROUPS.forEach(g => {
+    const id = g.id;
     const agg = CAT_STATS[id] || { total: 0, attempted: 0, passed: 0, wrong: 0 };
 
+    // 该 group 覆盖的 categories 下所有 KP 状态聚合
+    const cats = DATA.filter(c => g.cats.includes(c.id));
     let kpDone = 0, kpPartial = 0, kpWeak = 0, kpTotal = 0;
-    grp.sections.forEach(sec => {
-      sec.kps.forEach(kp => {
-        const k = makeKey(kp);
-        const st = getStatus(k);
-        kpTotal++;
-        if (st === 'done') kpDone++;
-        else if (st === 'partial') kpPartial++;
-        if (getWeak(k)) kpWeak++;
-      });
-    });
+    cats.forEach(c => c.sections.forEach(sec => sec.kps.forEach(kp => {
+      const k = makeKey(kp);
+      const st = getStatus(k);
+      kpTotal++;
+      if (st === 'done') kpDone++;
+      else if (st === 'partial') kpPartial++;
+      if (getWeak(k)) kpWeak++;
+    })));
 
     const pct = agg.total > 0
       ? Math.round(agg.passed / agg.total * 100)

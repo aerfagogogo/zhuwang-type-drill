@@ -706,6 +706,13 @@ document.getElementById('reset-link').addEventListener('click', (e) => {
 
 // ============ Init ============
 (async () => {
+  try {
+    await loadOutline();
+  } catch (e) {
+    document.getElementById('main-cols').innerHTML =
+      `<div style="padding:20px;color:var(--weak)">outline.json 加载失败：${e.message}</div>`;
+    return;
+  }
   await loadAutoDerive();
   render();
 })();

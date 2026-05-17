@@ -687,7 +687,26 @@ function render() {
     const colDiv = document.createElement('div');
     colDiv.className = 'col ' + col.cls;
 
-    // 不再渲染列头（顶部卡已有大类信息+数量）
+    // 每个大类自己的标题块：标题 + 完成率 + 题数/KP数/已练/薄弱
+    const stats = getCategoryStats(col);
+    const header = document.createElement('div');
+    header.className = 'cat-header ' + col.cls;
+    const metaParts = [
+      stats.agg.total > 0 ? `${stats.agg.passed}/${stats.agg.total}` : `${col.q_total}`,
+      `${stats.kpTotal} KP`,
+    ];
+    if (stats.agg.attempted > 0) metaParts.push(`已练 ${stats.agg.attempted}`);
+    if (stats.agg.wrong > 0 || stats.kpWeak > 0) metaParts.push(`⚠ ${stats.agg.wrong + stats.kpWeak}`);
+    header.innerHTML = `
+      <div class="cat-title-row">
+        <span class="cat-dot"></span>
+        <span class="cat-title">${col.label}</span>
+        <span class="cat-pct">${stats.pct}%</span>
+      </div>
+      <div class="cat-meta">${metaParts.join(' · ')}</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:${stats.pct}%"></div></div>
+    `;
+    colDiv.appendChild(header);
 
     col.sections.forEach(sec => {
       const secDiv = document.createElement('div');

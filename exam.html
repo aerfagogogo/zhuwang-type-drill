@@ -115,7 +115,13 @@ select{padding:8px 10px;cursor:pointer}
 .img-thumb .rm{position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);color:#fff;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:13px;padding:0;line-height:1}
 .img-thumb .rm:hover{background:var(--red)}
 
-/* ===== 速记栈（探索模式 v2 · 2026-05-17） ===== */
+/* ===== 速记栈（探索模式 v2 · 2026-05-17） =====
+   ⚠️ 已废弃 2026-05-18：GUI 学科速记/笔记走 Anki 实操题::{学科} 的 Back 字段，
+   不再走网页速记栈。下面所有 .note-* 样式、notesStackList DOM、
+   addNoteEntry/removeNoteEntry/renderNotesStack/migrateLegacyNotes 等 JS
+   函数已不再有触发路径（探索模式 option 删除 + 智能切换逻辑删除），
+   保留代码仅为防止 1300 行文件改动过大引入 bug。后续清理可一并删除。
+*/
 .note-stack-head{display:flex;align-items:center;gap:8px;font-size:13px;color:#64b5f6;margin:10px 0 6px}
 .note-stack-head .count{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .note-entry{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:6px;font-size:12px}

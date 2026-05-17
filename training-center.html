@@ -580,11 +580,8 @@ function toggleWeak(key) {
 }
 
 // ============ 自动派生（progress_data.json）============
-// 一个大类（linux/dm/d6）可绑多个后台学科（outline.json category.subjects）。
-// 聚合该大类所有学科的 total/attempted/passed/wrong_pending → 卡片显示
-// KP 默认状态：按该大类聚合后的 passed_rate 算
-//   ≥ 0.8 → done · 有 attempted → partial · 都没 → untouched
-let CAT_STATS = {}; // { linux: {total, attempted, passed, wrong}, dm: {...}, d6: {...} }
+// 大组（linux/dm/d6）→ 多个后台学科聚合 → 题级统计
+// KP 默认 status：按该组 passed_rate 给所有 KP 同一默认（粗）；以后 AnkiConnect 接上后改 KP 粒度
 
 async function loadAutoDerive() {
   try {
@@ -593,41 +590,39 @@ async function loadAutoDerive() {
     const pj = await r.json();
     const subjStat = pj.subjects || {};
 
-    // 1. 按大类聚合
     CAT_STATS = {};
-    DATA.forEach(cat => {
-      const subjs = cat.subjects || (cat.fallback_subject ? [cat.fallback_subject] : []);
+    DATA.forEach(grp => {
       const agg = { total: 0, attempted: 0, passed: 0, wrong: 0 };
-      subjs.forEach(name => {
+      (grp.subjects || []).forEach(name => {
         const s = subjStat[name];
         if (!s) return;
-        agg.total      += s.total || 0;
-        agg.attempted  += s.attempted || 0;
-        agg.passed     += s.passed || 0;
-        agg.wrong      += s.wrong_pending || 0;
+        agg.total     += s.total || 0;
+        agg.attempted += s.attempted || 0;
+        agg.passed    += s.passed || 0;
+        agg.wrong     += s.wrong_pending || 0;
       });
-      CAT_STATS[cat.id] = agg;
+      CAT_STATS[grp.id] = agg;
     });
 
-    // 2. KP 默认 status：按大类 passed_rate
+    // KP 默认 status：组级 passed_rate；KP 有题数=0 直接 untouched
     AUTO_DERIVED = {};
-    DATA.forEach(cat => {
-      const agg = CAT_STATS[cat.id];
-      let st = 'untouched';
+    DATA.forEach(grp => {
+      const agg = CAT_STATS[grp.id];
+      let grpDefault = 'untouched';
       if (agg.total > 0) {
         const rate = agg.passed / agg.total;
-        if (rate >= 0.8) st = 'done';
-        else if (agg.attempted > 0 || agg.passed > 0) st = 'partial';
+        if (rate >= 0.8) grpDefault = 'done';
+        else if (agg.attempted > 0 || agg.passed > 0) grpDefault = 'partial';
       }
-      cat.sections.forEach((sec, si) => {
-        sec.items.forEach((_, ii) => {
-          AUTO_DERIVED[makeKey(cat.id, si, ii)] = st;
+      grp.sections.forEach(sec => {
+        sec.kps.forEach(kp => {
+          AUTO_DERIVED[makeKey(kp)] = kp.q_count > 0 ? grpDefault : 'untouched';
         });
       });
     });
 
     document.getElementById('src-info').textContent =
-      `数据源：localStorage + progress_data.json (${pj.generated || '?'})`;
+      `数据源：localStorage + progress_data.json (${pj.generated || '?'}) + questions_index (${QIDX.total} 题)`;
   } catch (e) {
     console.warn('progress_data.json 加载失败:', e);
     document.getElementById('src-info').textContent =
@@ -635,17 +630,15 @@ async function loadAutoDerive() {
   }
 }
 
-// 把映射好的学科信息更新到顶部卡片（题数/已练/未过关）
 function updateOverviewCards() {
-  DATA.forEach(cat => {
-    const id = cat.id;
+  DATA.forEach(grp => {
+    const id = grp.id;
     const agg = CAT_STATS[id] || { total: 0, attempted: 0, passed: 0, wrong: 0 };
 
-    // KP 数（手动+派生算法计 done/partial）
     let kpDone = 0, kpPartial = 0, kpWeak = 0, kpTotal = 0;
-    cat.sections.forEach((sec, si) => {
-      sec.items.forEach((_, ii) => {
-        const k = makeKey(id, si, ii);
+    grp.sections.forEach(sec => {
+      sec.kps.forEach(kp => {
+        const k = makeKey(kp);
         const st = getStatus(k);
         kpTotal++;
         if (st === 'done') kpDone++;
@@ -654,7 +647,6 @@ function updateOverviewCards() {
       });
     });
 
-    // 顶部大数 = 题完成率（passed / total）；total=0 时退回 KP 完成率
     const pct = agg.total > 0
       ? Math.round(agg.passed / agg.total * 100)
       : (kpTotal > 0 ? Math.round((kpDone + kpPartial * 0.5) / kpTotal * 100) : 0);
@@ -664,14 +656,11 @@ function updateOverviewCards() {
       agg.total > 0 ? `${agg.passed}/${agg.total} 题` : `${kpTotal} KP`;
     document.getElementById(`bar-${id}`).style.width = pct + '%';
 
-    // Meta 行
     document.getElementById(`meta-${id}-kp`).textContent = `${kpTotal} KP`;
     document.getElementById(`meta-${id}-att`).textContent =
       agg.total > 0 ? `已练 ${agg.attempted}` : '—';
-    const weakText = (agg.wrong > 0 || kpWeak > 0)
-      ? `⚠ ${agg.wrong + kpWeak}`
-      : '';
-    document.getElementById(`meta-${id}-weak`).textContent = weakText;
+    document.getElementById(`meta-${id}-weak`).textContent =
+      (agg.wrong > 0 || kpWeak > 0) ? `⚠ ${agg.wrong + kpWeak}` : '';
   });
 }
 

@@ -808,23 +808,18 @@ function renderOutlineTree() {
         const icon = PHASE_ICON[kp.phase] || '⬜';
         const countCls = kp.q_count === 0 ? 'zero' : '';
         const kpProg = aggregateProgress(kp.questions);
-        const kpBtnHTML = isCV
-          ? `<span class="sm" style="opacity:.45;cursor:default;font-size:11px">—</span>`
-          : `<button class="sm primary js-kp-btn" ${kp.q_count === 0 ? 'disabled' : ''}>进</button>`;
         kpRow.innerHTML = `
           <span class="kp-phase">${icon}</span>
           <span class="kp-id">${escH(kp.id)}</span>
           <span class="kp-name">${escH(kp.name)}</span>
           <span class="kp-count ${countCls}">${kp.q_count}</span>
           ${progressBadgeHTML(kpProg)}
-          ${kpBtnHTML}
+          <button class="sm primary js-kp-btn" ${kp.q_count === 0 ? 'disabled' : ''}>进</button>
         `;
         const kpBtn = kpRow.querySelector('.js-kp-btn');
-        if (kpBtn) {
-          kpBtn.addEventListener('click', () => {
-            gotoScope(kp.id + ' ' + kp.name, kp.questions);
-          });
-        }
+        kpBtn.addEventListener('click', () => {
+          gotoScope(kp.id + ' ' + kp.name, kp.questions);
+        });
         kpsDiv.appendChild(kpRow);
       }
 

@@ -729,23 +729,35 @@ function renderOutlineTree() {
     const block = document.createElement('div');
     block.className = 'subj-block open';
 
+    // 收集学科所有题，判 CV 模式 + 算总进度
+    const subjAllQs = collectSubjQs(subj.name);
+    const subjProg = aggregateProgress(subjAllQs);
+    const isCV = isCVSubjFromQuestions(subjAllQs);
+
     // ── 学科 header ──
     const subjHeader = document.createElement('div');
     subjHeader.className = 'subj-header';
+    const cvTag = isCV ? '<span class="cv-mode-tag" title="CV 模式学科：在终端 CV 里训练，网页只展示进度">CV</span>' : '';
+    const subjBtnHTML = isCV
+      ? `<span class="sm" style="opacity:.45;cursor:default;font-size:11px" title="CV 模式学科，请在终端 CV 里训练">仅进度</span>`
+      : `<button class="sm js-subj-btn" ${subj.q_count === 0 ? 'disabled' : ''}>全科</button>`;
     subjHeader.innerHTML = `
       <span class="subj-dot ${escH(subj.key)}"></span>
-      <span class="subj-name">${escH(subj.name)}</span>
+      <span class="subj-name">${escH(subj.name)}</span>${cvTag}
       <span class="subj-count">${subj.q_count}题</span>
-      <button class="sm js-subj-btn" ${subj.q_count === 0 ? 'disabled' : ''}>全科</button>
+      ${progressBadgeHTML(subjProg)}
+      ${subjBtnHTML}
       <span class="subj-chevron">▶</span>
     `;
     subjHeader.addEventListener('click', () => block.classList.toggle('open'));
-    // 全科按钮
+    // 全科按钮（仅非 CV 模式学科）
     const subjBtn = subjHeader.querySelector('.js-subj-btn');
-    subjBtn.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      gotoScope(subj.name + ' 全科', collectSubjQs(subj.name));
-    });
+    if (subjBtn) {
+      subjBtn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        gotoScope(subj.name + ' 全科', collectSubjQs(subj.name));
+      });
+    }
     block.appendChild(subjHeader);
 
     // ── 章节 body ──

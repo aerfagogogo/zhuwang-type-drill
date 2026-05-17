@@ -350,6 +350,52 @@
   }
   .item:hover .item-src { opacity: 1; }
 
+  /* 编号（1.1.10 这种） */
+  .item-code {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    color: var(--text-muted);
+    min-width: 36px;
+    flex-shrink: 0;
+  }
+
+  /* 题数徽章 */
+  .q-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--accent-dm);
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 3px;
+    padding: 0 5px;
+    min-width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .q-badge.q-zero {
+    color: var(--text-muted);
+    background: transparent;
+    border-color: var(--border);
+  }
+  html[data-theme="dark"] .q-badge {
+    background: rgba(96, 165, 250, 0.1);
+    border-color: rgba(96, 165, 250, 0.25);
+  }
+
+  /* D6 组的章节分隔（不同 category 之间） */
+  .chapter-divider {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    font-weight: 700;
+    margin: 14px 0 6px;
+    padding: 4px 8px;
+    background: var(--surface);
+    border-left: 2px solid var(--accent-d6);
+    border-radius: 0 4px 4px 0;
+  }
+
   /* ── Footer bar ── */
   .footer-bar {
     margin-top: 32px;

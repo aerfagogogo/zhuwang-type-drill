@@ -55,7 +55,7 @@
     {
       "id": "dm",
       "ordinal": "二",
-      "name": "达梦数据库 (DM)",
+      "name": "商用数据库",
       "subjects": ["数据库"],
       "sections": [
         {

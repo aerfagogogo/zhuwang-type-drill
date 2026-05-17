@@ -678,23 +678,22 @@ function render() {
     header.innerHTML = `<div class="col-dot"></div><div class="col-title">${col.label}</div>`;
     colDiv.appendChild(header);
 
-    col.sections.forEach((sec, si) => {
+    col.sections.forEach(sec => {
       const secDiv = document.createElement('div');
       secDiv.className = 'section';
 
       const secLabel = document.createElement('div');
       secLabel.className = 'section-label';
-      secLabel.textContent = sec.label;
+      secLabel.textContent = `${sec.code} ${sec.label}`;
       secDiv.appendChild(secLabel);
 
       let visible = 0;
-      sec.items.forEach((text, ii) => {
-        const key = makeKey(col.id, si, ii);
+      sec.kps.forEach(kp => {
+        const key = makeKey(kp);
         const status = getStatus(key);
         const weak = getWeak(key);
         const isManual = !!(getState()[key]?.status_manual);
 
-        // 筛选
         if (CURRENT_FILTER === 'untouched' && status !== 'untouched') return;
         if (CURRENT_FILTER === 'partial'   && status !== 'partial')   return;
         if (CURRENT_FILTER === 'done'      && status !== 'done')      return;
@@ -706,42 +705,44 @@ function render() {
         item.dataset.status = status;
         item.dataset.weak = weak ? 'true' : 'false';
         item.dataset.key = key;
+        item.title = `${kp.tag}  ·  ${kp.desc}`;
 
-        // src 标记：M=手动 / A=自动
-        const srcTag = isManual ? 'M' : (AUTO_DERIVED[key] ? 'A' : '');
+        const qCnt = kp.q_count;
+        const qBadge = qCnt > 0
+          ? `<span class="q-badge">${qCnt}</span>`
+          : `<span class="q-badge q-zero">0</span>`;
+        const srcTag = isManual ? 'M' : (qCnt > 0 ? 'A' : '');
         item.innerHTML = `
           <div class="item-dot"></div>
-          <div class="item-text">${text}</div>
-          <div class="item-weak">薄弱</div>
+          <div class="item-code">${kp.code}</div>
+          <div class="item-text">${kp.name}</div>
+          ${qBadge}
+          <div class="item-weak">弱</div>
           <div class="item-src" title="${isManual ? '手动覆盖' : '自动派生'}">${srcTag}</div>
         `;
 
-        // 单击：cycle status（含手动覆盖标记）
-        item.addEventListener('click', (e) => {
-          // 防止双击触发单击
+        item.addEventListener('click', () => {
           if (item._dblTimer) { clearTimeout(item._dblTimer); item._dblTimer = null; return; }
           item._dblTimer = setTimeout(() => {
             item._dblTimer = null;
-            const newStatus = cycleStatus(key);
-            item.dataset.status = newStatus;
+            const ns = cycleStatus(key);
+            item.dataset.status = ns;
             item.querySelector('.item-src').textContent = 'M';
             item.querySelector('.item-src').title = '手动覆盖';
             updateStats();
           }, 220);
         });
-        // 双击：toggle weak
-        item.addEventListener('dblclick', (e) => {
+        item.addEventListener('dblclick', e => {
           e.preventDefault();
           if (item._dblTimer) { clearTimeout(item._dblTimer); item._dblTimer = null; }
-          const isWeak = toggleWeak(key);
-          item.dataset.weak = isWeak ? 'true' : 'false';
+          const w = toggleWeak(key);
+          item.dataset.weak = w ? 'true' : 'false';
           updateStats();
         });
 
         secDiv.appendChild(item);
       });
 
-      // 该 section 在当前筛选下有可见 item 才显示
       if (visible > 0) colDiv.appendChild(secDiv);
     });
 

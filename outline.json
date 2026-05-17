@@ -54,6 +54,7 @@
       "name": "二、达梦数据库 (DM)",
       "tag_segment": "DM",
       "fallback_subject": "数据库",
+      "subjects": ["数据库"],
       "sections": [
         {
           "id": "dm_intro",

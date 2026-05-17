@@ -767,31 +767,48 @@ async function loadAutoDerive() {
   }
 }
 
-// 算单个 category 的统计（题级 from progress_data + KP 级 from localStorage）
-function getCategoryStats(cat) {
+// 顶部 3 卡：按 OVERVIEW_GROUPS 聚合
+function updateOverviewCards() {
   const subjStat = (window.PROGRESS_DATA && window.PROGRESS_DATA.subjects) || {};
-  const agg = { total: 0, attempted: 0, passed: 0, wrong: 0 };
-  (cat.subjects || []).forEach(name => {
-    const s = subjStat[name];
-    if (!s) return;
-    agg.total     += s.total || 0;
-    agg.attempted += s.attempted || 0;
-    agg.passed    += s.passed || 0;
-    agg.wrong     += s.wrong_pending || 0;
+  OVERVIEW_GROUPS.forEach(g => {
+    const id = g.id;
+    const cats = DATA.filter(c => g.cats.includes(c.id));
+    const subjs = [...new Set(cats.flatMap(c => c.subjects))];
+    const agg = { total: 0, attempted: 0, passed: 0, wrong: 0 };
+    subjs.forEach(name => {
+      const s = subjStat[name];
+      if (!s) return;
+      agg.total     += s.total || 0;
+      agg.attempted += s.attempted || 0;
+      agg.passed    += s.passed || 0;
+      agg.wrong     += s.wrong_pending || 0;
+    });
+
+    let kpDone = 0, kpPartial = 0, kpWeak = 0, kpTotal = 0;
+    cats.forEach(c => c.sections.forEach(sec => sec.kps.forEach(kp => {
+      const k = makeKey(kp);
+      const st = getStatus(k);
+      kpTotal++;
+      if (st === 'done') kpDone++;
+      else if (st === 'partial') kpPartial++;
+      if (getWeak(k)) kpWeak++;
+    })));
+
+    const pct = agg.total > 0
+      ? Math.round(agg.passed / agg.total * 100)
+      : (kpTotal > 0 ? Math.round((kpDone + kpPartial * 0.5) / kpTotal * 100) : 0);
+
+    document.getElementById(`pct-${id}`).textContent = pct + '%';
+    document.getElementById(`cnt-${id}`).textContent =
+      agg.total > 0 ? `${agg.passed}/${agg.total}` : `${kpTotal} KP`;
+    document.getElementById(`bar-${id}`).style.width = pct + '%';
+    document.getElementById(`meta-${id}-q`).textContent = `${agg.total || 0} 题`;
+    document.getElementById(`meta-${id}-kp`).textContent = `${kpTotal} KP`;
+    document.getElementById(`meta-${id}-att`).textContent =
+      agg.total > 0 ? `已练 ${agg.attempted}` : '—';
+    document.getElementById(`meta-${id}-weak`).textContent =
+      (agg.wrong > 0 || kpWeak > 0) ? `⚠ ${agg.wrong + kpWeak}` : '';
   });
-  let kpDone = 0, kpPartial = 0, kpWeak = 0, kpTotal = 0;
-  cat.sections.forEach(sec => sec.kps.forEach(kp => {
-    const k = makeKey(kp);
-    const st = getStatus(k);
-    kpTotal++;
-    if (st === 'done') kpDone++;
-    else if (st === 'partial') kpPartial++;
-    if (getWeak(k)) kpWeak++;
-  }));
-  const pct = agg.total > 0
-    ? Math.round(agg.passed / agg.total * 100)
-    : (kpTotal > 0 ? Math.round((kpDone + kpPartial * 0.5) / kpTotal * 100) : 0);
-  return { agg, kpTotal, kpDone, kpPartial, kpWeak, pct };
 }
 
 // ============ Render ============

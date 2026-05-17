@@ -442,93 +442,38 @@
 </div>
 
 <script>
-// ============ KP 数据 ============
-// subj 字段标识该 KP 所属学科（用于 progress_data.json 自动派生默认状态）
-const DATA = [
-  {
-    id: 'linux', label: '一、Linux 系统基础', cls: 'linux',
-    sections: [
-      { label: '1.1 入门：基础命令与日常操作', subj: '操作系统', items: [
-        '权限管理：rwx、属主属组、chmod/chown/chgrp',
-        '磁盘存储：df -h、df -i、du -sh、分区挂载卸载',
-        '进程服务:ps、top、kill、killall',
-        '网络时间:ping、telnet、netstat、ifconfig、ip addr、date',
-        '定时任务:crontab、分时日月周语法',
-        '日志基础:/var/log、grep 过滤',
-        'Shell 基础:变量、参数、管道、重定向、条件组',
-      ]},
-      { label: '1.2 进阶：Shell 脚本与系统优化', subj: '操作系统', items: [
-        '高级文本:sed、awk、find',
-        '资源管理:top、vmstat、iostat、sar、lsof',
-        '服务管理:service、systemctl、开机自启',
-        '时间同步:NTP 服务、ntpdate',
-        '压缩传输:tar、gzip、scp、sftp、md5sum',
-      ]},
-      { label: '1.3 运维：故障排查与维护', subj: '操作系统', items: [
-        '故障定位：日志→权限→配置→进程',
-        '常见故障：服务无法启动、磁盘满、CPU 高、OOM、网络不通',
-        '文件异常：权限错误、误删恢复',
-        '自动化：备份、巡检、日志切割',
-      ]},
-    ]
-  },
-  {
-    id: 'dm', label: '二、达梦数据库 (DM)', cls: 'dm',
-    sections: [
-      { label: '2.1 入门：基础认知与常用操作', subj: '数据库', items: [
-        '数据库架构：库、表、行、列、主键外键',
-        '达梦架构：实例、数据库、表空间',
-        '基础 SQL：SELECT、INSERT、UPDATE、DELETE',
-        '工具使用:disql 登录、spool、执行脚本',
-        '备份恢复:dexp 导出、dimp 导入',
-      ]},
-      { label: '2.2 进阶：SQL 高级、权限与约束', subj: '数据库', items: [
-        '高级 SQL：多表关联、子查询、GROUP BY、聚合函数',
-        '事务控制：COMMIT、ROLLBACK、行锁、表锁、死锁、阻塞',
-        '权限角色：系统权限、对象权限、角色管理',
-        '约束管理：主键、唯一、非空、外键',
-        '数据库对象：视图、索引、序列、触发器、存储过程',
-      ]},
-      { label: '2.3 运维：集群、备份恢复、故障处理', subj: '数据库', items: [
-        '数据迁移:DTS 工具',
-        '物理备份:dmnman、全量/增量/归档备份',
-        '高可用:DataWatch 主备、DMDSC 集群、DMHS 同步',
-        '故障处理：无法启动、连接失败、锁阻塞、慢 SQL',
-        '安全规范：密码策略、审计、权限最小化',
-      ]},
-    ]
-  },
-  {
-    id: 'd6', label: '三/四、D6.0 + SCADA', cls: 'd6',
-    sections: [
-      { label: '3.1 入门：架构认知与安装部署', subj: '基础平台', items: [
-        '核心模块：SCADA、FES、人机、平台',
-        '部署模式：主管、集群、分布式',
-        '安装步骤：平台、人机前置、FES 前置采集',
-        '基础配置:hosts、IP 映射、时间同步',
-        '启停命令:sys_ctl start/stop/restart',
-      ]},
-      { label: '3.2 进阶：平台功能、配置与权限', subj: '系统平台', items: [
-        '核心组件：消息总线、文件服务、对象化计算',
-        '权限管理：用户、用户组、遥控权限',
-        '责任区：定义、划分、绑定设备',
-        '界面配置：总控台、告警管理、菜单、颜色',
-        '日常巡检：服务、进程、端口、磁盘、CPU、内存、日志',
-        '配置故障:hosts 填误、节点名错误、权限不足',
-      ]},
-      { label: '3.3 运维：平台运检与故障处理', subj: '稳态监控', items: [
-        '数据故障：不刷新、采样异常、限值不生效',
-        '告警升级：无法登录、巡检失败、告警不弹窗',
-        '备份升级：配置备份、补丁安装、回退方案',
-        'SCADA 基础：采集→传输→处理→展示',
-        '数据类型：遥测、遥信、SOE、事件',
-        'FES 配置：规约配置、通道、装置、点表',
-        '遥控操作：操作票、五防、对点、执行确认',
-        '事故推图：智能告警、事故溯源、CIM 模型',
-      ]},
-    ]
-  }
-];
+// ============ KP 数据：fetch outline.json（SSOT）============
+// 加载完成后回填到 DATA。DATA 结构兼容原版 render 逻辑：
+//   { id, label, cls, sections: [{ label, subj, items: [text], kps: [{tag, ...}] }] }
+let DATA = [];
+const CLS_MAP = { linux: 'linux', dm: 'dm', d6: 'd6' };
+
+async function loadOutline() {
+  const r = await fetch('./outline.json', { cache: 'no-cache' });
+  if (!r.ok) throw new Error('outline.json ' + r.status);
+  const o = await r.json();
+  DATA = o.categories.map(cat => ({
+    id: cat.id,
+    label: cat.name,
+    cls: CLS_MAP[cat.id] || cat.id,
+    tag_segment: cat.tag_segment,
+    fallback_subject: cat.fallback_subject,
+    sections: cat.sections.map(sec => ({
+      id: sec.id,
+      label: sec.name,
+      tag_segment: sec.tag_segment,
+      subj: cat.fallback_subject,
+      kps: sec.kps,
+      items: sec.kps.map(kp => `${kp.name}：${kp.desc}`)
+    }))
+  }));
+  return o;
+}
+
+// 拼 KP 完整 tag：KP::<学科>::<阶段>::<考点名>
+function kpTag(catTag, secTag, kpName) {
+  return `KP::${catTag}::${secTag}::${kpName}`;
+}
 
 const STATUSES = ['untouched', 'partial', 'done'];
 const STORAGE_KEY = 'd6_training_v1';

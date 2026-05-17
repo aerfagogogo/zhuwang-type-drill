@@ -771,20 +771,28 @@ function renderOutlineTree() {
       const secHeader = document.createElement('div');
       secHeader.className = 'sec-header';
       const secNameDisplay = sec.name.replace(/^\d+\.\d+\s+/, '');
+      const secAllQs = collectSecQs(subj.name, sec.id);
+      const secProg = aggregateProgress(secAllQs);
+      const secBtnHTML = isCV
+        ? `<span class="sm" style="opacity:.45;cursor:default;font-size:11px">—</span>`
+        : `<button class="sm js-sec-btn" ${sec.q_count === 0 ? 'disabled' : ''}>全节</button>`;
       secHeader.innerHTML = `
         <span class="sec-id">${escH(sec.id)}</span>
         <span class="sec-name">${escH(secNameDisplay)}</span>
         <span class="sec-count">${sec.q_count}题</span>
-        <button class="sm js-sec-btn" ${sec.q_count === 0 ? 'disabled' : ''}>全节</button>
+        ${progressBadgeHTML(secProg)}
+        ${secBtnHTML}
         <span class="sec-chevron">▶</span>
       `;
       secHeader.addEventListener('click', () => secBlock.classList.toggle('open'));
-      // 全节按钮
+      // 全节按钮（仅非 CV 模式学科）
       const secBtn = secHeader.querySelector('.js-sec-btn');
-      secBtn.addEventListener('click', (ev) => {
-        ev.stopPropagation();
-        gotoScope(sec.name, collectSecQs(subj.name, sec.id));
-      });
+      if (secBtn) {
+        secBtn.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          gotoScope(sec.name, collectSecQs(subj.name, sec.id));
+        });
+      }
       secBlock.appendChild(secHeader);
 
       // KP rows

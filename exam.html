@@ -677,8 +677,13 @@ function renderQ(){
 
   // 阶段 1 状态
   $('ans').value=e.user_answer||'';
-  $('notes').value=e.notes||'';
-  renderImageList(e.images||[]);
+  // 探索模式：先迁移老数据 → 再渲染速记栈 + 草稿区
+  if(MODE==='explore'){
+    migrateLegacyNotes(e);
+    renderNotesStack(e.notes_stack||[]);
+  }
+  $('notes').value=e.notes||'';     // 草稿文本（textarea 直接用现有 notes 字段当 draft buffer）
+  renderImageList(e.images||[]);    // 草稿图片（同上）
   let s1='进行中';
   if(e.mark==='flagged')s1='⚠️ 标记答案有误';
   else if(e.mark==='skip')s1='⏭ 已跳过 (可重答)';

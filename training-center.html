@@ -548,8 +548,9 @@ function getState() {
 function saveState(s) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
 }
-function makeKey(colId, secIdx, itemIdx) {
-  return `${colId}_${secIdx}_${itemIdx}`;
+// KP key = 编号本身（如 "1.1.10"），更直观且跨 schema 升级稳定
+function makeKey(kp) {
+  return kp.code;
 }
 
 // 单 KP 当前状态：手动覆盖 > 自动派生 > untouched

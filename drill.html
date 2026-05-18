@@ -163,12 +163,18 @@ async function loadQuestion(qid) {
     showError('无法加载 exam_data.json: ' + e.message); return;
   }
 
-  // Flatten all questions
+  // 2026-05-18 大重构后：qid 现在是全局编号（如 "78"），向后兼容旧 {学科}-NNN 格式
+  // exam_data.json 新 schema 下题字段含 编号，旧字段 id 已废弃
+  const targetNo = /^\d+$/.test(qid) ? parseInt(qid, 10) : null;
+
   let found = null;
   for (const subj of (data.subjects || [])) {
     for (const sec of (subj.sections || [])) {
       for (const kp of (sec.kps || [])) {
         for (const q of (kp.questions || [])) {
+          // 新风格：按 编号 匹配
+          if (targetNo !== null && q['编号'] === targetNo) { found = q; break; }
+          // 旧风格兼容：按 id 匹配（如果 exam_data 还有 id 字段）
           if (q.id === qid) { found = q; break; }
         }
         if (found) break;
@@ -184,8 +190,9 @@ async function loadQuestion(qid) {
   }
 
   // Fill header
-  document.getElementById('qidBadge').textContent = found.id;
-  document.getElementById('qTitle').textContent   = found.title || found.id;
+  const idDisplay = found['编号'] !== undefined ? `#${found['编号']}` : (found.id || qid);
+  document.getElementById('qidBadge').textContent = idDisplay;
+  document.getElementById('qTitle').textContent   = found.title || idDisplay;
   document.getElementById('qScene').textContent   = (found['题面'] || '').replace(/`/g, '');
 
   // Parse answer

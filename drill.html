@@ -414,8 +414,8 @@ function showError(msg) {
 // ─── Entry point ─────────────────────────────────────────────────
 const qid = new URLSearchParams(location.search).get('qid');
 if (!qid) {
-  showError('缺少 ?qid= 参数。示例：drill.html?qid=操作系统-001');
-  document.getElementById('qTitle').textContent = '示例：drill.html?qid=操作系统-001';
+  showError('缺少 ?qid= 参数。示例：drill.html?qid=78（全局编号）');
+  document.getElementById('qTitle').textContent = '示例：drill.html?qid=78';
 } else {
   loadQuestion(qid);
 }

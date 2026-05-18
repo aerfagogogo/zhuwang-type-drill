@@ -1,6 +1,6 @@
 # 主网自动化竞赛 · 工作手册
 
-**常用入口**：操作系统训练 · 达梦训练 · 竞赛环境训练 · 变式训练 · 出模拟卷 · 刷新题库（`bash refresh_exam.sh`）
+**网页入口**：[训练中心](https://aerfagogogo.github.io/zhuwang-type-drill/training-center.html) · [变式训练](https://aerfagogogo.github.io/zhuwang-type-drill/exam.html) · [惩罚盲敲](https://aerfagogogo.github.io/zhuwang-type-drill/drill.html) · [主页](https://aerfagogogo.github.io/zhuwang-type-drill/)
 
 > **本 README 是项目 SSOT**（流程/规则维度）。与 memory、与"印象"冲突时**以本文档为准**。
 > **2026-05-18 v6 大重构**：题库从 9 份分散 json 合并为单一 `question.json`，MD 文档退役（仅作 Anki 推题副产物），网页改名「训练中心 / 惩罚 / 变式训练」，新增「整理 anki」skill 等。完整改造经过见 [[2026-05-18-主网竞赛大重构]] 经验贴。

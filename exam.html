@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>一站式训练 · 主网自动化竞赛</title>
+<title>变式训练 · 主网自动化竞赛</title>
+<!--
+  2026-05-18 大重构定位变更：
+    原「一站式训练」功能与 Anki 重叠 → 砍掉除「变式训练」外的所有功能。
+    本页 UI 重写留待后续单独迭代（exam.html 1300+ 行不在本次大重构范围）。
+    新数据源：question.json + outline.json。
+    旧引用 exam_data.json 字段（id/学科-NNN）已不存在，需要后续配合改造网页 JS。
+-->
 <style>
 /* ===== 主题变量 ===== */
 :root{

@@ -1,6 +1,6 @@
 {
-  "version": "v0.2",
-  "generated": "2026-05-17",
+  "version": "v0.3",
+  "generated": "2026-05-18",
   "subjects": {
     "基础平台": {
       "total": 54,
@@ -16,7 +16,7 @@
       "passed": 0,
       "wrong_pending": 7,
       "last_attempt_at": "2026-05-17",
-      "source": "weak_json"
+      "source": "weak"
     },
     "数据库": {
       "total": 37,
@@ -24,7 +24,7 @@
       "passed": 0,
       "wrong_pending": 0,
       "last_attempt_at": null,
-      "source": "weak_json"
+      "source": "weak"
     },
     "稳态监控": {
       "total": 28,
@@ -40,7 +40,7 @@
       "passed": 0,
       "wrong_pending": 2,
       "last_attempt_at": "2026-05-17",
-      "source": "weak_json"
+      "source": "weak"
     },
     "系统平台": {
       "total": 76,
@@ -76,2443 +76,1325 @@
     }
   },
   "questions": {
-    "基础平台-001": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-002": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-003": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-004": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-005": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-006": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-007": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-008": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-009": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-010": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-011": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-012": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-013": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-014": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-015": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-016": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-017": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-018": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-019": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-020": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-021": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-022": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-023": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-024": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-025": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-026": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-027": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-028": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-029": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-030": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-031": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-032": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-033": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-034": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-035": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-036": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-037": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-038": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-039": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-040": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-041": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-042": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-043": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-044": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-045": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-046": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-047": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-048": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-049": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-050": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-051": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-052": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-053": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "基础平台-054": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "操作系统-001": {
+    "55": {
+      "编号": 55,
+      "subject": "操作系统",
+      "title": "001-crontab 定时记录内存",
       "last_verdict": "❌",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-14",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-002": {
+    "56": {
+      "编号": 56,
+      "subject": "操作系统",
+      "title": "002-SSH 远程抓 top 信息 + scp 拷回",
       "last_verdict": "❌",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-14",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-003": {
+    "57": {
+      "编号": 57,
+      "subject": "操作系统",
+      "title": "003-SSH 远程查 CPU + 打包 + scp 拷回",
       "last_verdict": "❌",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-14",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-004": {
+    "58": {
+      "编号": 58,
+      "subject": "操作系统",
+      "title": "004-账户锁定 + 口令有效期",
       "last_verdict": "❌",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-14",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-005": {
+    "59": {
+      "编号": 59,
+      "subject": "操作系统",
+      "title": "005-last + history + ps + find 四件套",
       "last_verdict": "❌",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-14",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-006": {
+    "60": {
+      "编号": 60,
+      "subject": "操作系统",
+      "title": "006-内存进程排行 + 反序查看 + find 大文件",
       "last_verdict": "❌",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-007": {
+    "61": {
+      "编号": 61,
+      "subject": "操作系统",
+      "title": "007-22 端口占用 + root_oct11 进程统计",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-008": {
+    "62": {
+      "编号": 62,
+      "subject": "操作系统",
+      "title": "008-find 目录深度 + stat 详情",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-009": {
+    "63": {
+      "编号": 63,
+      "subject": "操作系统",
+      "title": "009-每天定时导库（脚本 + crontab）",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-010": {
+    "64": {
+      "编号": 64,
+      "subject": "操作系统",
+      "title": "010-vi 范围删除 + 读文件 + 行首尾替换",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-011": {
+    "65": {
+      "编号": 65,
+      "subject": "操作系统",
+      "title": "011-uname + lsof + sed 替换路径 + 行范围存",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-012": {
+    "66": {
+      "编号": 66,
+      "subject": "操作系统",
+      "title": "012-内核查询 + down_load + top 排序（综合）",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-013": {
+    "67": {
+      "编号": 67,
+      "subject": "操作系统",
+      "title": "013-关闭 iapi + 下装 public + 切应用主机",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-014": {
+    "68": {
+      "编号": 68,
+      "subject": "操作系统",
+      "title": "014-netstat 查端口 + ifconfig 临时改 IP ",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-015": {
+    "69": {
+      "编号": 69,
+      "subject": "操作系统",
+      "title": "015-后台进程 jobs_fg_kill + 内存句柄 + lso",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-016": {
+    "70": {
+      "编号": 70,
+      "subject": "操作系统",
+      "title": "016-crontab + ps-xj + lspci + user",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-017": {
+    "71": {
+      "编号": 71,
+      "subject": "操作系统",
+      "title": "017-vi 多操作 + find 软链 + 22 端口 + df ",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-018": {
+    "72": {
+      "编号": 72,
+      "subject": "操作系统",
+      "title": "018-alias 自定义命令 + shell if 脚本",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-019": {
+    "73": {
+      "编号": 73,
+      "subject": "操作系统",
+      "title": "019-touch + chown + chmod + tar 打包",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-020": {
+    "74": {
+      "编号": 74,
+      "subject": "操作系统",
+      "title": "020-grep 行首行尾 + 组合过滤",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-021": {
+    "75": {
+      "编号": 75,
+      "subject": "操作系统",
+      "title": "021-find -user + ls+wc 统计 + grep 行",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-022": {
+    "76": {
+      "编号": 76,
+      "subject": "操作系统",
+      "title": "022-find 大小 + ls+wc 统计 + vi 范围替换",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-023": {
+    "77": {
+      "编号": 77,
+      "subject": "操作系统",
+      "title": "023-sftp 脚本 + 定时上传",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-024": {
+    "78": {
+      "编号": 78,
+      "subject": "操作系统",
+      "title": "024-NTP 对时 + 定时重启",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-025": {
+    "79": {
+      "编号": 79,
+      "subject": "操作系统",
+      "title": "025-sed 批量替换 + grep+wc 统计",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-026": {
+    "80": {
+      "编号": 80,
+      "subject": "操作系统",
+      "title": "026-vi 范围保存 + awk 加行号",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-027": {
+    "81": {
+      "编号": 81,
+      "subject": "操作系统",
+      "title": "027-awk passwd + crontab 清理 + shel",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-028": {
+    "82": {
+      "编号": 82,
+      "subject": "操作系统",
+      "title": "028-tar bz2_gz + dmesg + 符号链 + awk",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-029": {
+    "83": {
+      "编号": 83,
+      "subject": "操作系统",
+      "title": "029-crontab + ps-xj + lspci + user",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-030": {
+    "84": {
+      "编号": 84,
+      "subject": "操作系统",
+      "title": "030-系统加固（关服务 + 超时 + 锁定 + 密码策略 + um",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-031": {
+    "85": {
+      "编号": 85,
+      "subject": "操作系统",
+      "title": "031-多主机远程检查磁盘脚本",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-032": {
+    "86": {
+      "编号": 86,
+      "subject": "操作系统",
+      "title": "032-在服务器上，利用操作系统自带的定时器crontab",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-033": {
+    "87": {
+      "编号": 87,
+      "subject": "操作系统",
+      "title": "033-检查_home_nusp分区的硬盘使用情况（分区大",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-034": {
+    "88": {
+      "编号": 88,
+      "subject": "操作系统",
+      "title": "034-将服务器上文件ceshi.txt拷贝到本机_hom",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-035": {
+    "89": {
+      "编号": 89,
+      "subject": "操作系统",
+      "title": "035-请配置工作站与服务器对时，采用ntp对时，并展示工",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-036": {
+    "90": {
+      "编号": 90,
+      "subject": "操作系统",
+      "title": "036-将主目录下_home_nusp____kaoshi",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-037": {
+    "91": {
+      "编号": 91,
+      "subject": "操作系统",
+      "title": "037-查看系统物理内存、交换分区的大小，系统内存使用率和",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-038": {
+    "92": {
+      "编号": 92,
+      "subject": "操作系统",
+      "title": "038-在服务器上找出文件名为的ceshi3_kkk文件，",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-039": {
+    "93": {
+      "编号": 93,
+      "subject": "操作系统",
+      "title": "039-使用vi工具完成下列操作，编辑_var_log_m",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-040": {
+    "94": {
+      "编号": 94,
+      "subject": "操作系统",
+      "title": "040-查看系统nusp用户当前打开的句柄数量并将结果输出",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-041": {
+    "95": {
+      "编号": 95,
+      "subject": "操作系统",
+      "title": "041-检查系统磁盘的空间和inode的使用率，并计算出系",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-042": {
+    "96": {
+      "编号": 96,
+      "subject": "操作系统",
+      "title": "042-说明：自动化值班员小明发现sca1-1 服务器的C",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-043": {
+    "97": {
+      "编号": 97,
+      "subject": "操作系统",
+      "title": "043-请在考试工作站_home_nusp_zhejian",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-044": {
+    "98": {
+      "编号": 98,
+      "subject": "操作系统",
+      "title": "044-说明：查询系统的信息（包括系统的内核、内核名、主机",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-045": {
+    "99": {
+      "编号": 99,
+      "subject": "操作系统",
+      "title": "045-在zj1-sca1服务器上，利用crontab定时",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-046": {
+    "100": {
+      "编号": 100,
+      "subject": "操作系统",
+      "title": "046-在系统中，检查_home_nusp_zhejian",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-047": {
+    "101": {
+      "编号": 101,
+      "subject": "操作系统",
+      "title": "047-在系统中，通过SSH将远程服务器（zj1-sca1",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-048": {
+    "102": {
+      "编号": 102,
+      "subject": "操作系统",
+      "title": "048-在工作站上，配置与NTP服务器（zj1-sca1）",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-049": {
+    "103": {
+      "编号": 103,
+      "subject": "操作系统",
+      "title": "049-在系统的_home_nusp_zhejiang_2",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-050": {
+    "104": {
+      "编号": 104,
+      "subject": "操作系统",
+      "title": "050-在系统中，查看系统物理内存、交换分区的详细使用情况",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-051": {
+    "105": {
+      "编号": 105,
+      "subject": "操作系统",
+      "title": "051-在系统中，查看当前dev用户打开的文件句柄数量，并",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-052": {
+    "106": {
+      "编号": 106,
+      "subject": "操作系统",
+      "title": "052-在系统中，检查所有磁盘分区的空间使用率和inode",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-053": {
+    "107": {
+      "编号": 107,
+      "subject": "操作系统",
+      "title": "053-在系统中，查询以下系统信息并将所有结果按分类保存到",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-054": {
+    "108": {
+      "编号": 108,
+      "subject": "操作系统",
+      "title": "054-在系统中，为应用创建专用用户appuser2026",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-055": {
+    "109": {
+      "编号": 109,
+      "subject": "操作系统",
+      "title": "055-ifconfig 临时 IP + route 加路由 + 重定向",
       "last_verdict": "✅",
       "weak_count": 1,
       "correct_streak": 2,
       "last_attempt_at": "2026-05-13",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-056": {
+    "110": {
+      "编号": 110,
+      "subject": "操作系统",
+      "title": "056-route 删路由 + 追加路由信息",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-057": {
+    "111": {
+      "编号": 111,
+      "subject": "操作系统",
+      "title": "057-shell 脚本处理 value.txt 空格分隔",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "操作系统-058": {
+    "112": {
+      "编号": 112,
+      "subject": "操作系统",
+      "title": "058-shell 脚本猜数字游戏 caishu.sh",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-001": {
+    "113": {
+      "编号": 113,
+      "subject": "数据库",
+      "title": "001-建表 SUBSTATION",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-002": {
+    "114": {
+      "编号": 114,
+      "subject": "数据库",
+      "title": "002-建表 BREAKER",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-003": {
+    "115": {
+      "编号": 115,
+      "subject": "数据库",
+      "title": "003-插数据 substation",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-004": {
+    "116": {
+      "编号": 116,
+      "subject": "数据库",
+      "title": "004-插数据 breaker",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-005": {
+    "117": {
+      "编号": 117,
+      "subject": "数据库",
+      "title": "005-DISTINCT + ORDER BY",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-006": {
+    "118": {
+      "编号": 118,
+      "subject": "数据库",
+      "title": "006-INNER JOIN",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-007": {
+    "119": {
+      "编号": 119,
+      "subject": "数据库",
+      "title": "007-子查询 IN",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-008": {
+    "120": {
+      "编号": 120,
+      "subject": "数据库",
+      "title": "008-多查询拼接 (4 种写法)",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-009": {
+    "121": {
+      "编号": 121,
+      "subject": "数据库",
+      "title": "009-CASE WHEN",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-010": {
+    "122": {
+      "编号": 122,
+      "subject": "数据库",
+      "title": "010-GROUP BY + COUNT",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-011": {
+    "123": {
+      "编号": 123,
+      "subject": "数据库",
+      "title": "011-GROUP BY + HAVING",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-012": {
+    "124": {
+      "编号": 124,
+      "subject": "数据库",
+      "title": "012-WHERE + GROUP BY + HAVING 三件套",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-013": {
+    "125": {
+      "编号": 125,
+      "subject": "数据库",
+      "title": "013-综合 (JOIN + GROUP BY + CASE + A",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-014": {
+    "126": {
+      "编号": 126,
+      "subject": "数据库",
+      "title": "014-用sql语句查询三天内进程告警信息（表名为 pro",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-015": {
+    "127": {
+      "编号": 127,
+      "subject": "数据库",
+      "title": "015-使用sql语句在菜单定义表中添加一条记录，并手动下",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-016": {
+    "128": {
+      "编号": 128,
+      "subject": "数据库",
+      "title": "016-通过sql命令展示出断路器中文名称、断路器所属厂站",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-017": {
+    "129": {
+      "编号": 129,
+      "subject": "数据库",
+      "title": "017-请通过sql语句查询保护信号表按厂站分组后，分组记",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-018": {
+    "130": {
+      "编号": 130,
+      "subject": "数据库",
+      "title": "018-请将数据库中的厂站表（substation）、断路",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-019": {
+    "131": {
+      "编号": 131,
+      "subject": "数据库",
+      "title": "019-说明：使用工作站主目录下的脚本ceshi1.sql",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-020": {
+    "132": {
+      "编号": 132,
+      "subject": "数据库",
+      "title": "020-说明：查询数据库的连接数， 用户名：SYSDBA",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-021": {
+    "133": {
+      "编号": 133,
+      "subject": "数据库",
+      "title": "021-说明：通过sql语句查询出最近三天XXX变XXX线",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-022": {
+    "134": {
+      "编号": 134,
+      "subject": "数据库",
+      "title": "022-说明：请使用sql语言查询出XXX变所有断路器名称",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-023": {
+    "135": {
+      "编号": 135,
+      "subject": "数据库",
+      "title": "023-使用isql工具在达梦数据库中新建登录名KAOSH",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-024": {
+    "136": {
+      "编号": 136,
+      "subject": "数据库",
+      "title": "024-在工作站上使用isql工具登录数据库，查询XXX变",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-025": {
+    "137": {
+      "编号": 137,
+      "subject": "数据库",
+      "title": "025-SQL查询与结果导出",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-026": {
+    "138": {
+      "编号": 138,
+      "subject": "数据库",
+      "title": "026-SQL插入与数据同步",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-027": {
+    "139": {
+      "编号": 139,
+      "subject": "数据库",
+      "title": "027-多表关联查询",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-028": {
+    "140": {
+      "编号": 140,
+      "subject": "数据库",
+      "title": "028-分组查询与更新操作",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-029": {
+    "141": {
+      "编号": 141,
+      "subject": "数据库",
+      "title": "029-数据库备份",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-030": {
+    "142": {
+      "编号": 142,
+      "subject": "数据库",
+      "title": "030-表创建与约束设置",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-031": {
+    "143": {
+      "编号": 143,
+      "subject": "数据库",
+      "title": "031-数据库连接数查询",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-032": {
+    "144": {
+      "编号": 144,
+      "subject": "数据库",
+      "title": "032-达梦数据库用户与表创建",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-033": {
+    "145": {
+      "编号": 145,
+      "subject": "数据库",
+      "title": "033-数据查询与导出",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-034": {
+    "146": {
+      "编号": 146,
+      "subject": "数据库",
+      "title": "034-SQL 关联查 白鹿变有功采样值",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-035": {
+    "147": {
+      "编号": 147,
+      "subject": "数据库",
+      "title": "035-数据库进程确认与历史采样表按日期导出",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-036": {
+    "148": {
+      "编号": 148,
+      "subject": "数据库",
+      "title": "036-student_course_SC建表与SQL查询",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "数据库-037": {
+    "149": {
+      "编号": 149,
+      "subject": "数据库",
+      "title": "037-long2_to_long1查询遥信设备名厂站名",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "稳态监控-001": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-002": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-003": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-004": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-005": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-006": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-007": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-008": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-009": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-010": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-011": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-012": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-013": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-014": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-015": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-016": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-017": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-018": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-019": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-020": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-021": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-022": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-023": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-024": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-025": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-026": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-027": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "稳态监控-028": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "竞赛环境-001": {
+    "178": {
+      "编号": 178,
+      "subject": "竞赛环境",
+      "title": "001-查看本机 IP 和网卡",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-002": {
+    "179": {
+      "编号": 179,
+      "subject": "竞赛环境",
+      "title": "002-查看当前路由表",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-003": {
+    "180": {
+      "编号": 180,
+      "subject": "竞赛环境",
+      "title": "003-判断哪些目标能 ping 通",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-004": {
+    "181": {
+      "编号": 181,
+      "subject": "竞赛环境",
+      "title": "004-说出路由表每列含义",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-005": {
+    "182": {
+      "编号": 182,
+      "subject": "竞赛环境",
+      "title": "005-找去核心网的网关",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-006": {
+    "183": {
+      "编号": 183,
+      "subject": "竞赛环境",
+      "title": "006-添加到核心网的路由",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-007": {
+    "184": {
+      "编号": 184,
+      "subject": "竞赛环境",
+      "title": "007-验证路由 ping 通 sca01",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-008": {
+    "185": {
+      "编号": 185,
+      "subject": "竞赛环境",
+      "title": "008-删除刚加的路由",
       "last_verdict": "⚠️",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-009": {
+    "186": {
+      "编号": 186,
+      "subject": "竞赛环境",
+      "title": "009-持久化路由配置",
       "last_verdict": null,
       "weak_count": 0,
       "correct_streak": 0,
       "last_attempt_at": null,
       "attempted": false,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-010": {
+    "187": {
+      "编号": 187,
+      "subject": "竞赛环境",
+      "title": "010-SSH 到 graph01",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-011": {
+    "188": {
+      "编号": 188,
+      "subject": "竞赛环境",
+      "title": "011-从 graph01 SSH 到 sca01",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-012": {
+    "189": {
+      "编号": 189,
+      "subject": "竞赛环境",
+      "title": "012-ssh -J 一步跳转",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-013": {
+    "190": {
+      "编号": 190,
+      "subject": "竞赛环境",
+      "title": "013-排查路由缺失",
       "last_verdict": "⚠️",
       "weak_count": 1,
       "correct_streak": 0,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-014": {
+    "191": {
+      "编号": 191,
+      "subject": "竞赛环境",
+      "title": "014-排查路由方向问题",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
+      "source": "weak"
     },
-    "竞赛环境-015": {
+    "192": {
+      "编号": 192,
+      "subject": "竞赛环境",
+      "title": "015-综合故障排查",
       "last_verdict": "✅",
       "weak_count": 0,
       "correct_streak": 1,
       "last_attempt_at": "2026-05-17",
       "attempted": true,
       "passed": false,
-      "source": "weak_json"
-    },
-    "系统平台-001": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-002": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-003": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-004": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-005": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-006": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-007": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-008": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-009": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-010": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-011": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-012": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-013": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-014": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-015": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-016": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-017": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-018": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-019": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-020": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-021": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-022": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-023": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-024": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-025": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-026": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-027": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-028": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-029": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-030": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-031": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-032": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-033": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-034": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-035": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-036": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-037": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-038": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-039": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-040": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-041": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-042": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-043": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-044": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-045": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-046": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-047": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-048": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-049": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-050": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-051": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-052": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-053": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-054": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-055": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-056": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-057": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-058": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-059": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-060": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-061": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-062": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-063": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-064": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-065": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-066": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-067": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-068": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-069": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-070": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-071": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-072": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-073": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-074": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-075": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "系统平台-076": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "综合智能告警-001": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "综合智能告警-002": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "综合智能告警-003": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "综合智能告警-004": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "综合智能告警-005": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "综合智能告警-006": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "综合智能告警-007": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-001": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-002": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-003": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-004": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-005": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-006": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-007": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-008": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-009": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-010": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-011": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-012": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-013": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "网络分析-014": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "调度数据网-001": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
-    },
-    "调度数据网-002": {
-      "reps": 0,
-      "ease_factor": 0,
-      "lapses": 0,
-      "attempted": false,
-      "passed": false,
-      "source": "anki"
+      "source": "weak"
     }
   }
 }

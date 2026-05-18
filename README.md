@@ -213,19 +213,36 @@ python3 工具/doctor.py --full
 
 ## 9 · 同步 GitHub（常规动作）
 
-**仓库结构**（实测 2026-05-18）：
-- **vault 主仓库**（vault 根目录）：**本地 git，无 GitHub remote**。commit 留在本地作为版本追溯，不推远端。
-- **web 子仓库**（`工具/web/`）：独立 git，remote = `https://github.com/aerfagogogo/zhuwang-type-drill.git` → 发布 GitHub Pages `https://aerfagogogo.github.io/zhuwang-type-drill/`，有 **auto-sync hook 自动 commit + push**（每次改 html 都看到 `auto-sync: <文件名>` commit）。
+**仓库结构**（2026-05-18 v6 大重构后）：
+- **git root = `工具/`**（项目工具代码 + question.json + web + README 都在这）
+- **远端 = `https://github.com/aerfagogogo/zhuwang-type-drill.git`**（public，main 分支）
+- **GitHub Pages 入口**：`https://aerfagogogo.github.io/zhuwang-type-drill/`
+  - root 的 `工具/index.html` 是跳转页，自动重定向到 `/web/`
+  - 实际内容来自 `工具/web/` 子目录
+- **vault 主仓库**（vault 根目录）保持本地 git，不推远端
 
-**铁律**：**每次对本项目目录做出改动后，必须确保两类改动同步**——
+**GitHub 双重作用**：工具代码备份（防丢 + 跨机 pull） + 网页发布（GitHub Pages）。
 
-**vault 主仓库（本地 commit）**：
-- 触发：改 `question.json` / `工具/*.py` / `README.md` / `.claude/skills/*` / `04实操题集/*` 等任何 vault 内文件
-- 步骤：
+**日常工作流**（铁律）：
+
 ```bash
-cd "/Users/sunyiting/Library/Mobile Documents/iCloud~md~obsidian/Documents/苍茫云海间"
-python3 "50-项目/主网自动化竞赛/工具/doctor.py" --quick || exit 1  # 体检强制
-git add <精确路径>   # 不 -A，避免误带未提交的历史 working tree 改动
+# 1. 拉最新（每次本地改之前必跑）
+cd "/Users/sunyiting/Library/Mobile Documents/iCloud~md~obsidian/Documents/苍茫云海间/50-项目/主网自动化竞赛/工具"
+git pull origin main
+
+# 2. 本地改（python 脚本 / question.json / README / web HTML 等）
+#    路径说明：
+#    - question.json 物理位置 = 工具/data/question.json
+#      （项目根 question.json 是软链回指，本地仍可用旧路径访问）
+#    - README.md 物理位置 = 工具/README.md
+#      （项目根 README.md 是软链回指）
+
+# 3. 体检（强制）
+python3 doctor.py --quick || exit 1
+
+# 4. 提交 + 推
+git add -A
+git diff --cached --stat   # 看清要 commit 什么
 git commit -m "$(cat <<'EOF'
 <一句话概括>
 
@@ -234,25 +251,29 @@ git commit -m "$(cat <<'EOF'
 Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 EOF
 )"
-# 注意：vault 主仓库无 remote，不跑 git push
+git push origin main
 ```
 
-**web 子仓库（自动推 GitHub Pages）**：
-- 触发：改 `工具/web/*.html / *.json / *.js`
-- 一般情况：auto-sync hook 已自动 commit + push，无需 CV 手动操作
-- 如 auto-sync 失败：手动跑
+**触发场景**（CV 自动按此协议跑）：
+- 改了 `工具/*.py` / `工具/*.sh` / `工具/web/*` / `工具/data/question.json` / `工具/README.md` / 工具下任何 tracked 文件
+- 用户说「同步 github」「推 github」「commit + push」「上传」「更新远程」
+
+**自动 push 入口**：`refresh_exam.sh` Step 5/6 仍自动跑（派生数据 + 推 Anki + git commit + push）。
+
+**每日 squash auto-sync commit**（每日收尾跑一次，可选）：
 ```bash
-cd "/Users/sunyiting/Library/Mobile Documents/iCloud~md~obsidian/Documents/苍茫云海间/50-项目/主网自动化竞赛/工具/web"
-git status; git add -A; git commit -m "..."; git push origin main
+N=$(git log --oneline --since="today 00:00" | wc -l)
+git rebase -i HEAD~$N    # 把 auto-sync 行的 pick 改成 squash 或 fixup
 ```
 
 **铁律细节**：
-- commit message 第一行**不要超过 70 字符**，正文用空行 + 要点列表
-- 涉及破坏性 git 操作（`reset --hard / push --force / branch -D`）必须用户**明确同意**才执行
-- 体检不过禁止 commit（即使 vault 主仓库不推远端，也保持 commit 历史干净）
-- 触发条件命中后 CV 提示 commit message 草稿，等用户**点头**再真正提交（避免误 commit 在做的草稿）
-- 关键路径如有 `.env / credentials.json` 等敏感文件，永远不要 `git add -A`，改成具名添加
-- 用户若要把 vault 主仓库也推 GitHub：先 `git remote add origin <url>` 配置远端，再 `git push -u origin main`，本协议届时再补「vault → GitHub」push 步骤
+- commit message 第一行不超过 70 字符，正文用空行 + 要点列表
+- 涉及破坏性 git 操作（`reset --hard / push --force / branch -D / filter-repo`）必须用户**明确同意**才执行
+- 体检不过禁止 push
+- 触发条件命中后 CV 提示 commit message 草稿，等用户**点头**再真正提交
+- 关键路径如 `.env / credentials.json` 等敏感文件，永远不要 `git add -A`，改成具名添加
+
+**vault 主仓库**（vault 根目录）保留本地 git，不推远端。vault 内除工具目录之外的改动（如 `.claude/skills/*` / `04实操题集/*` / `20-经验/*`）走 vault 本地 commit。
 
 ## 10 · 历史变更
 

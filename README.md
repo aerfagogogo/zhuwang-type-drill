@@ -1,19 +1,33 @@
 # 主网自动化竞赛 · 工作手册
 
-> **本 README 是项目 SSOT**（流程/规则维度）。与 memory、与"印象"冲突时**以本文档为准**。
-> **2026-05-18 v6 大重构**：题库从 9 份分散 json 合并为单一 `question.json`，MD 文档退役（仅作 Anki 推题副产物），网页改名「训练中心 / 惩罚 / 变式训练」，新增「整理 anki」skill 等。完整改造经过见 [[2026-05-18-主网竞赛大重构]] 经验贴。
+## 🚀 训练入口（说这些话直接进对应流程）
+
+| 想干什么 | 说什么 | 跳哪 |
+|---|---|---|
+| 🐧 **Linux 实操**（ks-wh01，58 题） | 「操作系统训练」「Linux 训练」「实操」「敲命令」「考我 linux」 | `.claude/skills/操作系统训练.md` |
+| 🗄️ **达梦 SQL 实操**（ks-his01，37 题） | 「达梦训练」「数据库训练」「DM 训练」「考我达梦」 | `.claude/skills/达梦训练.md` |
+| 🐳 **竞赛 Docker 环境**（15 题） | 「竞赛环境训练」「网络训练」「Docker 训练」 | `.claude/skills/竞赛环境训练.md` |
+| 🔁 **变式训练**（任意学科换参数练） | 「变个题」「对这题变式」「换个参数练」 | `.claude/skills/变式训练.md` |
+| 📝 **出模拟卷** | 「出模拟卷」「生成模拟卷」 | `.claude/skills/出模拟卷.md` |
+| 🤖 **整理 Anki**（同步 Anki 编辑回题库） | 「整理 anki」「弄一下 anki」「同步 anki」 | `.claude/skills/整理anki.md` |
+| 📤 **录入新题** | 把老师发的 word/xlsx 放进对应学科文件夹后说「录入题库」 | `工具/import_source.py` |
+| 🔄 **刷新题库 + 推 Anki + 同步 GitHub** | 「刷新题库」 | `bash 工具/refresh_exam.sh` |
+| 🩺 **体检** | 「体检」「检查一下」 | `python3 工具/doctor.py --full` |
 
 ---
 
-## 0 · 速览
+## 📊 系统速览
 
 ```
-内容 SSOT       → question.json（项目根，291 题）
+内容 SSOT       → question.json（291 题，物理位置 工具/data/）
 流程 SSOT       → 本 README
 大纲 SSOT       → 工具/web/outline.json（8 章 106 KP，对齐系统实操学习脑图.pdf）
-体检入口        → 工具/doctor.py --quick | --full
-一键刷新        → 工具/refresh_exam.sh （Step 0 自动跑 doctor）
+GitHub 远端     → github.com/aerfagogogo/zhuwang-type-drill（备份 + GitHub Pages）
+网页入口        → https://aerfagogogo.github.io/zhuwang-type-drill/
+最近大重构      → 2026-05-18 v6（详见 [[2026-05-18-主网竞赛大重构]] 经验贴）
 ```
+
+> 本 README 是项目流程/规则的单一事实源。与 memory、印象冲突时以本文档为准。
 
 ## 1 · 数据分层 SSOT
 

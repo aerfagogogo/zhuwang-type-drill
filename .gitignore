@@ -1,0 +1,24 @@
+# 2026-05-18 GitHub 备份重组后的 git root（工具/）gitignore
+
+# 已废弃的旧脚本子目录
+归档/
+题集重构/
+
+# 自动生成日志 / 历史
+.auto_rebuild_bank.log
+anki/.push_history.jsonl
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 临时
+*.tmp
+*.swp
+*.bak
+.DS_Store
+
+# 编辑器
+.vscode/
+.idea/

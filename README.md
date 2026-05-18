@@ -1,208 +1,261 @@
-# 主网自动化竞赛 · 训练系统
+# 主网自动化竞赛 · 工作手册
 
-> 一个为浙江主网自动化竞赛设计的网页刷题系统。  
-> 基于 Obsidian vault 题集 + Python 脚本 + GitHub Pages。
-
-🌐 **主页**：https://aerfagogogo.github.io/zhuwang-type-drill/  
-🎯 **KP 训练中心**：https://aerfagogogo.github.io/zhuwang-type-drill/training-center.html  
-📝 **试卷训练**：https://aerfagogogo.github.io/zhuwang-type-drill/exam.html  
-⌨️ **盲敲惩罚**：https://aerfagogogo.github.io/zhuwang-type-drill/drill.html
+> **本 README 是项目 SSOT**（流程/规则维度）。与 memory、与"印象"冲突时**以本文档为准**。
+> **2026-05-18 v6 大重构**：题库从 9 份分散 json 合并为单一 `question.json`，MD 文档退役（仅作 Anki 推题副产物），网页改名「训练中心 / 惩罚 / 变式训练」，新增「整理 anki」skill 等。完整改造经过见 [[2026-05-18-主网竞赛大重构]] 经验贴。
 
 ---
 
-## 🌊 工作流
-
-两条并行轨道，实操错题会变成背诵卡进 Anki。
-
-```mermaid
-flowchart LR
-    subgraph 实操["🛠️ 实操轨"]
-        direction LR
-        A1([📝 录题]) --> A2([🔄 刷新题库]) --> A3([💻 网页训练]) --> A4([❌ 错题→薄弱点]) --> A5([🎯 惩罚/特训])
-        A5 --> A3
-    end
-
-    subgraph 背诵["🎴 背诵轨"]
-        direction LR
-        B1([📚 课后 KP]) --> B2([✍️ 制作客观题]) --> B3([📦 每日背诵.md]) --> B4([🎴 推 Anki]) --> B5([🌙 每日复习])
-    end
-
-    实操 -.错题→客观题.-> 背诵
-
-    style A1 fill:#fff7ed,stroke:#fb923c,stroke-width:2px
-    style A2 fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
-    style A3 fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
-    style A4 fill:#fee2e2,stroke:#ef4444,stroke-width:2px
-    style A5 fill:#ede9fe,stroke:#8b5cf6,stroke-width:2px
-    style B1 fill:#ecfdf5,stroke:#10b981,stroke-width:2px
-    style B2 fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
-    style B3 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
-    style B4 fill:#fae8ff,stroke:#a855f7,stroke-width:2px
-    style B5 fill:#fce7f3,stroke:#be185d,stroke-width:2px
-```
-
----
-
-## 🏗️ 数据流
-
-```mermaid
-flowchart TD
-    LIB[("📁 03 资料库<br/>PDF / KP")]
-    Q[("📁 04 题集<br/>一题一 MD")]
-    KP[("📝 🌟今日 KP 索引")]
-    DAY[("🎯每日背诵<br/>YYYY-MM-DD.md")]
-
-    Q --> BE["build_exam_data.py"]
-    BE --> EJ["exam_data.json"]
-    EJ --> WEB["🌐 GitHub Pages<br/>实操训练"]
-
-    KP --> CL1["🤖 Claude<br/>制作闪卡"]
-    LIB -.参考.-> CL1
-    CL1 --> DAY
-    DAY --> BA["build_anki_index.py"]
-    BA --> AI[("题库索引.json")]
-    AI --> RT["reset_by_topic.py"]
-    DAY --> ANKI["🎴 Anki<br/>背诵训练"]
-    RT -.按主题推到今天.-> ANKI
-
-    WEB -.错题 JSON.-> CL2["🤖 Claude<br/>训练结算"]
-    CL2 -.更新薄弱点.-> Q
-    CL2 -.实操错题→客观题.-> DAY
-    LIB -.写答案.-> Q
-
-    style LIB fill:#fef3c7,stroke:#f59e0b
-    style Q fill:#fef3c7,stroke:#f59e0b
-    style KP fill:#ecfdf5,stroke:#10b981
-    style DAY fill:#dcfce7,stroke:#16a34a
-    style BE fill:#e0e7ff,stroke:#6366f1
-    style BA fill:#e0e7ff,stroke:#6366f1
-    style RT fill:#e0e7ff,stroke:#6366f1
-    style EJ fill:#dcfce7,stroke:#16a34a
-    style AI fill:#dcfce7,stroke:#16a34a
-    style WEB fill:#dbeafe,stroke:#3b82f6
-    style ANKI fill:#fce7f3,stroke:#be185d
-    style CL1 fill:#fae8ff,stroke:#a855f7
-    style CL2 fill:#fae8ff,stroke:#a855f7
-```
-
-- **实操轨**：`04 题集` → `exam_data.json` → 网页 → 错题回 vault 更新薄弱点
-- **背诵轨**：今日 KP → Claude 出客观题 → `每日背诵.md` → Anki
-- **交叉点**：网页训练错题 → Claude 抽 KP 做客观题 → 进当天背诵文件 → 推 Anki
-- **Anki 桥接**：`AnkiConnect` 插件 + `reset_by_topic.py` 把老题按主题推到今天到期
-
----
-
-## 🎯 口令字典（你说 → 我做）
-
-**实操轨**
-
-| 你说 | 我做 |
-|---|---|
-| **「刷新题库」** | 跑 `bash refresh_exam.sh`（build + commit + push） |
-| **「为 <学科> 批量生成答案」** | 读资料库 → 给每题写草稿答案 |
-| **「修 <学科>-NNN 答案：<问题>」** | 改 MD → 刷新题库 → 推 |
-| 粘训练 JSON / **「训练结算」** | 找 `flagged` 修答案；找 `wrong/dontknow` 更薄弱点 + 出惩罚 URL |
-| **「出 <学科> 惩罚清单」** | `punishment.py gen <学科> 3` |
-| **「惩罚检查 <学科>」** | `punishment.py check <学科>` |
-
-**背诵轨**
-
-| 你说 | 我做 |
-|---|---|
-| **「整理今日知识点」** | 读今日 KP + 资料库 → 出客观题写进当天背诵 MD |
-| **「推 Anki <主题>」** | `reset_by_topic.py <主题>` 把相关老题推到今天 |
-| **「重建 Anki 索引」** | `build_anki_index.py`（新建牌组后跑） |
-| **「把实操错题做成背诵卡」** | 抽训练 JSON 错题 KP → 出客观题 → 进当天背诵 → 推 Anki |
-
----
-
-## 📦 入库
-
-题集放在 `04实操题集/<学科>/`，**一题一文件**：
+## 0 · 速览
 
 ```
-04实操题集/
-├── 操作系统/      57 题
-├── 系统平台/      76 题
-├── 数据库/        34 题
-├── 基础平台/      54 题
-├── 网络分析/      14 题
-├── 稳态监控/      28 题
-├── 综合智能告警/   7 题
-└── 调度数据网/     2 题
+内容 SSOT       → question.json（项目根，291 题）
+流程 SSOT       → 本 README
+大纲 SSOT       → 工具/web/outline.json（8 章 106 KP，对齐系统实操学习脑图.pdf）
+体检入口        → 工具/doctor.py --quick | --full
+一键刷新        → 工具/refresh_exam.sh （Step 0 自动跑 doctor）
 ```
 
-**frontmatter 模板**：
-```yaml
----
-id: <学科>-NNN
-学科: <学科>
-题源: <来源 第X题>
-关联KP: "[[KP1]], [[KP2]]"
-tags: [命令名, 业务词]
----
-```
+## 1 · 数据分层 SSOT
 
-**正文骨架**：`## 题面` → `## 答案`。仅此两段。
-
-各学科答案格式细则见 vault 顶层 README。
-
----
-
-## 🚀 训练
-
-| 入口 | 用途 |
-|---|---|
-| **KP 训练中心** `training-center.html` | 106 KP 进度看板 · 单击切状态 · 双击标薄弱 · 对齐系统实操学习脑图 7 章 |
-| **试卷训练** `exam.html` | 答题 + API 批卷 + 内嵌盲敲 |
-| **盲敲惩罚** `drill.html` | 命令盲敲校对 |
-
-**批卷**：用 AIHUBMIX gpt-4o-mini，每题 ≈ ¥0.001。  
-**首次设置**：在「🔧 高级设置」里填 API Key，本地存 localStorage。
-
-**试卷标记按钮**：
-
-| 按钮 | 含义 |
-|---|---|
-| ← 上一题 / ⏭ 跳过 | 导航 |
-| ❌ 不会 | 进薄弱点 |
-| ⚠️ 答案有误 | 标记反馈 |
-| 提交批卷 | API 评分 |
-
-`correct_streak >= 3` 视为过关。
-
----
-
-## 🛠️ 脚本一览
-
-```
-99-工作流/
-├── refresh_exam.sh             一键：build + commit + push
-├── build_exam_data.py          MD 题集 → exam_data.json （实操轨）
-├── build_index.py              资料库索引（PDF/DOC 全文抽取）
-├── punishment.py               盲敲惩罚清单生成/检查
-├── gen_drill_url.py            生成盲敲 URL
-├── fix_tags.py                 修复 tag 格式
-└── anki工具/
-    ├── build_anki_index.py     扫所有牌组 → 题库索引.json
-    └── reset_by_topic.py       按主题推到今天到期（保留学习历史）
-```
-
----
-
-## 📌 版本
-
-| Tag | 日期 | 内容 |
+| 层级 | 文件 | 谁写 |
 |---|---|---|
-| v1.2 | **2026-05-18** | **当前** · training-center.html KP 进度看板（106 KP · outline v0.3 · 对齐系统实操学习脑图） |
-| v1.1 | 5/17 | drill.html 盲敲 + 双轨进度 + Anki 实操题分离 |
-| v1.0 | 5/15 | UI 改造：学科卡片仪表盘 |
-| v0.5 | 5/14 | 一站式（API 批卷 + 内嵌盲敲） |
-| v0.1 | 5/13 | 打字训练初版 |
+| 流程/规则 | `README.md`（本文件） | 用户 + Claudian 协议 |
+| 题目内容 | `question.json` | Claudian 录入 + 用户在 Anki 编辑后回写 |
+| 大纲结构 | `工具/web/outline.json` | PDF 大纲解析（对齐系统实操学习脑图.pdf） |
+| 派生网页数据 | `工具/web/exam_data.json` `progress_data.json` | `build_exam_data.py` / `build_progress_data.py` 派生 |
+| Anki 牌组进度 | Anki 本机数据库 | 用户日常复习 + AnkiConnect 读 |
+| Anki 推题副产物 | `04实操题集/{学科}/anki归档/*.md` | `build_subject_bank.py` 派生（**不要手编**） |
 
-**回滚**：
-```bash
-cd web && git checkout v0.6 && git push -f origin main
+**铁律**：
+- `question.json` 是题目内容的唯一编辑入口（Anki 端临时编辑通过「整理 anki」skill 同步回来）
+- `04实操题集/{学科}/anki归档/*.md` 是只读副产物，**严禁手改**——下次 build_subject_bank 会覆盖
+
+## 2 · question.json schema
+
+每题字段（全部 13 项必备，doctor 体检校验）：
+
+```json
+{
+  "编号": 78,                              // 全局自增整数
+  "subject": "操作系统",                    // 学科 = 04实操题集 文件夹名
+  "deck": "实操题::操作系统",                // Anki 牌组路径
+  "title": "024-NTP 对时 + 定时重启",
+  "题面": "...",
+  "答案": "...",                            // 部分题可能为空字符串（待用户上机后补）
+  "题源": "杭州培训·凝思 第一·题24",
+  "tags": ["操作系统", "Shell 脚本与系统优化", "资源管控"],  // 单层，无特殊字符
+  "归属大纲": "1.2.3",                      // PDF 大纲叶节点编号；竞赛环境学科为空
+  "weak_count": 0,
+  "correct_streak": 0,
+  "last_wrong_at": null,
+  "last_attempt_at": null,
+  "notes": ""                               // 训练记录 list 或空 string
+}
 ```
 
-**项目地址**：https://github.com/aerfagogogo/zhuwang-type-drill
+**字段写入方**：
+
+| 字段 | 谁写 |
+|---|---|
+| 编号 / subject / deck | `import_source.py` 录入时定 |
+| title / 题面 / 答案 / 题源 | `import_source.py` + 用户在 Anki 编辑 → 「整理 anki」回写 |
+| tags / 归属大纲 | Claudian 录入时初判（参照 outline.json）；用户在 Anki 调整 → 「整理 anki」回写 |
+| weak_count / correct_streak / last_wrong_at / last_attempt_at / notes | CV 训练写入（操作系统/数据库/竞赛环境）+ Anki 反向同步（其他学科）|
+
+## 3 · 学科分布（2026-05-18 实测）
+
+| 学科 | 题数 | 训练轨 |
+|---|---|---|
+| 系统平台 | 76 | Anki 客观题 |
+| 操作系统 | 58 | CV 实操（ks-wh01）|
+| 基础平台 | 54 | Anki 客观题 |
+| 数据库 | 37 | CV 实操（ks-his01）|
+| 稳态监控 | 28 | Anki 客观题 |
+| 竞赛环境 | 15 | CV 实操（Docker） |
+| 网络分析 | 14 | Anki 客观题 |
+| 综合智能告警 | 7 | Anki 客观题 |
+| 调度数据网 | 2 | Anki 客观题 |
+| **合计** | **291** | |
+
+## 4 · 工作流
+
+### 4.1 日常学习闭环
+
+```
+新题来源（老师发的 word/xlsx/txt）
+  └── 用户分类放入 04实操题集/{学科}/源文件/
+        │
+        ▼ 运行 import_source.py
+  题目录入 question.json（编号自增 + tags 留空 + 归属大纲留空）
+        │
+        ├── Claudian 用 outline.json 语义初判 tags + 归属大纲
+        │
+        ▼ 运行 refresh_exam.sh
+  - 派生 exam_data.json / progress_data.json
+  - 推 Anki 实操题::{学科} 牌组（push_exam_to_anki.py）
+  - 生成 anki归档/{学科}-{题源}.md 副产物
+        │
+        ▼
+  ╔══════════════════════╗     ╔══════════════════════╗
+  ║ CLI 实操学科         ║     ║ GUI / 客观题学科       ║
+  ║ 操作系统 / 数据库     ║     ║ 系统平台 / 稳态监控 等  ║
+  ║ 竞赛环境              ║     ║                       ║
+  ║                      ║     ║                       ║
+  ║ → 触发 CV 训练 skill ║     ║ → 用户在 Anki 复习     ║
+  ║   读 question.json   ║     ║   备注/订正/加 tag     ║
+  ║   出题 → 实操 → 评判 ║     ║                       ║
+  ║   update_weak.py 写  ║     ║ → 「整理 anki」skill   ║
+  ║   weak_count++ etc   ║     ║   anki_sync.py 回写    ║
+  ╚══════════════════════╝     ╚══════════════════════╝
+        │                              │
+        └───────────┬──────────────────┘
+                    ▼
+            训练中心网页展示
+            （以 PDF 大纲为骨架，按 KP 聚合题，
+              点 KP 节点看薄弱题 + 题面预览）
+```
+
+### 4.2 触发词速查
+
+| 用户说 | 触发什么 |
+|---|---|
+| 「刷新题库」 | `bash 工具/refresh_exam.sh` |
+| 「Linux 训练 / 操作系统训练」 | `.claude/skills/操作系统训练.md` |
+| 「达梦训练 / 数据库训练」 | `.claude/skills/达梦训练.md` |
+| 「竞赛环境训练」 | `.claude/skills/竞赛环境训练.md` |
+| 「整理 anki / 弄一下 anki」 | `.claude/skills/整理anki.md` |
+| 「变式训练 / 对这题变式」 | `.claude/skills/变式训练.md` |
+| 「出模拟卷」 | `.claude/skills/出模拟卷.md` |
+
+## 5 · 脚本生态
+
+位于 `工具/` 目录，所有脚本通过 `_qdata.py` 适配器统一访问 question.json。
+
+| 脚本 | 作用 | 何时跑 |
+|---|---|---|
+| `_qdata.py` | 共享数据适配器（读写 question.json） | 被其他脚本 import，不直接跑 |
+| `doctor.py` | 体检脚本（quick + full 两级） | refresh_exam 自动跑；用户怀疑漂移时手动跑 |
+| `refresh_exam.sh` | 一键刷新：体检 → 派生 → 推 Anki → 生成副产物 → git commit | 每次录新题 / 训练完一轮后 |
+| `import_source.py` | word/xlsx/txt 源文件 → question.json 录入桥 | 拿到老师发的新题文件时 |
+| `build_exam_data.py` | question.json + outline.json → exam_data.json | 由 refresh_exam.sh 调用 |
+| `build_progress_data.py` | question.json 的 weak + AnkiConnect → progress_data.json | 同上 |
+| `build_subject_bank.py` | question.json → anki归档/*.md 副产物 | 同上 |
+| `push_exam_to_anki.py` | question.json → Anki 牌组（增量、幂等） | 同上 |
+| `update_weak.py` | 写 question.json 的 weak 字段（CV 训练落盘）| CV 训练 skill 内部调用 |
+| `anki_sync.py` | Anki 端编辑 → question.json 回写 | 整理 anki skill 触发 |
+| `build_index.py` | 资料库索引（与本流程独立） | 不动 |
+
+### 5.1 体检 (doctor) 使用示范
+
+```bash
+# 快体检：路径/题数/skill 文件存在性，~1 秒
+python3 工具/doctor.py --quick
+
+# 深体检：加 question.json ↔ outline.json 一致性、学科分布
+python3 工具/doctor.py --full
+```
+
+退出码：0 全过 / 1 有警告 / 2 致命错误。refresh_exam.sh 在 Step 0 跑 quick，致命退出。
+
+## 6 · 网页
+
+位于 `工具/web/`，发布到 GitHub Pages: https://aerfagogogo.github.io/zhuwang-type-drill/
+
+| 文件 | 作用 |
+|---|---|
+| `index.html` | 入口聚合页 |
+| `training-center.html` | **训练中心** · 以 PDF 大纲为骨架，按 KP 聚合题 + 显示薄弱状态 + 题面预览（2026-05-18 改名自「D6.0 备考训练中心」）|
+| `exam.html` | **变式训练**入口（2026-05-18 砍掉「一站式训练」其他功能） |
+| `drill.html` | **惩罚** · CV 训练做错时弹的盲敲页（2026-05-18 改名自「盲敲惩罚」，qid 改用全局编号） |
+| `mockup.html` | UI 方案预览（设计基础，含两套配色 token） |
+| `exam_data.json` | 派生：网页主数据 |
+| `progress_data.json` | 派生：进度数据（CLI 学科取 weak、GUI 学科取 Anki） |
+| `outline.json` | PDF 大纲结构化（106 KP）|
+
+**UI 设计参考**：
+- 暗色 dashboard 风格（参考 `/Users/sunyiting/Desktop/123.txt` 设计 token）
+- 字体：DM Mono（等宽数字） + Noto Sans SC（中文）
+- 配色 token 见 `mockup.html` 方案 A（Claude Native 暖橙）/ 方案 B（Vibe Island 玻璃岛）
+- 全面 UI 重做留作后续单独迭代任务，不在 2026-05-18 重构范围
+
+## 7 · skill 清单
+
+位于 `.claude/skills/`（vault 根目录），按 frontmatter description 自动触发。
+
+| Skill | 作用 | 触发词样例 |
+|---|---|---|
+| 操作系统训练.md | 凝思 Linux 实操（ks-wh01） | linux 训练、操作系统训练 |
+| 达梦训练.md | DM8 实操（ks-his01） | 达梦训练、数据库训练 |
+| 竞赛环境训练.md | Docker 仿真环境训练 | 竞赛环境训练、网络训练 |
+| 变式训练.md | 出变式题（不计成绩） | 变个题、对这题变式 |
+| 出模拟卷.md | 生成模拟卷 | 出模拟卷 |
+| 主观题训练.md | 主观题盲答评分 | 主观题训练、粘多行要点 |
+| **整理anki.md**（v0.1 新）| Anki ↔ question.json 同步 | 整理 anki、弄一下 anki |
+| Anki错题重学.md | Anki 错题专项刷 | （按 frontmatter）|
+| anki分析.md / anki同步.md | 现有 Anki 工具，与「整理 anki」职能可能重叠，后续视情况合并 | |
+| 制作闪卡.md / 考过题标记.md / 错题标注.md | 现有辅助 skill | |
+| 考试宝转换.md | 用户独立工具 | （不属于本项目重构范围） |
+
+**2026-05-18 已归档**（最后快照在 `70-归档/skills版本/<名>/v_废弃_2026-05-18.md`）：
+- 念能力训练.md（与新流程不匹配）
+- 竞赛训练.md（过时）
+- 错题标注.md → 已删
+- 杭州培训-*.md（4 份，杭州培训已并入主网）
+
+## 8 · 故障排查
+
+| 症状 | 检查 |
+|---|---|
+| refresh_exam.sh 报 anki 路径错 | 看是否 push_exam_to_anki.py 在 `工具/anki/` 下（v5 修过的 bug） |
+| Anki 推题后题数没变 | doctor --full 看 question.json 与 outline.json 一致性 |
+| drill.html 找不到题 | `?qid=` 必须是全局编号；旧风格 `qid=操作系统-001` 也兼容但不推荐 |
+| 「整理 anki」无差异 | Anki 端 Front 是否含 `[#编号]`（旧推送是 `[操作系统-001]`，需先重新 push 一次） |
+
+## 9 · 同步 GitHub（常规动作）
+
+**仓库结构**（实测 2026-05-18）：
+- **vault 主仓库**（vault 根目录）：**本地 git，无 GitHub remote**。commit 留在本地作为版本追溯，不推远端。
+- **web 子仓库**（`工具/web/`）：独立 git，remote = `https://github.com/aerfagogogo/zhuwang-type-drill.git` → 发布 GitHub Pages `https://aerfagogogo.github.io/zhuwang-type-drill/`，有 **auto-sync hook 自动 commit + push**（每次改 html 都看到 `auto-sync: <文件名>` commit）。
+
+**铁律**：**每次对本项目目录做出改动后，必须确保两类改动同步**——
+
+**vault 主仓库（本地 commit）**：
+- 触发：改 `question.json` / `工具/*.py` / `README.md` / `.claude/skills/*` / `04实操题集/*` 等任何 vault 内文件
+- 步骤：
+```bash
+cd "/Users/sunyiting/Library/Mobile Documents/iCloud~md~obsidian/Documents/苍茫云海间"
+python3 "50-项目/主网自动化竞赛/工具/doctor.py" --quick || exit 1  # 体检强制
+git add <精确路径>   # 不 -A，避免误带未提交的历史 working tree 改动
+git commit -m "$(cat <<'EOF'
+<一句话概括>
+
+<分类要点>
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+EOF
+)"
+# 注意：vault 主仓库无 remote，不跑 git push
+```
+
+**web 子仓库（自动推 GitHub Pages）**：
+- 触发：改 `工具/web/*.html / *.json / *.js`
+- 一般情况：auto-sync hook 已自动 commit + push，无需 CV 手动操作
+- 如 auto-sync 失败：手动跑
+```bash
+cd "/Users/sunyiting/Library/Mobile Documents/iCloud~md~obsidian/Documents/苍茫云海间/50-项目/主网自动化竞赛/工具/web"
+git status; git add -A; git commit -m "..."; git push origin main
+```
+
+**铁律细节**：
+- commit message 第一行**不要超过 70 字符**，正文用空行 + 要点列表
+- 涉及破坏性 git 操作（`reset --hard / push --force / branch -D`）必须用户**明确同意**才执行
+- 体检不过禁止 commit（即使 vault 主仓库不推远端，也保持 commit 历史干净）
+- 触发条件命中后 CV 提示 commit message 草稿，等用户**点头**再真正提交（避免误 commit 在做的草稿）
+- 关键路径如有 `.env / credentials.json` 等敏感文件，永远不要 `git add -A`，改成具名添加
+- 用户若要把 vault 主仓库也推 GitHub：先 `git remote add origin <url>` 配置远端，再 `git push -u origin main`，本协议届时再补「vault → GitHub」push 步骤
+
+## 10 · 历史变更
+
+- **2026-05-18 v6 大重构**：本次。完整设计决策与执行回顾见 [[2026-05-18-主网竞赛大重构]] 经验贴。
+- **2026-05-18 v6.1 Codex 审查后修正**：6 处问题修完（doctor full 真正可用 / merge 脚本路径修正 / 变式训练.md 对齐 / 惩罚 URL 补 drill.html / 活文件残留清理 / notes 字段统一 list）。
+- 之前历史变更通过 git log 追溯。
